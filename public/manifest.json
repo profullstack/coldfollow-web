@@ -1,6 +1,6 @@
 {
-  "name": "convert2doc.com",
-  "short_name": "convert2doc",
+  "name": "coldfollow.com",
+  "short_name": "coldfollow",
   "description": "Generate PDFs, Word documents, Excel spreadsheets, PowerPoint presentations, and EPUB e-books from HTML content",
   "start_url": "/",
   "display": "standalone",
