@@ -290,7 +290,7 @@ class PfHeader extends HTMLElement {
         <a href="/" class="logo-link" style="text-decoration: none;">
           <div class="logo">
             <img src="/icons/logo.${this.currentTheme === 'dark' ? 'dark' : 'light'}.svg" alt="Profullstack, Inc. Logo">
-            <h1 data-i18n="app_name">convert2doc</h1>
+            <h1 data-i18n="app_name">coldfollow</h1>
           </div>
         </a>
         
