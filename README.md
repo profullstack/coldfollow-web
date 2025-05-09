@@ -404,3 +404,4 @@ This script will generate a test PDF and output the detected Chrome path.
 
 test2
 
+
