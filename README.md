@@ -1,5 +1,7 @@
 # PDF Document Generation Service
 
+[![Crypto Payment](https://paybadge.profullstack.com/badge.svg)](https://paybadge.profullstack.com/?tickers=btc%2Ceth%2Csol%2Cusdc)
+
 A service for generating various document formats from HTML and Markdown.
 
 ## Automatic Deployment with GitHub Actions
