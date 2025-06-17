@@ -396,15 +396,33 @@ run_migrations() {
   echo -e "${YELLOW}Step 2: Applying pending migrations to database...${NC}"
   echo "Using database password: ${SUPABASE_DB_PASSWORD:0:3}*****"
   
-  # Use the Supabase CLI to push migrations with --include-all flag
-  echo -e "${YELLOW}Running: supabase db push --include-all${NC}"
+  # Use the Supabase CLI to push migrations with timeout to prevent hanging
+  echo -e "${YELLOW}Running: timeout 300 supabase db push --include-all${NC}"
+  echo -e "${YELLOW}(Will timeout after 5 minutes if stuck)${NC}"
   
   # Create a temporary file to capture push output
   PUSH_TEMP_OUTPUT=$(mktemp)
   
-  # Run the command and capture both stdout and stderr, while also showing output
-  supabase db push --include-all 2>&1 | tee "$PUSH_TEMP_OUTPUT"
+  # Run the command with timeout and capture both stdout and stderr, while also showing output
+  timeout 300 supabase db push --include-all 2>&1 | tee "$PUSH_TEMP_OUTPUT"
   PUSH_EXIT_CODE=$?
+  
+  # Check if command timed out
+  if [ $PUSH_EXIT_CODE -eq 124 ]; then
+    echo -e "${YELLOW}Command timed out after 5 minutes. Trying alternative approach...${NC}"
+    
+    # Try without --include-all flag as fallback
+    echo -e "${YELLOW}Running fallback: timeout 300 supabase db push${NC}"
+    timeout 300 supabase db push 2>&1 | tee "$PUSH_TEMP_OUTPUT"
+    PUSH_EXIT_CODE=$?
+    
+    if [ $PUSH_EXIT_CODE -eq 124 ]; then
+      echo -e "${RED}Migration push timed out even with fallback approach.${NC}"
+      echo -e "${YELLOW}This might indicate network issues or resource constraints.${NC}"
+      echo -e "${YELLOW}Consider running migrations manually via Supabase dashboard.${NC}"
+      exit 1
+    fi
+  fi
   
   if [ $PUSH_EXIT_CODE -ne 0 ]; then
     echo -e "${YELLOW}Migration push failed (exit code: $PUSH_EXIT_CODE). Analyzing output for repair commands...${NC}"
