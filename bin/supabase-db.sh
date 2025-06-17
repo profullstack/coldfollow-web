@@ -407,6 +407,16 @@ run_migrations() {
   timeout 300 supabase db push --include-all 2>&1 | tee "$PUSH_TEMP_OUTPUT"
   PUSH_EXIT_CODE=$?
   
+  # Check the output for authentication errors
+  if grep -q "Wrong password\|failed SASL auth\|failed to connect" "$PUSH_TEMP_OUTPUT"; then
+    echo -e "${RED}❌ Authentication failed! Database password is incorrect.${NC}"
+    echo -e "${YELLOW}The migration script cannot connect to the database.${NC}"
+    echo -e "${YELLOW}Please check your database password in the .env file.${NC}"
+    echo -e "${YELLOW}You may need to reset your database password in Supabase dashboard.${NC}"
+    rm -f "$PUSH_TEMP_OUTPUT"
+    exit 1
+  fi
+  
   # Check if command timed out
   if [ $PUSH_EXIT_CODE -eq 124 ]; then
     echo -e "${YELLOW}Command timed out after 5 minutes. Trying alternative approach...${NC}"
@@ -416,12 +426,29 @@ run_migrations() {
     timeout 300 supabase db push 2>&1 | tee "$PUSH_TEMP_OUTPUT"
     PUSH_EXIT_CODE=$?
     
+    # Check for auth errors in fallback too
+    if grep -q "Wrong password\|failed SASL auth\|failed to connect" "$PUSH_TEMP_OUTPUT"; then
+      echo -e "${RED}❌ Authentication failed in fallback attempt!${NC}"
+      echo -e "${YELLOW}Database password is incorrect.${NC}"
+      rm -f "$PUSH_TEMP_OUTPUT"
+      exit 1
+    fi
+    
     if [ $PUSH_EXIT_CODE -eq 124 ]; then
       echo -e "${RED}Migration push timed out even with fallback approach.${NC}"
       echo -e "${YELLOW}This might indicate network issues or resource constraints.${NC}"
       echo -e "${YELLOW}Consider running migrations manually via Supabase dashboard.${NC}"
+      rm -f "$PUSH_TEMP_OUTPUT"
       exit 1
     fi
+  fi
+  
+  # Check for other error conditions
+  if [ $PUSH_EXIT_CODE -ne 0 ]; then
+    echo -e "${RED}❌ Migration push failed with exit code: $PUSH_EXIT_CODE${NC}"
+    echo -e "${YELLOW}Check the output above for specific error details.${NC}"
+    rm -f "$PUSH_TEMP_OUTPUT"
+    exit 1
   fi
   
   if [ $PUSH_EXIT_CODE -ne 0 ]; then
