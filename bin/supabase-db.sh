@@ -375,23 +375,15 @@ run_migrations() {
         supabase migration repair --status applied 20250617092028
       fi
     fi
-      
-      # Try pulling again after repairs
-      echo -e "${YELLOW}Retrying sync after repairs...${NC}"
-      supabase db pull --schema public,auth,storage,graphql_public,supabase_functions,extensions
-      
-      if [ $? -eq 0 ]; then
-        echo -e "${GREEN}Migration history synced successfully after repairs!${NC}"
-      else
-        echo -e "${YELLOW}Warning: Sync still failed after repairs. Continuing with migration application...${NC}"
-      fi
+    
+    # Try pulling again after repairs
+    echo -e "${YELLOW}Retrying sync after repairs...${NC}"
+    supabase db pull --schema public,auth,storage,graphql_public,supabase_functions,extensions
+    
+    if [ $? -eq 0 ]; then
+      echo -e "${GREEN}Migration history synced successfully after repairs!${NC}"
     else
-      echo -e "${YELLOW}No repair commands found in output. This might be a different type of error.${NC}"
-      echo -e "${YELLOW}Common issues:${NC}"
-      echo -e "${YELLOW}  - Network connectivity problems${NC}"
-      echo -e "${YELLOW}  - Authentication issues${NC}"
-      echo -e "${YELLOW}  - Database connection problems${NC}"
-      echo -e "${YELLOW}Continuing with migration application...${NC}"
+      echo -e "${YELLOW}Warning: Sync still failed after repairs. Continuing with migration application...${NC}"
     fi
   else
     echo -e "${GREEN}Migration history synced successfully!${NC}"
