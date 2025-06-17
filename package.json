@@ -1,7 +1,7 @@
 {
-  "name": "document-generation-api",
+  "name": "coldfollow-platform",
   "version": "1.0.0",
-  "description": "API for generating various document formats from HTML and Markdown",
+  "description": "Social media marketing platform for cold outreach via email, SMS, phone calls, and social media",
   "type": "module",
   "main": "src/index.js",
   "scripts": {
@@ -13,14 +13,15 @@
     "stripe:products": "node bin/create-stripe-products.js"
   },
   "keywords": [
-    "pdf",
-    "doc",
-    "excel",
-    "powerpoint",
-    "epub",
-    "markdown",
-    "html",
-    "conversion",
+    "social media",
+    "marketing",
+    "cold outreach",
+    "email marketing",
+    "sms marketing",
+    "phone calls",
+    "ai automation",
+    "social posting",
+    "scheduling",
     "api"
   ],
   "author": "",

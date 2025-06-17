@@ -1,321 +1,593 @@
-# Document Generation API - Future Enhancements
+# ColdFollow Platform Development TODO
 
-This document outlines planned features and enhancements to provide additional value to paying customers.
+## Overview
+Transform the platform into a comprehensive social media marketing and cold outreach platform with campaign management capabilities. Users should be able to create campaigns and manage all tasks under each campaign.
 
-## Core Infrastructure
+## Phase 1: Database Schema & Migrations
 
-- [ ] Set up CI/CD pipeline for automated testing and deployment
-- [ ] Optimize performance for large document processing
+### 1.1 Core Campaign Management Tables
+- [ ] **Create campaigns table migration**
+  ```bash
+  node bin/generator.js server migration --name="create_campaigns_table"
+  ```
+  - `id` (UUID, primary key)
+  - `user_id` (UUID, foreign key to auth.users)
+  - `name` (VARCHAR, campaign name)
+  - `description` (TEXT, campaign description)
+  - `type` (ENUM: 'email', 'sms', 'phone', 'social', 'mixed')
+  - `status` (ENUM: 'draft', 'scheduled', 'running', 'paused', 'completed', 'cancelled')
+  - `target_audience` (JSONB, audience criteria)
+  - `settings` (JSONB, campaign-specific settings)
+  - `scheduled_at` (TIMESTAMP, when to start)
+  - `started_at` (TIMESTAMP, actual start time)
+  - `completed_at` (TIMESTAMP, completion time)
+  - `created_at` (TIMESTAMP)
+  - `updated_at` (TIMESTAMP)
 
-## Advanced Document Customization
+### 1.2 Contact Management Tables
+- [ ] **Create contacts table migration**
+  ```bash
+  node bin/generator.js server migration --name="create_contacts_table"
+  ```
+  - `id` (UUID, primary key)
+  - `user_id` (UUID, foreign key to auth.users)
+  - `email` (VARCHAR, contact email)
+  - `phone` (VARCHAR, contact phone)
+  - `first_name` (VARCHAR)
+  - `last_name` (VARCHAR)
+  - `company` (VARCHAR)
+  - `title` (VARCHAR)
+  - `tags` (TEXT[], array of tags)
+  - `notes` (TEXT)
+  - `source` (VARCHAR, how contact was acquired)
+  - `status` (ENUM: 'active', 'inactive', 'unsubscribed', 'bounced')
+  - `custom_fields` (JSONB, additional contact data)
+  - `created_at` (TIMESTAMP)
+  - `updated_at` (TIMESTAMP)
 
-- [ ] Custom Templates
-  - [ ] Pre-designed templates for different document types
-  - [ ] Template management system
-  - [ ] Template variables and placeholders
-  - [ ] Template versioning
+- [ ] **Create contact_lists table migration**
+  ```bash
+  node bin/generator.js server migration --name="create_contact_lists_table"
+  ```
+  - `id` (UUID, primary key)
+  - `user_id` (UUID, foreign key to auth.users)
+  - `name` (VARCHAR, list name)
+  - `description` (TEXT)
+  - `created_at` (TIMESTAMP)
+  - `updated_at` (TIMESTAMP)
 
-- [ ] Branding Options
-  - [ ] Add logos and watermarks to documents
-  - [ ] Custom styling and theming
-  - [ ] Brand asset management
-  - [ ] Multi-brand support
+- [ ] **Create contact_list_members table migration**
+  ```bash
+  node bin/generator.js server migration --name="create_contact_list_members_table"
+  ```
+  - `id` (UUID, primary key)
+  - `contact_list_id` (UUID, foreign key)
+  - `contact_id` (UUID, foreign key)
+  - `added_at` (TIMESTAMP)
 
-- [ ] Advanced Formatting
-  - [ ] Custom headers and footers
-  - [ ] Automatic page numbering
-  - [ ] Table of contents generation
-  - [ ] Cross-references and bookmarks
+### 1.3 Campaign Tasks & Execution Tables
+- [ ] **Create campaign_tasks table migration**
+  ```bash
+  node bin/generator.js server migration --name="create_campaign_tasks_table"
+  ```
+  - `id` (UUID, primary key)
+  - `campaign_id` (UUID, foreign key to campaigns)
+  - `type` (ENUM: 'email', 'sms', 'phone_call', 'social_post', 'follow_up')
+  - `name` (VARCHAR, task name)
+  - `template_id` (UUID, foreign key to templates)
+  - `target_contacts` (JSONB, contact selection criteria)
+  - `settings` (JSONB, task-specific settings)
+  - `scheduled_at` (TIMESTAMP)
+  - `status` (ENUM: 'pending', 'running', 'completed', 'failed', 'cancelled')
+  - `execution_stats` (JSONB, sent/delivered/opened/clicked counts)
+  - `created_at` (TIMESTAMP)
+  - `updated_at` (TIMESTAMP)
 
-- [ ] Font Management
-  - [ ] Upload and use custom fonts
-  - [ ] Font library management
-  - [ ] Font substitution rules
-  - [ ] Font embedding in documents
+- [ ] **Create campaign_executions table migration**
+  ```bash
+  node bin/generator.js server migration --name="create_campaign_executions_table"
+  ```
+  - `id` (UUID, primary key)
+  - `campaign_task_id` (UUID, foreign key)
+  - `contact_id` (UUID, foreign key)
+  - `status` (ENUM: 'sent', 'delivered', 'opened', 'clicked', 'replied', 'bounced', 'failed')
+  - `sent_at` (TIMESTAMP)
+  - `delivered_at` (TIMESTAMP)
+  - `opened_at` (TIMESTAMP)
+  - `clicked_at` (TIMESTAMP)
+  - `replied_at` (TIMESTAMP)
+  - `error_message` (TEXT)
+  - `metadata` (JSONB, execution-specific data)
 
-## Batch Processing
+### 1.4 Template Management Tables
+- [ ] **Create templates table migration**
+  ```bash
+  node bin/generator.js server migration --name="create_templates_table"
+  ```
+  - `id` (UUID, primary key)
+  - `user_id` (UUID, foreign key to auth.users)
+  - `name` (VARCHAR, template name)
+  - `type` (ENUM: 'email', 'sms', 'phone_script', 'social_post')
+  - `subject` (VARCHAR, for email templates)
+  - `content` (TEXT, template content with merge tags)
+  - `variables` (JSONB, available merge variables)
+  - `is_ai_generated` (BOOLEAN)
+  - `created_at` (TIMESTAMP)
+  - `updated_at` (TIMESTAMP)
 
-- [ ] Bulk Conversion
-  - [ ] Process multiple documents simultaneously
-  - [ ] Parallel processing for better performance
-  - [ ] Progress tracking for batch jobs
-  - [ ] Batch job management
+### 1.5 Social Media Integration Tables
+- [ ] **Create social_accounts table migration**
+  ```bash
+  node bin/generator.js server migration --name="create_social_accounts_table"
+  ```
+  - `id` (UUID, primary key)
+  - `user_id` (UUID, foreign key to auth.users)
+  - `platform` (ENUM: 'twitter', 'facebook', 'instagram', 'linkedin', 'tiktok', 'youtube')
+  - `account_name` (VARCHAR)
+  - `account_id` (VARCHAR, platform-specific ID)
+  - `access_token` (TEXT, encrypted)
+  - `refresh_token` (TEXT, encrypted)
+  - `expires_at` (TIMESTAMP)
+  - `is_active` (BOOLEAN)
+  - `connected_at` (TIMESTAMP)
+  - `last_sync_at` (TIMESTAMP)
 
-- [ ] Document Merging
-  - [ ] Combine multiple documents into a single output
-  - [ ] Specify merge order and options
-  - [ ] Insert dividers between merged documents
-  - [ ] Table of contents for merged documents
+- [ ] **Create social_posts table migration**
+  ```bash
+  node bin/generator.js server migration --name="create_social_posts_table"
+  ```
+  - `id` (UUID, primary key)
+  - `campaign_task_id` (UUID, foreign key, nullable)
+  - `social_account_id` (UUID, foreign key)
+  - `content` (TEXT, post content)
+  - `media_urls` (TEXT[], array of media URLs)
+  - `scheduled_at` (TIMESTAMP)
+  - `published_at` (TIMESTAMP)
+  - `platform_post_id` (VARCHAR, platform-specific post ID)
+  - `status` (ENUM: 'draft', 'scheduled', 'published', 'failed')
+  - `engagement_stats` (JSONB, likes/shares/comments)
+  - `created_at` (TIMESTAMP)
 
-- [ ] Scheduled Generation
-  - [ ] Set up recurring document generation jobs
-  - [ ] Schedule-based document updates
-  - [ ] Notification for scheduled jobs
-  - [ ] Retry logic for failed scheduled jobs
+### 1.6 Analytics & Reporting Tables
+- [ ] **Create campaign_analytics table migration**
+  ```bash
+  node bin/generator.js server migration --name="create_campaign_analytics_table"
+  ```
+  - `id` (UUID, primary key)
+  - `campaign_id` (UUID, foreign key)
+  - `date` (DATE, analytics date)
+  - `metrics` (JSONB, daily metrics)
+  - `created_at` (TIMESTAMP)
 
-- [ ] Batch API Endpoints
-  - [ ] Convert collections of documents in one request
-  - [ ] Bulk download options
-  - [ ] Batch status checking
-  - [ ] Batch cancellation
+## Phase 2: Backend API Development
 
-## Enhanced Document Security
+### 2.1 Campaign Management Controllers
+- [ ] **Create CampaignController**
+  ```bash
+  node bin/generator.js server controller --name="CampaignController"
+  ```
+  - `getAll()` - List user's campaigns
+  - `getById()` - Get campaign details
+  - `create()` - Create new campaign
+  - `update()` - Update campaign
+  - `remove()` - Delete campaign
+  - `start()` - Start campaign execution
+  - `pause()` - Pause campaign
+  - `resume()` - Resume paused campaign
+  - `getStats()` - Get campaign statistics
 
-- [ ] Password Protection
-  - [ ] Add passwords to PDFs and other documents
-  - [ ] Password strength requirements
-  - [ ] Password management options
-  - [ ] Secure password transmission
+- [ ] **Create campaign routes**
+  ```bash
+  node bin/generator.js server route --path="/api/v1/campaigns" --controller="CampaignController" --method="get"
+  node bin/generator.js server route --path="/api/v1/campaigns" --controller="CampaignController" --method="post"
+  node bin/generator.js server route --path="/api/v1/campaigns/:id" --controller="CampaignController" --method="get"
+  node bin/generator.js server route --path="/api/v1/campaigns/:id" --controller="CampaignController" --method="put"
+  node bin/generator.js server route --path="/api/v1/campaigns/:id" --controller="CampaignController" --method="delete"
+  node bin/generator.js server route --path="/api/v1/campaigns/:id/start" --controller="CampaignController" --method="post"
+  node bin/generator.js server route --path="/api/v1/campaigns/:id/pause" --controller="CampaignController" --method="post"
+  node bin/generator.js server route --path="/api/v1/campaigns/:id/stats" --controller="CampaignController" --method="get"
+  ```
 
-- [ ] Document Expiration
-  - [ ] Set documents to expire after a certain time
-  - [ ] Expiration notifications
-  - [ ] Auto-deletion of expired documents
-  - [ ] Expiration extension options
+### 2.2 Contact Management Controllers
+- [ ] **Create ContactController**
+  ```bash
+  node bin/generator.js server controller --name="ContactController"
+  ```
+  - `getAll()` - List contacts with filtering/pagination
+  - `getById()` - Get contact details
+  - `create()` - Create new contact
+  - `update()` - Update contact
+  - `remove()` - Delete contact
+  - `import()` - Bulk import contacts
+  - `export()` - Export contacts
 
-- [ ] Digital Signatures
-  - [ ] Add digital signatures to documents
-  - [ ] Signature verification
-  - [ ] Multiple signature support
-  - [ ] Signature positioning options
+- [ ] **Create ContactListController**
+  ```bash
+  node bin/generator.js server controller --name="ContactListController"
+  ```
+  - `getAll()` - List contact lists
+  - `getById()` - Get list with members
+  - `create()` - Create new list
+  - `update()` - Update list
+  - `remove()` - Delete list
+  - `addContacts()` - Add contacts to list
+  - `removeContacts()` - Remove contacts from list
 
-- [ ] Encryption Options
-  - [ ] Enhanced encryption for sensitive documents
-  - [ ] Encryption key management
-  - [ ] Multiple encryption standards
-  - [ ] Encryption strength options
+### 2.3 Template Management Controllers
+- [ ] **Create TemplateController**
+  ```bash
+  node bin/generator.js server controller --name="TemplateController"
+  ```
+  - `getAll()` - List templates by type
+  - `getById()` - Get template details
+  - `create()` - Create new template
+  - `update()` - Update template
+  - `remove()` - Delete template
+  - `generateWithAI()` - AI-powered template generation
 
-## Integration Capabilities
+### 2.4 Social Media Controllers
+- [ ] **Create SocialAccountController**
+  ```bash
+  node bin/generator.js server controller --name="SocialAccountController"
+  ```
+  - `getAll()` - List connected accounts
+  - `connect()` - Connect new social account
+  - `disconnect()` - Disconnect account
+  - `refresh()` - Refresh account tokens
 
-- [ ] Webhooks
-  - [ ] Notify external systems when documents are generated
-  - [ ] Customizable webhook payloads
-  - [ ] Webhook retry logic
-  - [ ] Webhook security (signing, etc.)
+- [ ] **Create SocialPostController**
+  ```bash
+  node bin/generator.js server controller --name="SocialPostController"
+  ```
+  - `getAll()` - List posts
+  - `create()` - Create new post
+  - `schedule()` - Schedule post
+  - `publish()` - Publish immediately
+  - `getEngagement()` - Get engagement metrics
 
-- [ ] Custom Callbacks
-  - [ ] Send documents directly to other services
-  - [ ] Callback authentication options
-  - [ ] Callback status tracking
-  - [ ] Error handling for callbacks
+### 2.5 Analytics Controllers
+- [ ] **Create AnalyticsController**
+  ```bash
+  node bin/generator.js server controller --name="AnalyticsController"
+  ```
+  - `getCampaignMetrics()` - Campaign performance
+  - `getSocialMetrics()` - Social media metrics
+  - `getEngagementMetrics()` - Engagement analytics
+  - `getROIMetrics()` - ROI calculations
 
-- [ ] Cloud Storage Integration
-  - [ ] Direct upload to Google Drive, Dropbox, etc.
-  - [ ] OAuth authentication for cloud services
-  - [ ] Folder structure management
-  - [ ] Permissions setting for uploaded files
+## Phase 3: Frontend Development
 
-- [ ] CMS Plugins
-  - [ ] Ready-made plugins for WordPress, Shopify, etc.
-  - [ ] CMS-specific document templates
-  - [ ] Integration with CMS content types
-  - [ ] CMS user permission mapping
+### 3.1 Campaign Management UI
+- [ ] **Create campaigns route**
+  ```bash
+  node bin/generator.js client route --route="/campaigns" --name="Campaigns" --auth --subscription
+  ```
+  - Campaign list view with filters
+  - Campaign creation wizard
+  - Campaign dashboard with real-time stats
+  - Campaign task management interface
 
-## Advanced Document Processing
+- [ ] **Create campaign detail route**
+  ```bash
+  node bin/generator.js client route --route="/campaigns/:id" --name="Campaign Detail" --auth --subscription
+  ```
+  - Campaign overview and settings
+  - Task timeline and execution status
+  - Performance metrics and charts
+  - Contact targeting and segmentation
 
-- [ ] OCR Capabilities
-  - [ ] Extract text from images within documents
-  - [ ] OCR language support
-  - [ ] OCR accuracy optimization
-  - [ ] Searchable PDF generation
+### 3.2 Contact Management UI
+- [ ] **Create contacts route**
+  ```bash
+  node bin/generator.js client route --route="/contacts" --name="Contacts" --auth --subscription
+  ```
+  - Contact list with search and filters
+  - Contact import/export functionality
+  - Contact list management
+  - Contact profile editing
 
-- [ ] Document Translation
-  - [ ] Translate content between languages
-  - [ ] Multiple language support
-  - [ ] Translation quality options
-  - [ ] Preserve document formatting during translation
+### 3.3 Template Management UI
+- [ ] **Create templates route**
+  ```bash
+  node bin/generator.js client route --route="/templates" --name="Templates" --auth --subscription
+  ```
+  - Template library by type
+  - Template editor with preview
+  - AI-powered template generation
+  - Merge tag management
 
-- [ ] Content Extraction
-  - [ ] Pull structured data from documents
-  - [ ] Data extraction templates
-  - [ ] Export extracted data to various formats
-  - [ ] Validation of extracted data
+### 3.4 Social Media Management UI
+- [ ] **Create social-accounts route**
+  ```bash
+  node bin/generator.js client route --route="/social-accounts" --name="Social Accounts" --auth --subscription
+  ```
+  - Connected accounts overview
+  - Account connection flow
+  - Post scheduling interface
+  - Engagement metrics dashboard
 
-- [ ] Document Comparison
-  - [ ] Compare different versions of documents
-  - [ ] Highlight differences
-  - [ ] Generate comparison reports
-  - [ ] Merge changes between documents
+### 3.5 Analytics Dashboard UI
+- [ ] **Create analytics route**
+  ```bash
+  node bin/generator.js client route --route="/analytics" --name="Analytics" --auth --subscription
+  ```
+  - Campaign performance dashboard
+  - Social media analytics
+  - ROI and conversion tracking
+  - Custom report generation
 
-## Performance Enhancements
+## Phase 4: Web Components Development
 
-- [ ] Priority Processing
-  - [ ] Faster queue processing for paying customers
-  - [ ] Multiple service tiers with different priorities
-  - [ ] Priority boost options for urgent jobs
-  - [ ] SLA guarantees for different tiers
+### 4.1 Campaign Components
+- [ ] **Create CampaignCard component**
+  ```bash
+  node bin/generator.js client component --name="CampaignCard" --tag="campaign-card" --description="Campaign overview card"
+  ```
 
-- [ ] Higher Rate Limits
-  - [ ] More API calls per minute/hour
-  - [ ] Customizable rate limits per customer
-  - [ ] Rate limit monitoring and alerts
-  - [ ] Automatic rate limit increases based on usage patterns
+- [ ] **Create CampaignWizard component**
+  ```bash
+  node bin/generator.js client component --name="CampaignWizard" --tag="campaign-wizard" --description="Multi-step campaign creation wizard"
+  ```
 
-- [ ] Larger Document Support
-  - [ ] Process bigger documents with more pages
-  - [ ] Optimize memory usage for large documents
-  - [ ] Chunked processing for very large documents
-  - [ ] Progress tracking for large document processing
+- [ ] **Create TaskTimeline component**
+  ```bash
+  node bin/generator.js client component --name="TaskTimeline" --tag="task-timeline" --description="Campaign task execution timeline"
+  ```
 
-- [ ] Dedicated Resources
-  - [ ] Better performance during peak times
-  - [ ] Resource allocation based on subscription tier
-  - [ ] Isolated processing for enterprise customers
-  - [ ] Performance monitoring and optimization
+### 4.2 Contact Components
+- [ ] **Create ContactTable component**
+  ```bash
+  node bin/generator.js client component --name="ContactTable" --tag="contact-table" --description="Sortable contact data table"
+  ```
 
-## Collaboration Features
+- [ ] **Create ContactImporter component**
+  ```bash
+  node bin/generator.js client component --name="ContactImporter" --tag="contact-importer" --description="CSV/Excel contact import interface"
+  ```
 
-- [ ] Shared Document Libraries
-  - [ ] Team access to generated documents
-  - [ ] Shared templates and assets
-  - [ ] Activity feed for team actions
-  - [ ] Document organization and categorization
+### 4.3 Template Components
+- [ ] **Create TemplateEditor component**
+  ```bash
+  node bin/generator.js client component --name="TemplateEditor" --tag="template-editor" --description="Rich text template editor with merge tags"
+  ```
 
-- [ ] Commenting System
-  - [ ] Add comments to documents
-  - [ ] Comment threading and replies
-  - [ ] Comment notifications
-  - [ ] Comment resolution tracking
+- [ ] **Create AITemplateGenerator component**
+  ```bash
+  node bin/generator.js client component --name="AITemplateGenerator" --tag="ai-template-generator" --description="AI-powered template generation interface"
+  ```
 
-- [ ] Collaborative Editing
-  - [ ] Multiple users editing document templates
-  - [ ] Real-time collaboration features
-  - [ ] Edit history and version control
-  - [ ] User presence indicators
+### 4.4 Social Media Components
+- [ ] **Create SocialPostComposer component**
+  ```bash
+  node bin/generator.js client component --name="SocialPostComposer" --tag="social-post-composer" --description="Multi-platform social media post composer"
+  ```
 
-- [ ] Role-Based Access
-  - [ ] Control who can generate different document types
-  - [ ] Custom roles and permissions
-  - [ ] Permission inheritance and overrides
-  - [ ] Access audit logging
+- [ ] **Create EngagementChart component**
+  ```bash
+  node bin/generator.js client component --name="EngagementChart" --tag="engagement-chart" --description="Social media engagement visualization"
+  ```
 
-## Analytics and Insights
+### 4.5 Analytics Components
+- [ ] **Create MetricsCard component**
+  ```bash
+  node bin/generator.js client component --name="MetricsCard" --tag="metrics-card" --description="Key performance indicator card"
+  ```
 
-- [ ] Usage Dashboard
-  - [ ] Visual reports of document generation activity
-  - [ ] Usage trends and patterns
-  - [ ] Export and sharing of reports
-  - [ ] Custom report generation
+- [ ] **Create CampaignChart component**
+  ```bash
+  node bin/generator.js client component --name="CampaignChart" --tag="campaign-chart" --description="Campaign performance visualization"
+  ```
 
-- [ ] Cost Estimation
-  - [ ] Predict usage costs based on patterns
-  - [ ] Budget alerts and notifications
-  - [ ] Cost optimization recommendations
-  - [ ] Cost allocation by department/project
+## Phase 5: Integration Modules
 
-- [ ] Conversion Analytics
-  - [ ] Insights into document types and sizes
-  - [ ] Conversion success/failure rates
-  - [ ] Performance metrics by document type
-  - [ ] Anomaly detection in conversion patterns
+### 5.1 Social Media Platform Integrations
+- [ ] **Twitter/X API Integration**
+  - OAuth 2.0 authentication
+  - Tweet posting and scheduling
+  - Engagement metrics collection
+  - Direct message automation
 
-- [ ] Performance Metrics
-  - [ ] Track generation times and optimization opportunities
-  - [ ] System load and capacity planning
-  - [ ] Bottleneck identification
-  - [ ] Performance benchmarking
+- [ ] **Facebook API Integration**
+  - Facebook Login integration
+  - Page post management
+  - Audience insights
+  - Ad campaign integration
 
-## Advanced Output Options
+- [ ] **LinkedIn API Integration**
+  - LinkedIn OAuth
+  - Professional post publishing
+  - Connection management
+  - Company page management
 
-- [ ] Multi-format Output
-  - [ ] Generate multiple formats from a single request
-  - [ ] Format-specific optimization options
-  - [ ] Consistent styling across formats
-  - [ ] Format conversion preferences
+- [ ] **Instagram API Integration**
+  - Instagram Basic Display API
+  - Story and post publishing
+  - Hashtag analytics
+  - Influencer identification
 
-- [ ] Quality Controls
-  - [ ] Fine-tune image quality, compression, and DPI
-  - [ ] File size optimization options
-  - [ ] Quality presets for different use cases
-  - [ ] Preview quality settings before generation
+### 5.2 Email Service Integrations
+- [ ] **SMTP Service Integration**
+  - Multiple SMTP provider support
+  - Email template rendering
+  - Bounce and complaint handling
+  - Delivery tracking
 
-- [ ] Specialized Formats
-  - [ ] Support for niche formats like LaTeX, XML, etc.
-  - [ ] Format-specific features and options
-  - [ ] Custom format converters
-  - [ ] Format validation and compliance checking
+- [ ] **Email Service Provider APIs**
+  - SendGrid integration
+  - Mailgun integration
+  - Amazon SES integration
+  - Postmark integration
 
-- [ ] Responsive Documents
-  - [ ] Documents optimized for different devices
-  - [ ] Responsive layout options
-  - [ ] Device-specific previews
-  - [ ] Accessibility enhancements
+### 5.3 SMS Service Integrations
+- [ ] **Twilio SMS Integration**
+  - SMS sending and scheduling
+  - Delivery status tracking
+  - Two-way SMS conversations
+  - Phone number management
 
-## User Experience Improvements
+- [ ] **Alternative SMS Providers**
+  - MessageBird integration
+  - Nexmo/Vonage integration
+  - AWS SNS integration
 
-- [ ] Document Preview
-  - [ ] Preview documents before finalizing
-  - [ ] Interactive preview with zoom and navigation
-  - [ ] Side-by-side comparison with source
-  - [ ] Annotation tools in preview mode
+### 5.4 AI Service Integrations
+- [ ] **OpenAI Integration**
+  - Content generation
+  - Template optimization
+  - Sentiment analysis
+  - Response automation
 
-- [ ] Version History
-  - [ ] Track changes across document versions
-  - [ ] Restore previous versions
-  - [ ] Version comparison
-  - [ ] Version notes and tagging
+- [ ] **Voice AI Integration**
+  - Text-to-speech for phone calls
+  - Speech recognition
+  - Conversation AI
+  - Call transcription
 
-- [ ] Advanced Search
-  - [ ] Full-text search across generated documents
-  - [ ] Search filters and facets
-  - [ ] Saved searches
-  - [ ] Search within document content
+## Phase 6: Advanced Features
 
-- [ ] Document Tagging
-  - [ ] Organize documents with custom tags and categories
-  - [ ] Tag-based filtering and searching
-  - [ ] Tag management and hierarchies
-  - [ ] Automatic tagging suggestions
+### 6.1 Automation & Workflows
+- [ ] **Workflow Engine**
+  - Visual workflow builder
+  - Trigger-based automation
+  - Conditional logic
+  - Multi-step sequences
 
-## Admin Features
+- [ ] **Lead Scoring System**
+  - Behavioral scoring
+  - Engagement tracking
+  - Predictive analytics
+  - Automated segmentation
 
-- [ ] User Management
-  - [ ] User registration and authentication
-  - [ ] User profile management
-  - [ ] User groups and teams
-  - [ ] User activity monitoring
+### 6.2 AI-Powered Features
+- [ ] **Content Optimization**
+  - A/B testing framework
+  - Performance prediction
+  - Best time to send optimization
+  - Subject line optimization
 
-- [ ] Subscription Management
-  - [ ] Subscription plan creation and editing
-  - [ ] Subscription status monitoring
-  - [ ] Manual subscription adjustments
-  - [ ] Subscription reporting
+- [ ] **Personalization Engine**
+  - Dynamic content insertion
+  - Behavioral personalization
+  - Predictive personalization
+  - Cross-channel consistency
 
-- [ ] System Configuration
-  - [ ] Global settings management
-  - [ ] Feature toggles and configuration
-  - [ ] Service integration settings
-  - [ ] Environment management
+### 6.3 Advanced Analytics
+- [ ] **Attribution Modeling**
+  - Multi-touch attribution
+  - Cross-channel tracking
+  - Customer journey mapping
+  - ROI calculation
 
-- [ ] Monitoring and Alerts
-  - [ ] System health monitoring
-  - [ ] Alert configuration and notification
-  - [ ] Performance threshold alerts
-  - [ ] Security incident detection
+- [ ] **Predictive Analytics**
+  - Churn prediction
+  - Lifetime value calculation
+  - Conversion probability
+  - Optimal timing prediction
 
-## Security
+## Phase 7: Testing & Quality Assurance
 
-- [ ] Security audit
-  - [ ] Regular security audits
-  - [ ] Security vulnerability scanning
-  - [ ] Security policy enforcement
-  - [ ] Security incident response
+### 7.1 Backend Testing
+- [ ] **Unit Tests for Controllers**
+  - Campaign management tests
+  - Contact management tests
+  - Template management tests
+  - Social media integration tests
 
-- [ ] Access Control
-  - [ ] User authentication and authorization
-  - [ ] Role-based access control
-  - [ ] Access control policies
-  - [ ] Access control reporting
-  - [ ] Access control monitoring
+- [ ] **Integration Tests**
+  - API endpoint testing
+  - Database integration tests
+  - External service integration tests
+  - Authentication and authorization tests
 
-- [ ] Data Security
-  - [ ] Data encryption at rest
-  - [ ] Data encryption in transit
-  - [ ] Data access controls
-  - [ ] Data retention policies
-  - [ ] Data export and import
-  - [ ] Data audit logging
-  - [ ] Data access monitoring
-  
+### 7.2 Frontend Testing
+- [ ] **Component Testing**
+  - Web component unit tests
+  - User interaction tests
+  - State management tests
+  - Responsive design tests
 
-  test\
+- [ ] **End-to-End Testing**
+  - Campaign creation flow
+  - Contact import process
+  - Social media posting
+  - Analytics dashboard
+
+### 7.3 Performance Testing
+- [ ] **Load Testing**
+  - Campaign execution performance
+  - Database query optimization
+  - API response times
+  - Concurrent user handling
+
+## Phase 8: Deployment & DevOps
+
+### 8.1 Infrastructure Setup
+- [ ] **Production Environment**
+  - Supabase production setup
+  - CDN configuration
+  - SSL certificate setup
+  - Domain configuration
+
+### 8.2 Monitoring & Logging
+- [ ] **Application Monitoring**
+  - Error tracking
+  - Performance monitoring
+  - User analytics
+  - System health checks
+
+### 8.3 Security Implementation
+- [ ] **Security Measures**
+  - API rate limiting
+  - Data encryption
+  - GDPR compliance
+  - Security headers
+
+## Development Guidelines
+
+### Using the Generator
+- Always use the generator for consistent code structure
+- Follow the established patterns for routes, controllers, and components
+- Leverage Supabase migrations for all database changes
+- Use the existing authentication and subscription middleware
+
+### Code Quality
+- Write tests for all new functionality
+- Follow ESLint and Prettier configurations
+- Use TypeScript-style JSDoc comments
+- Implement proper error handling
+
+### Database Best Practices
+- Use UUIDs for all primary keys
+- Implement proper foreign key constraints
+- Add appropriate indexes for performance
+- Use RLS (Row Level Security) for data protection
+
+### API Design
+- Follow RESTful conventions
+- Use consistent response formats
+- Implement proper HTTP status codes
+- Add comprehensive API documentation
+
+### Frontend Architecture
+- Use web components for reusable UI elements
+- Implement proper state management
+- Follow accessibility guidelines
+- Ensure responsive design
+
+## Priority Order
+1. **Phase 1**: Database schema (critical foundation)
+2. **Phase 2**: Core API endpoints (campaign and contact management)
+3. **Phase 3**: Basic frontend interfaces
+4. **Phase 4**: Essential web components
+5. **Phase 5**: Key integrations (email, SMS, basic social)
+6. **Phase 6**: Advanced features and AI
+7. **Phase 7**: Comprehensive testing
+8. **Phase 8**: Production deployment
+
+## Success Metrics
+- Campaign creation and execution functionality
+- Contact management and segmentation
+- Multi-channel outreach capabilities
+- Real-time analytics and reporting
+- User engagement and retention
+- Platform performance and reliability

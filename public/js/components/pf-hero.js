@@ -81,8 +81,8 @@ class PfHero extends HTMLElement {
       </style>
       
       <div class="hero">
-        <h2>Generate Documents from HTML with Ease</h2>
-        <p>Convert HTML content to PDF, Word, Excel, PowerPoint, and EPUB formats with a simple API call. Perfect for reports, invoices, presentations, and more.</p>
+        <h2>Supercharge Your Cold Outreach & Social Media Marketing</h2>
+        <p>Comprehensive platform for cold outreach via email, SMS, AI-powered phone calls, and social media automation. Scale your marketing efforts with intelligent automation and detailed analytics.</p>
         
         <div class="cta-buttons">
           <a href="/register" class="cta-primary">Get Started</a>

@@ -1,8 +1,34 @@
-# vibe-stack.dev
+# ColdFollow - Social Media Marketing Platform
 
 [![Crypto Payment](https://paybadge.profullstack.com/badge.svg)](https://paybadge.profullstack.com/?tickers=btc%2Ceth%2Csol%2Cusdc)
 
-vibe-stack.dev is a modern, AI-first framework built for rapid development of Progressive Web Apps (PWAs). Designed for versatility and speed, it provides an optimized boilerplate for creating, testing, and deploying full-stack applications across Windows, macOS, Linux, iOS, Android, desktop, and WebXR environments. With seamless integration to backend tools like Supabase, vibe-stack.dev empowers developers to prototype quickly and scale effortlessly, ensuring a smooth, consistent experience on any platform or device.
+ColdFollow is a comprehensive social media marketing platform designed for cold outreach and automated engagement. Built with modern web technologies, it provides powerful tools for email marketing, SMS campaigns, AI-powered phone calls, and social media management across multiple platforms.
+
+## Features
+
+### 🎯 Cold Outreach
+- **Email Marketing**: Automated email campaigns with personalization
+- **SMS Marketing**: Bulk SMS campaigns with scheduling and tracking
+- **AI Phone Calls**: Automated phone outreach using AI voice technology
+- **Social Media Outreach**: Direct messaging across platforms
+
+### 📱 Social Media Management
+- **Multi-Platform Posting**: Schedule and publish to multiple social networks
+- **Content Calendar**: Visual planning and scheduling interface
+- **Analytics Dashboard**: Track engagement, reach, and conversion metrics
+- **Automated Responses**: AI-powered social media interactions
+
+### 🤖 AI-Powered Features
+- **Content Generation**: AI-assisted content creation for posts and campaigns
+- **Lead Scoring**: Intelligent prospect qualification and prioritization
+- **Conversation AI**: Automated responses and engagement
+- **Performance Optimization**: AI-driven campaign optimization
+
+### 📊 Analytics & Reporting
+- **Campaign Performance**: Detailed metrics for all outreach channels
+- **ROI Tracking**: Revenue attribution and conversion tracking
+- **A/B Testing**: Split testing for campaigns and content
+- **Custom Reports**: Exportable reports and dashboards
 
 ## Automatic Deployment with GitHub Actions
 
@@ -87,12 +113,12 @@ This repository is configured to automatically deploy to the production server w
      - `bin/check-deployment.sh`
      - `bin/manual-deploy.sh`
 
-4. **Verify GitHub Actions is enabled**:
+5. **Verify GitHub Actions is enabled**:
    - Go to your repository on GitHub
    - Click on the "Actions" tab
    - Make sure Actions are enabled for the repository
 
-5. **Test the workflow**:
+6. **Test the workflow**:
    - Make a small change to your repository
    - Commit and push to master/main
    - Go to the "Actions" tab in your GitHub repository to monitor the workflow
@@ -173,56 +199,6 @@ This script will:
 
 This is the recommended way to deploy when you have database schema changes. The GitHub Actions workflow has been updated to use this script automatically, ensuring that migrations are applied during CI/CD deployments.
 
-#### CI/CD with Migrations
-
-The GitHub Actions workflow has been configured to:
-1. Install the Supabase CLI and set up the project
-2. Run migrations as part of the deployment process
-
-This ensures that your database schema is always in sync with your code. The workflow uses the same `supabase-db.sh` script that you can use locally.
-
-### Test Script
-
-The test script creates a timestamped file on the server to verify deployment:
-
-```bash
-./bin/test-github-actions.sh
-```
-
-This is automatically run by both GitHub Actions and the manual deployment script.
-
-### Check GitHub Actions Status
-
-To check the status of your GitHub Actions workflows:
-
-```bash
-./bin/check-github-actions.sh
-```
-
-This script will:
-- Determine your GitHub repository from git remote
-- Check workflow status using GitHub CLI (if installed)
-- Fall back to using curl with a GITHUB_TOKEN
-- Show recent workflow runs and their status
-
-This is particularly useful for diagnosing issues with GitHub Actions not running or failing.
-
-### Test File for Triggering Workflows
-
-The repository includes a test file that can be modified to trigger a workflow run:
-
-```
-github-actions-test.txt
-```
-
-To trigger a new workflow run:
-1. Edit the file
-2. Increment the "Deployment test" number
-3. Commit and push to master/main
-4. Check the Actions tab on GitHub to see if the workflow runs
-
-This provides a simple way to test if GitHub Actions is properly configured without making significant code changes.
-
 ## Database Setup
 
 This project uses Supabase as its database. You need to set up the required tables before the application will work correctly.
@@ -245,15 +221,16 @@ This project uses Supabase as its database. You need to set up the required tabl
 ### Required Tables
 
 The application requires the following tables:
-- `users` - For storing user information
-- `api_keys` - For storing API keys
+- `users` - For storing user information and profiles
+- `api_keys` - For storing API keys for external integrations
 - `subscriptions` - For storing subscription information
-- `payments` - For recording payment transactions
-- `document_generations` - For storing document generation history
+- `campaigns` - For storing marketing campaign data
+- `contacts` - For storing prospect and customer information
+- `social_accounts` - For storing connected social media accounts
+- `scheduled_posts` - For storing scheduled social media content
+- `outreach_sequences` - For storing automated outreach workflows
 
 These tables are defined in the Supabase migrations in the `supabase/migrations` directory.
-
-If you're experiencing 500 Internal Server Error when using the subscription API, it's likely because these tables don't exist in your Supabase database.
 
 ### Database Migrations with Supabase CLI
 
@@ -295,153 +272,173 @@ Available commands:
 
 3. **Create New Migration** - Create a new migration file:
    ```bash
-   ./bin/supabase-db.sh new add_user_preferences
+   ./bin/supabase-db.sh new add_campaign_analytics
    ```
 
 **Note:** You need to add `SUPABASE_DB_PASSWORD` to your .env file. This is your database password from the Supabase dashboard.
 
-#### Migration Files
+## API Integrations
 
-Migration files are stored in the `supabase/migrations` directory with timestamp prefixes. Here's an example migration file:
+ColdFollow integrates with various third-party services to provide comprehensive marketing capabilities:
 
-```sql
--- Add user_preferences table
-CREATE TABLE IF NOT EXISTS user_preferences (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  theme TEXT DEFAULT 'light',
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+### Email Services
+- **Mailgun**: For transactional and marketing emails
+- **SendGrid**: Alternative email service provider
+- **SMTP**: Custom SMTP server support
 
--- Create index on user_id
-CREATE INDEX IF NOT EXISTS idx_user_preferences_user_id ON user_preferences(user_id);
+### SMS Services
+- **Twilio**: For SMS campaigns and notifications
+- **Plivo**: Alternative SMS service provider
+
+### Social Media APIs
+- **Twitter/X API**: For posting and engagement
+- **LinkedIn API**: For professional networking outreach
+- **Facebook/Meta API**: For Facebook and Instagram posting
+- **TikTok API**: For short-form video content
+
+### AI Services
+- **OpenAI**: For content generation and conversation AI
+- **ElevenLabs**: For AI voice generation in phone calls
+- **Anthropic**: Alternative AI service for content creation
+
+### Analytics
+- **Google Analytics**: For website traffic tracking
+- **Facebook Pixel**: For social media conversion tracking
+- **Custom Analytics**: Built-in analytics dashboard
+
+## Environment Variables
+
+Create a `.env` file with the following variables:
+
+```env
+# Database
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+SUPABASE_DB_PASSWORD=your_db_password
+
+# Email Services
+MAILGUN_API_KEY=your_mailgun_key
+MAILGUN_DOMAIN=your_domain
+FROM_EMAIL=hello@coldfollow.com
+
+# SMS Services
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_token
+TWILIO_PHONE_NUMBER=your_twilio_number
+
+# AI Services
+OPENAI_API_KEY=your_openai_key
+ELEVENLABS_API_KEY=your_elevenlabs_key
+
+# Social Media APIs
+TWITTER_API_KEY=your_twitter_key
+TWITTER_API_SECRET=your_twitter_secret
+LINKEDIN_CLIENT_ID=your_linkedin_id
+LINKEDIN_CLIENT_SECRET=your_linkedin_secret
+
+# Payment Processing
+STRIPE_SECRET_KEY=your_stripe_secret
+STRIPE_PUBLISHABLE_KEY=your_stripe_publishable
+
+# Application
+PORT=3000
+NODE_ENV=production
+API_BASE_URL=https://coldfollow.com
 ```
-For more information on Supabase migrations, see the [Supabase CLI documentation](https://supabase.com/docs/reference/cli/supabase-db-push).
 
-## Supabase Storage Configuration
+## Getting Started
 
-This application uses Supabase Storage to store generated documents (PDFs, DOCs, etc.). The application requires a properly configured storage bucket to function correctly.
-
-### Storage Bucket Setup
-
-The application uses a storage bucket named `documents` to store all generated files. During deployment, the `setup-supabase-storage.js` script is automatically run to ensure this bucket exists:
-
-```bash
-node bin/setup-supabase-storage.js
-```
-
-This script:
-1. Checks if the `documents` bucket exists
-2. Creates it if it doesn't exist
-3. Configures appropriate permissions
-4. Tests the bucket with a sample upload
-
-### Manual Bucket Creation
-
-If you need to manually create the storage bucket:
-
-1. Go to the Supabase dashboard
-2. Navigate to Storage
-3. Create a new bucket named `documents`
-4. Set it to private (not public)
-5. Configure RLS policies to allow authenticated users to access their own documents
-
-### Authentication and Storage
-
-The application uses Supabase's service role key for storage operations to ensure reliability even when user JWT tokens expire. This approach:
-
-1. Prevents "Bucket not found" errors
-2. Handles JWT token expiration gracefully
-3. Associates documents with existing users in the database
-
-Note: The application only associates documents with existing users and does not create new users. If a user doesn't exist in the database, the document will still be generated but won't be recorded in the document history.
-
-## Puppeteer Configuration
-
-This application uses Puppeteer for HTML to PDF conversion. Puppeteer requires a Chrome executable to function properly. The application is configured to automatically detect the appropriate Chrome path based on the environment.
-
-### Chrome Path Detection
-
-The application uses the following strategy to determine the Chrome executable path:
-
-1. **Environment Variable**: If `PUPPETEER_EXECUTABLE_PATH` is set in the `.env` file, it will be used directly.
-2. **Auto-detection**: If no environment variable is set, the application will attempt to detect the Chrome path based on the current user:
-   - Production path (ubuntu user): `/home/ubuntu/.cache/puppeteer/chrome/linux-135.0.7049.114/chrome-linux64/chrome`
-   - Local development path: `/home/username/.cache/puppeteer/chrome/linux-135.0.7049.114/chrome-linux64/chrome`
-
-### Deployment Configuration
-
-During deployment, the `setup-puppeteer.sh` script is automatically run to configure the Chrome path in the production environment. This script:
-
-1. Detects the current user and environment
-2. Checks if Chrome exists at the expected path
-3. Updates the `.env` file with the correct `PUPPETEER_EXECUTABLE_PATH` if needed
-
-### Manual Configuration
-
-If you need to manually configure the Chrome path:
-
-1. Find your Chrome executable path:
+1. **Clone the repository**:
    ```bash
-   find ~/.cache/puppeteer -name chrome
+   git clone https://github.com/your-username/coldfollow-web.git
+   cd coldfollow-web
    ```
 
-2. Add the path to your `.env` file:
+2. **Install dependencies**:
+   ```bash
+   pnpm install
    ```
-   PUPPETEER_EXECUTABLE_PATH=/path/to/chrome
+
+3. **Set up environment variables**:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your actual values
    ```
 
-3. Restart the application
+4. **Set up the database**:
+   ```bash
+   ./bin/supabase-db.sh setup
+   ./bin/supabase-db.sh migrate
+   ```
 
-### Testing PDF Generation
+5. **Start the development server**:
+   ```bash
+   pnpm dev
+   ```
 
-You can test PDF generation with the correct Chrome path using:
+6. **Open your browser**:
+   Navigate to `http://localhost:3000`
 
-```bash
-node scripts/test-pdf-generation.js
-```
+## Development
 
-This script will generate a test PDF and output the detected Chrome path.
-
-## Frontend Development
-
-This application uses a custom SPA (Single Page Application) router for frontend navigation. The router handles page transitions, authentication checks, and subscription requirements.
-
-### Adding New Routes
+### Adding New Features
 
 For detailed instructions on how to add new routes, pages, or components to the application, see the [Generator Guide](README-generator.md).
 
 This guide covers:
-- Creating HTML view files
-- Setting up page initializers
-- Adding routes to the router
-- Handling authentication and subscription requirements
-- Best practices for route management
+- Creating marketing campaign interfaces
+- Setting up social media integrations
+- Adding new outreach channels
+- Implementing analytics dashboards
+- Best practices for feature development
 
-We also provide a template-based generator script that automates the process of creating various components:
+We provide a template-based generator script that automates the process of creating various components:
 
 ```bash
-# Generate a client-side route
-./bin/generator.js client route --route="/my-feature" --name="My Feature" [--auth] [--subscription]
+# Generate a client-side route for campaigns
+./bin/generator.js client route --route="/campaigns" --name="Campaigns" --auth --subscription
 
-# Generate a server-side route
-./bin/generator.js server route --path="/api/v1/users" --controller="User" --method="get"
+# Generate a server-side API route
+./bin/generator.js server route --path="/api/v1/campaigns" --controller="Campaign" --method="post"
 
 # Generate a database migration
-./bin/generator.js server migration --name="add_user_fields"
+./bin/generator.js server migration --name="add_campaign_analytics"
 
 # Generate a controller
-./bin/generator.js server controller --name="User"
+./bin/generator.js server controller --name="Campaign"
 ```
 
-This script creates all the necessary files and code in one step using templates stored in the `templates` directory. The template-based approach makes it easy to customize the generated code without modifying the generator script itself.
+### Testing
 
-Key features of the generator:
-- Uses external templates for all generated files
-- Supports both client-side and server-side components
-- Clearly separates up and down migrations in SQL files
-- Maintains consistent code style across generated files
+Run the test suite:
 
-For detailed usage instructions and information about customizing templates, see the [Generator Guide](README-generator.md).
+```bash
+pnpm test
+```
 
+### Building for Production
+
+Build the application:
+
+```bash
+pnpm build
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/new-feature`
+3. Make your changes and commit: `git commit -am 'Add new feature'`
+4. Push to the branch: `git push origin feature/new-feature`
+5. Submit a pull request
+
+## License
+
+This project is licensed under the ISC License - see the LICENSE file for details.
+
+## Support
+
+For support and questions:
+- Email: support@coldfollow.com
+- Documentation: https://docs.coldfollow.com
+- GitHub Issues: https://github.com/your-username/coldfollow-web/issues

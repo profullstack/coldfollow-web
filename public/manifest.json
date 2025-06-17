@@ -1,7 +1,7 @@
 {
   "name": "coldfollow.com",
   "short_name": "coldfollow",
-  "description": "Generate PDFs, Word documents, Excel spreadsheets, PowerPoint presentations, and EPUB e-books from HTML content",
+  "description": "Comprehensive social media marketing platform for cold outreach via email, SMS, AI-powered phone calls, and social media automation",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
