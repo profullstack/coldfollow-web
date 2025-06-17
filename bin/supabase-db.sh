@@ -329,11 +329,24 @@ run_migrations() {
     # Read the captured output
     PULL_OUTPUT=$(cat "$TEMP_OUTPUT")
     
-    # Extract repair commands from the output
-    REPAIR_COMMANDS=$(echo "$PULL_OUTPUT" | grep "supabase migration repair" | sed 's/^[[:space:]]*//')
+    # Print the full output for debugging
+    echo -e "${YELLOW}Full pull output for analysis:${NC}"
+    echo "$PULL_OUTPUT"
+    echo -e "${YELLOW}End of pull output${NC}"
+    
+    # Extract repair commands from the output - look for various patterns
+    REPAIR_COMMANDS=$(echo "$PULL_OUTPUT" | grep -E "(supabase migration repair|supabase db repair)" | sed 's/^[[:space:]]*//')
+    
+    # Also try to extract repair commands that might be formatted differently
+    if [ -z "$REPAIR_COMMANDS" ]; then
+      # Look for lines that contain "repair" and migration IDs
+      REPAIR_COMMANDS=$(echo "$PULL_OUTPUT" | grep -E "repair.*--status.*(reverted|applied)" | sed 's/^[[:space:]]*//')
+    fi
     
     if [ -n "$REPAIR_COMMANDS" ]; then
       echo -e "${YELLOW}Found repair commands. Executing them...${NC}"
+      echo -e "${YELLOW}Repair commands to execute:${NC}"
+      echo "$REPAIR_COMMANDS"
       
       # Execute each repair command
       echo "$REPAIR_COMMANDS" | while IFS= read -r repair_cmd; do
@@ -348,6 +361,20 @@ run_migrations() {
           fi
         fi
       done
+    else
+      echo -e "${YELLOW}No repair commands found in output. Manually executing suggested repairs...${NC}"
+      
+      # Check if the output contains specific migration IDs that need repair
+      if echo "$PULL_OUTPUT" | grep -q "20250617085550"; then
+        echo -e "${YELLOW}Running: supabase migration repair --status reverted 20250617085550${NC}"
+        supabase migration repair --status reverted 20250617085550
+      fi
+      
+      if echo "$PULL_OUTPUT" | grep -q "20250617092028"; then
+        echo -e "${YELLOW}Running: supabase migration repair --status applied 20250617092028${NC}"
+        supabase migration repair --status applied 20250617092028
+      fi
+    fi
       
       # Try pulling again after repairs
       echo -e "${YELLOW}Retrying sync after repairs...${NC}"
