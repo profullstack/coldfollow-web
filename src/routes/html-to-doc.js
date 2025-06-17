@@ -10,17 +10,20 @@ import { errorUtils } from '../utils/error-utils.js';
  */
 export async function htmlToDocHandler(c) {
   try {
-    const { html, filename = 'document.doc', store = false } = c.get('body');
+    const { html, filename = 'document.docx', store = false } = c.get('body');
     
-    // Generate Word document from HTML
-    const docBuffer = docService.generateDoc(html);
+    // Ensure filename has the correct extension
+    const finalFilename = filename.endsWith('.docx') ? filename : filename.replace(/\.doc$|$/, '.docx');
+    
+    // Generate Word document from HTML - now returns a Promise
+    const docBuffer = await docService.generateDoc(html);
     
     // Store the document in Supabase if requested
     if (store) {
       try {
         // Extract metadata from the request
         const metadata = {
-          contentType: 'application/msword',
+          contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
           userAgent: c.req.header('user-agent'),
           timestamp: new Date().toISOString()
         };
@@ -29,7 +32,7 @@ export async function htmlToDocHandler(c) {
         const userEmail = c.get('userEmail');
         
         // Store the document with user association and original HTML content
-        const result = await storageService.storeDoc(docBuffer, filename, metadata, userEmail, html);
+        const result = await storageService.storeDoc(docBuffer, finalFilename, metadata, userEmail, html);
         
         // Add storage information to the response headers
         c.header('X-Storage-Path', result.path);
@@ -39,13 +42,14 @@ export async function htmlToDocHandler(c) {
       }
     }
     
-    // Set response headers
-    c.header('Content-Type', 'application/msword');
-    c.header('Content-Disposition', `attachment; filename="${filename}"`);
+    // Set response headers for .docx format
+    c.header('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    c.header('Content-Disposition', `attachment; filename="${finalFilename}"`);
     
     // Return the document buffer
     return c.body(docBuffer);
   } catch (error) {
+    console.error('Error in HTML to DOC conversion:', error);
     return errorUtils.handleError(error, c);
   }
 }

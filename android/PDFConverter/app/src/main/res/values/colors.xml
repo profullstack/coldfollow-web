@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default Android colors (required by the system) -->
+    <color name="purple_200">#e54d5d</color>
+    <color name="purple_500">#e02337</color>
+    <color name="purple_700">#c01d2f</color>
+    <color name="teal_200">#fd9c6a</color>
+    <color name="teal_700">#e66a2c</color>
+    <color name="black">#111827</color>
+    <color name="white">#ffffff</color>
+    
+    <!-- Base colors from theme.css -->
+    <color name="primary">#e02337</color>
+    <color name="primary_light">#e54d5d</color>
+    <color name="primary_dark">#c01d2f</color>
+    <color name="secondary">#fc7e3e</color>
+    <color name="secondary_light">#fd9c6a</color>
+    <color name="secondary_dark">#e66a2c</color>
+    <color name="accent">#ba18aa</color>
+    
+    <!-- Neutral colors -->
+    <color name="background">#ffffff</color>
+    <color name="surface">#f9fafb</color>
+    <color name="surface_variant">#f3f4f6</color>
+    <color name="border">#e5e7eb</color>
+    <color name="divider">#d1d5db</color>
+    
+    <!-- Text colors -->
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#4b5563</color>
+    <color name="text_tertiary">#6b7280</color>
+    <color name="text_disabled">#9ca3af</color>
+    <color name="text_on_primary">#ffffff</color>
+    <color name="text_on_secondary">#ffffff</color>
+    
+    <!-- Status colors -->
+    <color name="success">#10b981</color>
+    <color name="warning">#fc7e3e</color>
+    <color name="error">#e02337</color>
+    <color name="info">#ba18aa</color>
+</resources>

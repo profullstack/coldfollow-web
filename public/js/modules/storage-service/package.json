@@ -1,0 +1,55 @@
+{
+  "name": "@profullstack/storage-service",
+  "version": "0.4.0",
+  "description": "Flexible storage service abstraction for file storage, retrieval, and metadata management",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./memory": "./dist/adapters/memory.js",
+    "./filesystem": "./dist/adapters/filesystem.js",
+    "./s3": "./dist/adapters/s3.js",
+    "./supabase": "./dist/adapters/supabase.js"
+  },
+  "scripts": {
+    "build": "mkdir -p dist && cp -r src/* dist/",
+    "test": "vitest run --bail 1",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "husky": "^9.0.11",
+    "vitest": "^1.3.0"
+  },
+  "keywords": [
+    "storage",
+    "file",
+    "s3",
+    "supabase",
+    "filesystem",
+    "upload",
+    "download",
+    "metadata"
+  ],
+  "author": "ProFullStack",
+  "license": "MIT",
+  "dependencies": {
+    "mime-types": "^2.1.35",
+    "uuid": "^11.1.0"
+  },
+  "optionalDependencies": {
+    "@aws-sdk/client-s3": "^3.540.0",
+    "@supabase/supabase-js": "^2.49.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/profullstack/storage-service"
+  },
+  "bugs": {
+    "url": "https://github.com/profullstack/storage-service/issues"
+  },
+  "homepage": "https://github.com/profullstack/storage-service#readme"
+}

@@ -81,7 +81,8 @@ export class ApiClient {
    * @param {boolean} store - Whether to store the document in Supabase
    * @returns {Promise<Blob>} - Word document blob
    */
-  static async htmlToDoc(html, filename = 'document.doc', store = false) {
+  static async htmlToDoc(html, filename = 'document.docx', store = false) {
+    console.log('Sending HTML to DOC conversion request with filename:', filename);
     return this.fetchBinaryResponse(`${this.baseUrl}/html-to-doc`, { 
       html, 
       filename, 

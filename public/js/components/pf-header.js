@@ -593,6 +593,7 @@ class PfHeader extends HTMLElement {
             </svg>
           </button>
           <div class="dropdown-menu">
+            <a href="/manage-subscription" class="dropdown-item">Manage Subscription</a>
             <a href="/settings" class="dropdown-item">Settings</a>
             <a href="#" class="dropdown-item logout-button">Logout</a>
           </div>
@@ -651,6 +652,7 @@ class PfHeader extends HTMLElement {
         if (!mobileMenu.querySelector('.mobile-settings-link')) {
           try {
             const mobileUserLinksHtml = `
+              <a href="/manage-subscription" class="nav-link mobile-subscription-link">Manage Subscription</a>
               <a href="/settings" class="nav-link mobile-settings-link">Settings</a>
               <a href="#" class="nav-link mobile-logout-link">Logout</a>
             `;

@@ -1,0 +1,157 @@
+{
+  "app": {
+    "name": "Beispiel-App",
+    "description": "Eine Beispielanwendung mit @profullstack/localizer"
+  },
+  "navigation": {
+    "home": "Startseite",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "dashboard": "Dashboard",
+    "settings": "Einstellungen",
+    "logout": "Abmelden"
+  },
+  "home": {
+    "welcome": "Willkommen bei Beispiel-App",
+    "tagline": "Ein einfaches Beispiel für Internationalisierung",
+    "get_started": "Loslegen",
+    "learn_more": "Mehr erfahren"
+  },
+  "about": {
+    "title": "Über uns",
+    "description": "Wir sind ein Team von Entwicklern, die leidenschaftlich gerne großartige Software erstellen.",
+    "mission": "Unsere Mission ist es, das Web für alle zugänglicher zu machen.",
+    "team": {
+      "title": "Unser Team",
+      "description": "Lernen Sie die Menschen hinter Beispiel-App kennen"
+    }
+  },
+  "contact": {
+    "title": "Kontakt",
+    "description": "Wir würden gerne von Ihnen hören!",
+    "form": {
+      "name": "Name",
+      "email": "E-Mail",
+      "message": "Nachricht",
+      "submit": "Nachricht senden"
+    },
+    "success": "Ihre Nachricht wurde erfolgreich gesendet!",
+    "error": "Beim Senden Ihrer Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+  },
+  "auth": {
+    "login": {
+      "title": "Anmelden",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "submit": "Anmelden",
+      "forgot_password": "Passwort vergessen?",
+      "no_account": "Haben Sie noch kein Konto?",
+      "register": "Registrieren"
+    },
+    "register": {
+      "title": "Registrieren",
+      "name": "Name",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "confirm_password": "Passwort bestätigen",
+      "submit": "Registrieren",
+      "has_account": "Haben Sie bereits ein Konto?",
+      "login": "Anmelden"
+    },
+    "forgot_password": {
+      "title": "Passwort vergessen",
+      "email": "E-Mail",
+      "submit": "Passwort zurücksetzen",
+      "back_to_login": "Zurück zur Anmeldung"
+    },
+    "reset_password": {
+      "title": "Passwort zurücksetzen",
+      "password": "Neues Passwort",
+      "confirm_password": "Neues Passwort bestätigen",
+      "submit": "Passwort zurücksetzen"
+    }
+  },
+  "dashboard": {
+    "welcome": "Willkommen, ${name}!",
+    "stats": {
+      "title": "Ihre Statistiken",
+      "visits": "Besuche",
+      "orders": "Bestellungen",
+      "revenue": "Umsatz"
+    },
+    "recent_activity": {
+      "title": "Neueste Aktivitäten",
+      "no_activity": "Keine neueren Aktivitäten"
+    }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "profile": {
+      "title": "Profil",
+      "name": "Name",
+      "email": "E-Mail",
+      "bio": "Bio",
+      "save": "Änderungen speichern"
+    },
+    "account": {
+      "title": "Konto",
+      "change_password": "Passwort ändern",
+      "delete_account": "Konto löschen",
+      "delete_confirm": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+    "preferences": {
+      "title": "Präferenzen",
+      "language": "Sprache",
+      "theme": "Thema",
+      "notifications": "Benachrichtigungen"
+    }
+  },
+  "common": {
+    "loading": "Wird geladen...",
+    "error": "Ein Fehler ist aufgetreten",
+    "success": "Erfolg!",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "view": "Ansehen",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "sort": "Sortieren",
+    "page": "Seite ${page} von ${total}",
+    "items_per_page": "Elemente pro Seite",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "first": "Erste",
+    "last": "Letzte"
+  },
+  "errors": {
+    "not_found": "404 - Seite nicht gefunden",
+    "not_found_message": "Die gesuchte Seite existiert nicht.",
+    "server_error": "500 - Serverfehler",
+    "server_error_message": "Auf unserer Seite ist etwas schief gelaufen. Bitte versuchen Sie es später erneut.",
+    "unauthorized": "401 - Nicht autorisiert",
+    "unauthorized_message": "Sie sind nicht berechtigt, auf diese Seite zuzugreifen.",
+    "forbidden": "403 - Verboten",
+    "forbidden_message": "Sie haben keine Berechtigung, auf diese Ressource zuzugreifen."
+  },
+  "validation": {
+    "required": "${field} ist erforderlich",
+    "email": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "min_length": "${field} muss mindestens ${length} Zeichen lang sein",
+    "max_length": "${field} darf höchstens ${length} Zeichen lang sein",
+    "password_match": "Passwörter stimmen nicht überein",
+    "invalid_format": "Ungültiges Format"
+  },
+  "dates": {
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "tomorrow": "Morgen",
+    "days_ago": "vor ${count} Tag",
+    "days_ago_plural": "vor ${count} Tagen",
+    "days_from_now": "in ${count} Tag",
+    "days_from_now_plural": "in ${count} Tagen"
+  }
+}

@@ -1,0 +1,8 @@
+This is a placeholder for the app icon.
+
+For production use, you should replace this with proper icon files:
+- icon.png (512x512 PNG for Linux)
+- icon.ico (Windows icon)
+- icon.icns (macOS icon)
+
+You can use tools like https://convertio.co/ to convert from PNG to ICO and ICNS formats.

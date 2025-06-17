@@ -71,5 +71,89 @@ export const validators = {
     if (!body) return 'Request body is required';
     if (!body.markdown) return 'Markdown content is required';
     return true;
+  },
+  
+  /**
+   * Validate PDF file content in request body
+   * @param {Object} body - Request body
+   * @returns {boolean|string} - True if valid, error message if invalid
+   */
+  pdfFileContent(body) {
+    if (!body) return 'Request body is required';
+    if (!body.file) return 'PDF file content is required';
+    if (!body.filename) return 'Filename is required';
+    return true;
+  },
+  
+  /**
+   * Validate DOCX file content in request body
+   * @param {Object} body - Request body
+   * @returns {boolean|string} - True if valid, error message if invalid
+   */
+  docxFileContent(body) {
+    if (!body) return 'Request body is required';
+    if (!body.file) return 'DOCX file content is required';
+    if (!body.filename) return 'Filename is required';
+    return true;
+  },
+  
+  /**
+   * Validate DOC file content in request body
+   * @param {Object} body - Request body
+   * @returns {boolean|string} - True if valid, error message if invalid
+   */
+  docFileContent(body) {
+    if (!body) return 'Request body is required';
+    if (!body.file) return 'DOC file content is required';
+    if (!body.filename) return 'Filename is required';
+    return true;
+  },
+  
+  /**
+   * Validate EPUB file content in request body
+   * @param {Object} body - Request body
+   * @returns {boolean|string} - True if valid, error message if invalid
+   */
+  epubFileContent(body) {
+    if (!body) return 'Request body is required';
+    if (!body.file) return 'EPUB file content is required';
+    if (!body.filename) return 'Filename is required';
+    return true;
+  },
+  
+  /**
+   * Validate text file content in request body
+   * @param {Object} body - Request body
+   * @returns {boolean|string} - True if valid, error message if invalid
+   */
+  textFileContent(body) {
+    if (!body) return 'Request body is required';
+    if (!body.file) return 'Text file content is required';
+    if (!body.filename) return 'Filename is required';
+    return true;
+  },
+  
+  /**
+   * Validate PPTX file content in request body
+   * @param {Object} body - Request body
+   * @returns {boolean|string} - True if valid, error message if invalid
+   */
+  pptxFileContent(body) {
+    if (!body) return 'Request body is required';
+    if (!body.file) return 'PPTX file content is required';
+    if (!body.filename) return 'Filename is required';
+    return true;
+  },
+  
+  /**
+   * Validate XLSX file content in request body
+   * @param {Object} body - Request body
+   * @returns {boolean|string} - True if valid, error message if invalid
+   */
+  xlsxFileContent(body) {
+    if (!body) return 'Request body is required';
+    if (!body.file) return 'XLSX file content is required';
+    if (!body.filename) return 'Filename is required';
+    return true;
   }
 };

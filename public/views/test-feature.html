@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Feature</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <div class="test-feature-container">
+    <h1 data-i18n="test_feature.title">Test Feature</h1>
+    <p data-i18n="test_feature.description">This is the Test Feature page.</p>
+    
+    <div class="test-feature-content">
+      <!-- Your content here -->
+      <form id="test-feature-form">
+        <div class="form-group">
+          <label for="name" data-i18n="test_feature.name_label">Name:</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email" data-i18n="test_feature.email_label">Email:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="message" data-i18n="test_feature.message_label">Message:</label>
+          <textarea id="message" name="message" rows="4" required></textarea>
+        </div>
+        
+        <button type="submit" data-i18n="test_feature.submit_button">Submit</button>
+      </form>
+      
+      <div id="form-result" class="form-result" style="display: none;"></div>
+    </div>
+  </div>
+</body>
+</html>

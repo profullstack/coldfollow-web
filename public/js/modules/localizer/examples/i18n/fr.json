@@ -1,0 +1,157 @@
+{
+  "app": {
+    "name": "Application Exemple",
+    "description": "Une application exemple utilisant @profullstack/localizer"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "contact": "Contact",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "dashboard": "Tableau de bord",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
+  },
+  "home": {
+    "welcome": "Bienvenue sur Application Exemple",
+    "tagline": "Un exemple simple d'internationalisation",
+    "get_started": "Commencer",
+    "learn_more": "En savoir plus"
+  },
+  "about": {
+    "title": "À propos de nous",
+    "description": "Nous sommes une équipe de développeurs passionnés par la création de logiciels de qualité.",
+    "mission": "Notre mission est de rendre le web plus accessible à tous.",
+    "team": {
+      "title": "Notre équipe",
+      "description": "Rencontrez les personnes derrière Application Exemple"
+    }
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "description": "Nous serions ravis d'avoir de vos nouvelles !",
+    "form": {
+      "name": "Nom",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Envoyer le message"
+    },
+    "success": "Votre message a été envoyé avec succès !",
+    "error": "Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer."
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "email": "Email",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "forgot_password": "Mot de passe oublié ?",
+      "no_account": "Vous n'avez pas de compte ?",
+      "register": "S'inscrire"
+    },
+    "register": {
+      "title": "Inscription",
+      "name": "Nom",
+      "email": "Email",
+      "password": "Mot de passe",
+      "confirm_password": "Confirmer le mot de passe",
+      "submit": "S'inscrire",
+      "has_account": "Vous avez déjà un compte ?",
+      "login": "Se connecter"
+    },
+    "forgot_password": {
+      "title": "Mot de passe oublié",
+      "email": "Email",
+      "submit": "Réinitialiser le mot de passe",
+      "back_to_login": "Retour à la connexion"
+    },
+    "reset_password": {
+      "title": "Réinitialiser le mot de passe",
+      "password": "Nouveau mot de passe",
+      "confirm_password": "Confirmer le nouveau mot de passe",
+      "submit": "Réinitialiser le mot de passe"
+    }
+  },
+  "dashboard": {
+    "welcome": "Bienvenue, ${name} !",
+    "stats": {
+      "title": "Vos statistiques",
+      "visits": "Visites",
+      "orders": "Commandes",
+      "revenue": "Revenus"
+    },
+    "recent_activity": {
+      "title": "Activité récente",
+      "no_activity": "Aucune activité récente"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "profile": {
+      "title": "Profil",
+      "name": "Nom",
+      "email": "Email",
+      "bio": "Bio",
+      "save": "Enregistrer les modifications"
+    },
+    "account": {
+      "title": "Compte",
+      "change_password": "Changer le mot de passe",
+      "delete_account": "Supprimer le compte",
+      "delete_confirm": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action ne peut pas être annulée."
+    },
+    "preferences": {
+      "title": "Préférences",
+      "language": "Langue",
+      "theme": "Thème",
+      "notifications": "Notifications"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "success": "Succès !",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "page": "Page ${page} sur ${total}",
+    "items_per_page": "Éléments par page",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "first": "Premier",
+    "last": "Dernier"
+  },
+  "errors": {
+    "not_found": "404 - Page non trouvée",
+    "not_found_message": "La page que vous recherchez n'existe pas.",
+    "server_error": "500 - Erreur serveur",
+    "server_error_message": "Quelque chose s'est mal passé de notre côté. Veuillez réessayer plus tard.",
+    "unauthorized": "401 - Non autorisé",
+    "unauthorized_message": "Vous n'êtes pas autorisé à accéder à cette page.",
+    "forbidden": "403 - Interdit",
+    "forbidden_message": "Vous n'avez pas la permission d'accéder à cette ressource."
+  },
+  "validation": {
+    "required": "${field} est requis",
+    "email": "Veuillez entrer une adresse email valide",
+    "min_length": "${field} doit comporter au moins ${length} caractères",
+    "max_length": "${field} doit comporter au maximum ${length} caractères",
+    "password_match": "Les mots de passe ne correspondent pas",
+    "invalid_format": "Format invalide"
+  },
+  "dates": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "tomorrow": "Demain",
+    "days_ago": "Il y a ${count} jour",
+    "days_ago_plural": "Il y a ${count} jours",
+    "days_from_now": "Dans ${count} jour",
+    "days_from_now_plural": "Dans ${count} jours"
+  }
+}

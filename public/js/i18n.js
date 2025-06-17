@@ -8,8 +8,14 @@
 // In production, this would be imported from the npm package
 // import { localizer, _t } from '@profullstack/localizer';
 // For development, we'll use our deps.js file
-import { localizer, _t } from './deps.js';
-import defaultStateManager from './state-manager.js';
+import { localizer, _t, createStore } from './deps.js';
+
+// Create a store for i18n state
+const i18nStore = createStore('i18n', {
+  currentLanguage: 'en',
+  availableLanguages: ['en', 'fr', 'de', 'uk', 'ru', 'pl', 'zh', 'ja', 'ar'],
+  isRTL: false
+});
 
 // Store available languages
 const AVAILABLE_LANGUAGES = ['en', 'fr', 'de', 'uk', 'ru', 'pl', 'zh', 'ja', 'ar'];
@@ -94,25 +100,18 @@ async function initI18n() {
  * Initialize state management for i18n
  */
 function initStateManagement() {
-  // Set up initial i18n state in the state manager
-  defaultStateManager.setState({
-    i18n: {
-      currentLanguage: localizer.getLanguage(),
-      availableLanguages: AVAILABLE_LANGUAGES,
-      isRTL: ['ar', 'he', 'fa', 'ur'].includes(localizer.getLanguage())
+  // Update the store with current language
+  i18nStore.state.currentLanguage = localizer.getLanguage();
+  i18nStore.state.isRTL = ['ar', 'he', 'fa', 'ur'].includes(localizer.getLanguage());
+  
+  // Subscribe to language changes in the store
+  i18nStore.subscribe((state) => {
+    const newLang = state.currentLanguage;
+    if (newLang !== localizer.getLanguage()) {
+      console.log(`Language change detected in store: ${newLang}`);
+      changeLanguage(newLang);
     }
   });
-  
-  // Subscribe to language changes in the state manager
-  defaultStateManager.subscribe((state, changedKeys) => {
-    if (changedKeys.includes('i18n.currentLanguage')) {
-      const newLang = state.i18n.currentLanguage;
-      if (newLang !== localizer.getLanguage()) {
-        console.log(`Language change detected in state manager: ${newLang}`);
-        changeLanguage(newLang);
-      }
-    }
-  }, 'i18n.currentLanguage');
 }
 
 /**
@@ -180,14 +179,12 @@ function changeLanguage(language) {
   // Apply RTL direction if needed
   applyDirectionToDocument();
   
-  // Update the state manager (without triggering the subscription callback)
+  // Update the store (without triggering circular updates)
   const isRTL = ['ar', 'he', 'fa', 'ur'].includes(language);
-  defaultStateManager.setState({
-    i18n: {
-      currentLanguage: language,
-      isRTL
-    }
-  }, true); // Silent update to prevent circular updates
+  
+  // Use direct property assignment to avoid triggering the subscription
+  i18nStore.state.currentLanguage = language;
+  i18nStore.state.isRTL = isRTL;
   
   // Dispatch an event to notify that language has changed
   window.dispatchEvent(new CustomEvent('language-changed', {

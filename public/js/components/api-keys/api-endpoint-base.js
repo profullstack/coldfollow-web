@@ -100,12 +100,18 @@ export class ApiEndpointBase extends BaseComponent {
         border-radius: var(--border-radius-md);
         overflow-x: auto;
         margin-bottom: var(--spacing-md);
+        max-width: 100%;
       }
       
       pre {
         margin: 0;
         font-family: monospace;
         color: var(--text-primary);
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        word-break: break-word;
+        font-size: 0.9em;
+        line-height: 1.5;
       }
       
       .parameter-table {
@@ -135,6 +141,40 @@ export class ApiEndpointBase extends BaseComponent {
       .parameter-optional {
         color: var(--text-tertiary);
         font-style: italic;
+      }
+      
+      /* Mobile parameter list styles */
+      .parameter-list {
+        margin-bottom: var(--spacing-md);
+      }
+      
+      .parameter-item {
+        padding: var(--spacing-sm);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        margin-bottom: var(--spacing-sm);
+        background-color: var(--surface-variant);
+      }
+      
+      .parameter-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: var(--spacing-xs);
+      }
+      
+      .parameter-name {
+        font-weight: var(--font-weight-semibold);
+        color: var(--text-primary);
+      }
+      
+      .parameter-type {
+        margin-bottom: var(--spacing-xs);
+        color: var(--text-secondary);
+      }
+      
+      .parameter-desc {
+        color: var(--text-secondary);
+        font-size: 0.9em;
       }
       
       /* Code examples tabs */
@@ -176,6 +216,10 @@ export class ApiEndpointBase extends BaseComponent {
       }
       
       @media (max-width: 768px) {
+        :host {
+          padding: var(--spacing-md);
+        }
+        
         .endpoint-header {
           flex-direction: column;
           align-items: flex-start;
@@ -185,12 +229,33 @@ export class ApiEndpointBase extends BaseComponent {
           margin-bottom: var(--spacing-xs);
         }
         
+        .endpoint-path {
+          font-size: var(--font-size-md);
+          word-break: break-all;
+        }
+        
         .code-tabs {
           flex-wrap: wrap;
         }
         
         .code-tab {
           margin-bottom: var(--spacing-xs);
+          font-size: var(--font-size-xs);
+          padding: var(--spacing-xs) var(--spacing-xs);
+        }
+        
+        .code-block {
+          padding: var(--spacing-sm);
+        }
+        
+        pre {
+          font-size: 0.8em;
+        }
+        
+        .parameter-table th,
+        .parameter-table td {
+          padding: var(--spacing-xs) var(--spacing-sm);
+          font-size: 0.9em;
         }
       }
     `;
@@ -295,6 +360,28 @@ export class ApiEndpointBase extends BaseComponent {
       return '';
     }
 
+    // For mobile, use a list-based approach
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+      return `
+        <div class="section-title">Request Parameters</div>
+        <div class="parameter-list">
+          ${parameters.map(param => `
+            <div class="parameter-item">
+              <div class="parameter-header">
+                <span class="parameter-name">${param.name}</span>
+                <span class="${param.required ? 'parameter-required' : 'parameter-optional'}">${param.required ? 'required' : 'optional'}</span>
+              </div>
+              <div class="parameter-type"><strong>Type:</strong> ${param.type}</div>
+              <div class="parameter-desc">${param.description}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+    
+    // For desktop, use the table approach
     return `
       <div class="section-title">Request Parameters</div>
       <table class="parameter-table">

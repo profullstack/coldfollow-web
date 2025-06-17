@@ -123,5 +123,9 @@
     "refund": "Refund Policy",
     "company_name": "Profullstack, Inc.",
     "all_rights_reserved": "All rights reserved."
+  },
+  "charts": {
+    "title": "Charts Demo",
+    "description": "Interactive data visualization using Charts.css library"
   }
 }

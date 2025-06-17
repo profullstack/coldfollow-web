@@ -1,0 +1,634 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { createStripeProvider } from '../../src/providers/stripe.js';
+
+// Create a mock implementation of the Stripe module
+const mockStripeInstance = {
+  checkout: {
+    sessions: {
+      create: vi.fn().mockResolvedValue({
+        id: 'cs_test_123',
+        url: 'https://checkout.stripe.com/test',
+        status: 'open',
+        customer: 'cus_test_123',
+        customer_email: 'test@example.com',
+        mode: 'payment',
+        payment_status: 'unpaid',
+        amount_total: 1000,
+        currency: 'usd',
+        metadata: {},
+        expires_at: Math.floor(Date.now() / 1000) + 3600,
+        payment_intent: 'pi_test_123',
+        subscription: null
+      })
+    }
+  },
+  subscriptions: {
+    create: vi.fn().mockResolvedValue({
+      id: 'sub_test_123',
+      customer: 'cus_test_123',
+      status: 'active',
+      current_period_start: Math.floor(Date.now() / 1000),
+      current_period_end: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
+      cancel_at_period_end: false,
+      canceled_at: null,
+      metadata: {},
+      items: {
+        data: [
+          {
+            id: 'si_test_123',
+            price: { id: 'price_test_123' },
+            quantity: 1
+          }
+        ]
+      },
+      latest_invoice: 'inv_test_123'
+    }),
+    retrieve: vi.fn().mockResolvedValue({
+      id: 'sub_test_123',
+      customer: 'cus_test_123',
+      status: 'active',
+      current_period_start: Math.floor(Date.now() / 1000),
+      current_period_end: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
+      cancel_at_period_end: false,
+      canceled_at: null,
+      metadata: {},
+      items: {
+        data: [
+          {
+            id: 'si_test_123',
+            price: { id: 'price_test_123' },
+            quantity: 1
+          }
+        ]
+      },
+      latest_invoice: 'inv_test_123'
+    }),
+    list: vi.fn().mockResolvedValue({
+      data: [
+        {
+          id: 'sub_test_123',
+          customer: 'cus_test_123',
+          status: 'active',
+          current_period_start: Math.floor(Date.now() / 1000),
+          current_period_end: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
+          cancel_at_period_end: false,
+          canceled_at: null,
+          metadata: {},
+          items: {
+            data: [
+              {
+                id: 'si_test_123',
+                price: { id: 'price_test_123' },
+                quantity: 1
+              }
+            ]
+          },
+          latest_invoice: 'inv_test_123'
+        }
+      ]
+    }),
+    update: vi.fn().mockResolvedValue({
+      id: 'sub_test_123',
+      customer: 'cus_test_123',
+      status: 'active',
+      current_period_start: Math.floor(Date.now() / 1000),
+      current_period_end: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
+      cancel_at_period_end: true,
+      canceled_at: null,
+      metadata: {},
+      items: {
+        data: [
+          {
+            id: 'si_test_123',
+            price: { id: 'price_test_123' },
+            quantity: 1
+          }
+        ]
+      }
+    }),
+    cancel: vi.fn().mockResolvedValue({
+      id: 'sub_test_123',
+      customer: 'cus_test_123',
+      status: 'canceled',
+      current_period_start: Math.floor(Date.now() / 1000),
+      current_period_end: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
+      cancel_at_period_end: false,
+      canceled_at: Math.floor(Date.now() / 1000),
+      metadata: {}
+    })
+  },
+  webhooks: {
+    constructEvent: vi.fn().mockImplementation((body, signature, secret) => {
+      if (!body || !signature || !secret) {
+        throw new Error('Missing required parameters');
+      }
+      
+      // Parse body if it's a string
+      const parsedBody = typeof body === 'string' ? JSON.parse(body) : body;
+      
+      return {
+        id: 'evt_test_123',
+        type: parsedBody.type || 'checkout.session.completed',
+        data: {
+          object: parsedBody.data || {
+            id: 'cs_test_123',
+            customer: 'cus_test_123',
+            customer_email: 'test@example.com',
+            payment_intent: 'pi_test_123',
+            subscription: 'sub_test_123',
+            amount_total: 1000,
+            currency: 'usd',
+            metadata: {},
+            status: 'complete',
+            payment_status: 'paid'
+          }
+        }
+      };
+    })
+  },
+  customers: {
+    create: vi.fn().mockResolvedValue({
+      id: 'cus_test_123',
+      email: 'test@example.com',
+      name: 'Test User',
+      metadata: {}
+    }),
+    retrieve: vi.fn().mockResolvedValue({
+      id: 'cus_test_123',
+      email: 'test@example.com',
+      name: 'Test User',
+      metadata: {}
+    }),
+    list: vi.fn().mockResolvedValue({
+      data: [
+        {
+          id: 'cus_test_123',
+          email: 'test@example.com',
+          name: 'Test User',
+          metadata: {}
+        }
+      ]
+    }),
+    update: vi.fn().mockResolvedValue({
+      id: 'cus_test_123',
+      email: 'updated@example.com',
+      name: 'Updated User',
+      metadata: { updated: true }
+    })
+  },
+  paymentMethods: {
+    create: vi.fn().mockResolvedValue({
+      id: 'pm_test_123',
+      type: 'card',
+      card: {
+        brand: 'visa',
+        last4: '4242'
+      }
+    }),
+    attach: vi.fn().mockResolvedValue({
+      id: 'pm_test_123',
+      customer: 'cus_test_123'
+    }),
+    list: vi.fn().mockResolvedValue({
+      data: [
+        {
+          id: 'pm_test_123',
+          type: 'card',
+          card: {
+            brand: 'visa',
+            last4: '4242'
+          }
+        }
+      ]
+    })
+  },
+  products: {
+    create: vi.fn().mockResolvedValue({
+      id: 'prod_test_123',
+      name: 'Test Product',
+      description: 'A test product',
+      metadata: {}
+    })
+  },
+  prices: {
+    create: vi.fn().mockResolvedValue({
+      id: 'price_test_123',
+      product: 'prod_test_123',
+      currency: 'usd',
+      unit_amount: 1000,
+      recurring: {
+        interval: 'month',
+        interval_count: 1
+      },
+      metadata: {}
+    })
+  },
+  paymentIntents: {
+    create: vi.fn().mockResolvedValue({
+      id: 'pi_test_123',
+      customer: 'cus_test_123',
+      amount: 1000,
+      currency: 'usd',
+      description: 'Test payment',
+      status: 'requires_payment_method',
+      client_secret: 'pi_test_secret_123',
+      metadata: {}
+    })
+  }
+};
+
+// Mock the require function to return our mock Stripe instance
+vi.mock('stripe', () => {
+  return function() {
+    return mockStripeInstance;
+  };
+});
+
+describe('Stripe Provider', () => {
+  let provider;
+  
+  beforeEach(() => {
+    // Create a Stripe provider with test options
+    provider = createStripeProvider({
+      secretKey: 'sk_test_123',
+      publishableKey: 'pk_test_123',
+      webhookSecret: 'whsec_test_123',
+      debug: true
+    });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe('Initialization', () => {
+    it('throws if secret key is missing', () => {
+      expect(() => createStripeProvider({
+        publishableKey: 'pk_test_123'
+      })).toThrow('Stripe secret key is required');
+    });
+
+    it('initializes with required options', () => {
+      expect(provider).toBeDefined();
+      expect(typeof provider.createCheckoutSession).toBe('function');
+      expect(typeof provider.createSubscription).toBe('function');
+      expect(typeof provider.getSubscription).toBe('function');
+      expect(typeof provider.cancelSubscription).toBe('function');
+      expect(typeof provider.handleWebhook).toBe('function');
+    });
+  });
+
+  describe('Checkout Sessions', () => {
+    it('creates a checkout session with price ID', async () => {
+      const session = await provider.createCheckoutSession({
+        priceId: 'price_test_123',
+        successUrl: 'https://example.com/success',
+        cancelUrl: 'https://example.com/cancel'
+      });
+      
+      expect(session.id).toBe('cs_test_123');
+      expect(session.url).toBe('https://checkout.stripe.com/test');
+      expect(session.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.checkout.sessions.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          line_items: [
+            {
+              price: 'price_test_123',
+              quantity: 1
+            }
+          ],
+          success_url: 'https://example.com/success',
+          cancel_url: 'https://example.com/cancel'
+        })
+      );
+    });
+
+    it('creates a checkout session with amount and currency', async () => {
+      const session = await provider.createCheckoutSession({
+        amount: 1000,
+        currency: 'usd',
+        successUrl: 'https://example.com/success',
+        cancelUrl: 'https://example.com/cancel'
+      });
+      
+      expect(session.id).toBe('cs_test_123');
+      expect(session.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.checkout.sessions.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          line_items: [
+            expect.objectContaining({
+              price_data: expect.objectContaining({
+                currency: 'usd',
+                unit_amount: 1000
+              })
+            })
+          ]
+        })
+      );
+    });
+  });
+
+  describe('Subscriptions', () => {
+    it('creates a subscription', async () => {
+      const subscription = await provider.createSubscription({
+        customerId: 'cus_test_123',
+        priceId: 'price_test_123'
+      });
+      
+      expect(subscription.id).toBe('sub_test_123');
+      expect(subscription.customerId).toBe('cus_test_123');
+      expect(subscription.status).toBe('active');
+      expect(subscription.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.subscriptions.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          customer: 'cus_test_123',
+          items: [{ price: 'price_test_123' }]
+        })
+      );
+    });
+
+    it('gets a subscription by ID', async () => {
+      const subscription = await provider.getSubscription({
+        subscriptionId: 'sub_test_123'
+      });
+      
+      expect(subscription.id).toBe('sub_test_123');
+      expect(subscription.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.subscriptions.retrieve).toHaveBeenCalledWith('sub_test_123');
+    });
+
+    it('gets a subscription by customer ID', async () => {
+      const subscription = await provider.getSubscription({
+        customerId: 'cus_test_123'
+      });
+      
+      expect(subscription.id).toBe('sub_test_123');
+      expect(subscription.customerId).toBe('cus_test_123');
+      expect(subscription.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.subscriptions.list).toHaveBeenCalledWith({
+        customer: 'cus_test_123',
+        limit: 1,
+        status: 'active'
+      });
+    });
+
+    it('cancels a subscription at period end', async () => {
+      const result = await provider.cancelSubscription({
+        subscriptionId: 'sub_test_123',
+        atPeriodEnd: true
+      });
+      
+      expect(result.id).toBe('sub_test_123');
+      expect(result.cancelAtPeriodEnd).toBe(true);
+      expect(result.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.subscriptions.update).toHaveBeenCalledWith(
+        'sub_test_123',
+        { cancel_at_period_end: true }
+      );
+    });
+
+    it('cancels a subscription immediately', async () => {
+      const result = await provider.cancelSubscription({
+        subscriptionId: 'sub_test_123',
+        atPeriodEnd: false
+      });
+      
+      expect(result.id).toBe('sub_test_123');
+      expect(result.status).toBe('canceled');
+      expect(result.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.subscriptions.cancel).toHaveBeenCalledWith('sub_test_123');
+    });
+  });
+
+  describe('Webhooks', () => {
+    it('handles checkout.session.completed webhook', async () => {
+      const result = await provider.handleWebhook({
+        body: JSON.stringify({
+          type: 'checkout.session.completed',
+          data: {
+            id: 'cs_test_123',
+            customer: 'cus_test_123',
+            customer_email: 'test@example.com',
+            payment_intent: 'pi_test_123',
+            subscription: 'sub_test_123',
+            amount_total: 1000,
+            currency: 'usd',
+            metadata: {},
+            status: 'complete',
+            payment_status: 'paid'
+          }
+        }),
+        signature: 'test_signature',
+        headers: {
+          'stripe-signature': 'test_signature'
+        }
+      });
+      
+      expect(result.event).toBe('checkout.completed');
+      expect(result.sessionId).toBe('cs_test_123');
+      expect(result.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.webhooks.constructEvent).toHaveBeenCalled();
+    });
+  });
+
+  describe('Customers', () => {
+    it('creates a customer', async () => {
+      const customer = await provider.createCustomer({
+        email: 'test@example.com',
+        name: 'Test User'
+      });
+      
+      expect(customer.id).toBe('cus_test_123');
+      expect(customer.email).toBe('test@example.com');
+      expect(customer.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.customers.create).toHaveBeenCalledWith({
+        email: 'test@example.com',
+        name: 'Test User',
+        metadata: {}
+      });
+    });
+
+    it('gets a customer by ID', async () => {
+      const customer = await provider.getCustomer({
+        customerId: 'cus_test_123'
+      });
+      
+      expect(customer.id).toBe('cus_test_123');
+      expect(customer.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.customers.retrieve).toHaveBeenCalledWith('cus_test_123');
+    });
+
+    it('gets a customer by email', async () => {
+      const customer = await provider.getCustomer({
+        email: 'test@example.com'
+      });
+      
+      expect(customer.id).toBe('cus_test_123');
+      expect(customer.email).toBe('test@example.com');
+      expect(customer.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.customers.list).toHaveBeenCalledWith({
+        email: 'test@example.com',
+        limit: 1
+      });
+    });
+
+    it('updates a customer', async () => {
+      const customer = await provider.updateCustomer({
+        customerId: 'cus_test_123',
+        email: 'updated@example.com',
+        name: 'Updated User',
+        metadata: { updated: true }
+      });
+      
+      expect(customer.id).toBe('cus_test_123');
+      expect(customer.email).toBe('updated@example.com');
+      expect(customer.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.customers.update).toHaveBeenCalledWith(
+        'cus_test_123',
+        {
+          email: 'updated@example.com',
+          name: 'Updated User',
+          metadata: { updated: true }
+        }
+      );
+    });
+  });
+
+  describe('Payment Methods', () => {
+    it('creates a payment method', async () => {
+      const paymentMethod = await provider.createPaymentMethod({
+        customerId: 'cus_test_123',
+        type: 'card',
+        data: {
+          number: '4242424242424242',
+          exp_month: 12,
+          exp_year: 2025,
+          cvc: '123'
+        }
+      });
+      
+      expect(paymentMethod.id).toBe('pm_test_123');
+      expect(paymentMethod.customerId).toBe('cus_test_123');
+      expect(paymentMethod.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.paymentMethods.create).toHaveBeenCalledWith({
+        type: 'card',
+        card: {
+          number: '4242424242424242',
+          exp_month: 12,
+          exp_year: 2025,
+          cvc: '123'
+        }
+      });
+      
+      expect(mockStripeInstance.paymentMethods.attach).toHaveBeenCalledWith(
+        'pm_test_123',
+        { customer: 'cus_test_123' }
+      );
+    });
+
+    it('gets payment methods', async () => {
+      const paymentMethods = await provider.getPaymentMethods({
+        customerId: 'cus_test_123',
+        type: 'card'
+      });
+      
+      expect(paymentMethods).toHaveLength(1);
+      expect(paymentMethods[0].id).toBe('pm_test_123');
+      expect(paymentMethods[0].provider).toBe('stripe');
+      
+      expect(mockStripeInstance.paymentMethods.list).toHaveBeenCalledWith({
+        customer: 'cus_test_123',
+        type: 'card'
+      });
+    });
+  });
+
+  describe('Products and Prices', () => {
+    it('creates a product', async () => {
+      const product = await provider.createProduct({
+        name: 'Test Product',
+        description: 'A test product'
+      });
+      
+      expect(product.id).toBe('prod_test_123');
+      expect(product.name).toBe('Test Product');
+      expect(product.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.products.create).toHaveBeenCalledWith({
+        name: 'Test Product',
+        description: 'A test product',
+        metadata: {}
+      });
+    });
+
+    it('creates a price', async () => {
+      const price = await provider.createPrice({
+        productId: 'prod_test_123',
+        unitAmount: 1000,
+        currency: 'usd',
+        interval: 'month',
+        intervalCount: 1
+      });
+      
+      expect(price.id).toBe('price_test_123');
+      expect(price.productId).toBe('prod_test_123');
+      expect(price.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.prices.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          product: 'prod_test_123',
+          currency: 'usd',
+          unit_amount: 1000,
+          recurring: {
+            interval: 'month',
+            interval_count: 1
+          }
+        })
+      );
+    });
+  });
+
+  describe('Payments', () => {
+    it('creates a payment', async () => {
+      const payment = await provider.createPayment({
+        customerId: 'cus_test_123',
+        amount: 1000,
+        currency: 'usd',
+        description: 'Test payment'
+      });
+      
+      expect(payment.id).toBe('pi_test_123');
+      expect(payment.customerId).toBe('cus_test_123');
+      expect(payment.provider).toBe('stripe');
+      
+      expect(mockStripeInstance.paymentIntents.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          amount: 1000,
+          currency: 'usd',
+          customer: 'cus_test_123',
+          description: 'Test payment'
+        })
+      );
+    });
+  });
+
+  describe('Publishable Key', () => {
+    it('gets the publishable key', () => {
+      const key = provider.getPublishableKey();
+      expect(key).toBe('pk_test_123');
+    });
+  });
+});

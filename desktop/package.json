@@ -1,0 +1,40 @@
+{
+  "name": "convert2doc-desktop",
+  "version": "1.0.0",
+  "description": "Convert2Doc Desktop App",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "author": "ProFullStack <info@convert2doc.com>",
+  "license": "MIT",
+  "homepage": "https://convert2doc.com",
+  "devDependencies": {
+    "electron": "^25.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3"
+  },
+  "build": {
+    "appId": "com.convert2doc.app",
+    "productName": "Convert2Doc",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "linux": {
+      "target": ["AppImage"],
+      "category": "Office",
+      "maintainer": "ProFullStack <info@convert2doc.com>"
+    }
+  }
+}

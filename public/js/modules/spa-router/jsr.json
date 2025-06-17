@@ -1,0 +1,24 @@
+{
+  "name": "@profullstack/spa-router",
+  "version": "1.14.0",
+  "description": "Simple SPA router with smooth transitions, component loading, and Shadow DOM support",
+  "exports": {
+    ".": "./dist/index.esm.js"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-terser": "^0.4.0",
+    "chai": "^4.3.7",
+    "jsdom": "^22.1.0",
+    "mocha": "^10.2.0",
+    "rollup": "^3.20.0",
+    "sinon": "^17.0.1"
+  },
+  "keywords": [
+    "router",
+    "spa",
+    "single-page-application",
+    "web-components"
+  ],
+  "license": "MIT"
+}

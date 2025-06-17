@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/h"
+
+cd "$(git rev-parse --show-toplevel)/payment-gateway" && pnpm test

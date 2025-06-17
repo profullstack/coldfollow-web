@@ -85,8 +85,8 @@ fi
 echo -e "${YELLOW}Installing system dependencies...${NC}"
 if command -v apt-get &> /dev/null; then
   apt-get update
-  apt-get install -y librsvg2-bin
-  echo -e "${GREEN}System dependencies installed.${NC}"
+  apt-get install -y librsvg2-bin poppler-utils
+  echo -e "${GREEN}System dependencies installed (librsvg2-bin, poppler-utils for pdftotext).${NC}"
 else
   echo -e "${YELLOW}apt-get not found. Please install librsvg2-bin manually.${NC}"
 fi

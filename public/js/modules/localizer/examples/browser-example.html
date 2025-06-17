@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@profullstack/localizer Browser Example</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .container {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+    
+    h1, h2 {
+      color: #e02337;
+    }
+    
+    .language-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .language-button {
+      padding: 8px 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .language-button:hover {
+      background-color: #f3f4f6;
+    }
+    
+    .language-button.active {
+      background-color: #e02337;
+      color: white;
+      border-color: #e02337;
+    }
+    
+    .example {
+      margin-bottom: 15px;
+    }
+    
+    .label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .result {
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>@profullstack/localizer Browser Example</h1>
+  
+  <div class="container">
+    <h2>Language Selection</h2>
+    <div class="language-controls">
+      <button class="language-button" data-lang="en">English</button>
+      <button class="language-button" data-lang="fr">Français</button>
+      <button class="language-button" data-lang="de">Deutsch</button>
+    </div>
+  </div>
+  
+  <div class="container">
+    <h2>Basic Translations</h2>
+    
+    <div class="example">
+      <div class="label">Greeting:</div>
+      <div class="result" id="greeting"></div>
+    </div>
+    
+    <div class="example">
+      <div class="label">Farewell:</div>
+      <div class="result" id="farewell"></div>
+    </div>
+    
+    <div class="example">
+      <div class="label">Current Language:</div>
+      <div class="result" id="current-language"></div>
+    </div>
+  </div>
+  
+  <div class="container">
+    <h2>Interpolation</h2>
+    
+    <div class="example">
+      <div class="label">Welcome Message:</div>
+      <div class="result" id="welcome"></div>
+    </div>
+    
+    <div class="example">
+      <div class="label">Items Count (1 item):</div>
+      <div class="result" id="items-one"></div>
+    </div>
+    
+    <div class="example">
+      <div class="label">Items Count (5 items):</div>
+      <div class="result" id="items-many"></div>
+    </div>
+  </div>
+  
+  <div class="container">
+    <h2>HTML Elements with data-i18n</h2>
+    
+    <div class="example">
+      <div class="label">Simple Translation:</div>
+      <div class="result">
+        <span data-i18n="greeting">Hello</span>
+      </div>
+    </div>
+    
+    <div class="example">
+      <div class="label">With Interpolation:</div>
+      <div class="result">
+        <span data-i18n="welcome" data-i18n-params='{"name":"John"}'>Welcome, John!</span>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module">
+    // Import the localizer from ESM
+    import { localizer, _t } from 'https://esm.sh/@profullstack/localizer@0.1.0';
+    
+    // Flatten a nested object into a flat object with dot notation keys
+    function flattenObject(obj, prefix = '') {
+      return Object.keys(obj).reduce((acc, key) => {
+        const prefixedKey = prefix ? `${prefix}.${key}` : key;
+        
+        if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+          Object.assign(acc, flattenObject(obj[key], prefixedKey));
+        } else {
+          acc[prefixedKey] = obj[key];
+        }
+        
+        return acc;
+      }, {});
+    }
+    
+    // Define translations
+    const translations = {
+      en: {
+        greeting: 'Hello',
+        farewell: 'Goodbye',
+        current_language: 'Current language: English',
+        welcome: 'Welcome, ${name}!',
+        items_one: 'You have ${count} item in your cart.',
+        items_other: 'You have ${count} items in your cart.'
+      },
+      fr: {
+        greeting: 'Bonjour',
+        farewell: 'Au revoir',
+        current_language: 'Langue actuelle: Français',
+        welcome: 'Bienvenue, ${name}!',
+        items_one: 'Vous avez ${count} article dans votre panier.',
+        items_other: 'Vous avez ${count} articles dans votre panier.'
+      },
+      de: {
+        greeting: 'Hallo',
+        farewell: 'Auf Wiedersehen',
+        current_language: 'Aktuelle Sprache: Deutsch',
+        welcome: 'Willkommen, ${name}!',
+        items_one: 'Sie haben ${count} Artikel in Ihrem Warenkorb.',
+        items_other: 'Sie haben ${count} Artikel in Ihrem Warenkorb.'
+      }
+    };
+    
+    // Load translations
+    Object.keys(translations).forEach(lang => {
+      localizer.loadTranslations(lang, translations[lang]);
+    });
+    
+    // Set initial language
+    localizer.setLanguage('en');
+    
+    // Update UI with translations
+    function updateUI() {
+      document.getElementById('greeting').textContent = _t('greeting');
+      document.getElementById('farewell').textContent = _t('farewell');
+      document.getElementById('current-language').textContent = _t('current_language');
+      document.getElementById('welcome').textContent = _t('welcome', { name: 'John' });
+      document.getElementById('items-one').textContent = _t('items', { count: 1 });
+      document.getElementById('items-many').textContent = _t('items', { count: 5 });
+      
+      // Translate elements with data-i18n attribute
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        
+        // Check for params
+        const paramsAttr = element.getAttribute('data-i18n-params');
+        if (paramsAttr) {
+          const params = JSON.parse(paramsAttr);
+          element.textContent = _t(key, params);
+        } else {
+          element.textContent = _t(key);
+        }
+      });
+    }
+    
+    // Set up language buttons
+    document.querySelectorAll('.language-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const lang = button.getAttribute('data-lang');
+        localizer.setLanguage(lang);
+        
+        // Update active state
+        document.querySelectorAll('.language-button').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        button.classList.add('active');
+        
+        // Update UI
+        updateUI();
+      });
+    });
+    
+    // Set initial active state
+    document.querySelector('.language-button[data-lang="en"]').classList.add('active');
+    
+    // Initial update
+    updateUI();
+  </script>
+</body>
+</html>

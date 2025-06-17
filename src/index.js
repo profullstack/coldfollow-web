@@ -296,6 +296,13 @@ serve({
   console.log(`- HTML to EPUB: http://localhost:${info.port}/api/1/html-to-epub`);
   console.log(`- HTML to Markdown: http://localhost:${info.port}/api/1/html-to-markdown`);
   console.log(`- Markdown to HTML: http://localhost:${info.port}/api/1/markdown-to-html`);
+  console.log(`- PDF to Markdown: http://localhost:${info.port}/api/1/pdf-to-markdown`);
+  console.log(`- DOCX to Markdown: http://localhost:${info.port}/api/1/docx-to-markdown`);
+  console.log(`- DOC to Markdown: http://localhost:${info.port}/api/1/doc-to-markdown`);
+  console.log(`- EPUB to Markdown: http://localhost:${info.port}/api/1/epub-to-markdown`);
+  console.log(`- Text to Markdown: http://localhost:${info.port}/api/1/text-to-markdown`);
+  console.log(`- PPTX to Markdown: http://localhost:${info.port}/api/1/pptx-to-markdown`);
+  console.log(`- XLSX to Markdown: http://localhost:${info.port}/api/1/xlsx-to-markdown`);
   console.log(`- Document History: http://localhost:${info.port}/api/1/document-history`);
   console.log(`- Subscription: http://localhost:${info.port}/api/1/subscription`);
   console.log(`- Subscription Status: http://localhost:${info.port}/api/1/subscription-status`);

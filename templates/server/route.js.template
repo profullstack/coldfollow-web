@@ -1,0 +1,27 @@
+/**
+ * {{entityName}} routes
+ */
+import { {{controllerName}} } from '../controllers/{{controllerFileName}}';
+
+/**
+ * Handler for {{methodUpper}} {{routePath}}
+ * @param {Object} c - Hono context
+ * @returns {Response} - Response object
+ */
+export async function {{methodName}}Handler(c) {
+  try {
+    return await {{controllerName}}.{{methodName}}(c);
+  } catch (error) {
+    console.error(`Error in {{methodName}}:`, error);
+    return c.json({ error: error.message || 'An unexpected error occurred' }, 500);
+  }
+}
+
+/**
+ * Route configuration for {{entityName}} endpoint
+ */
+export const {{entityName}}Route = {
+  method: '{{methodUpper}}',
+  path: '{{routePath}}',
+  handler: {{methodName}}Handler
+};

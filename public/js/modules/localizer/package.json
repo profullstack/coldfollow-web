@@ -1,0 +1,42 @@
+{
+  "name": "@profullstack/localizer",
+  "version": "0.8.0",
+  "description": "Simple localization and internationalization library with RTL support",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup --config tsup.config.ts",
+    "dev": "tsup --config tsup.config.ts --watch",
+    "test": "vitest run --bail 1",
+    "test:watch": "vitest --bail 1",
+    "lint": "eslint src --ext .ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "i18n",
+    "l10n",
+    "localization",
+    "internationalization",
+    "translation",
+    "rtl",
+    "right-to-left",
+    "arabic"
+  ],
+  "author": "ProFullStack",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "eslint": "^8.56.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.3"
+  }
+}

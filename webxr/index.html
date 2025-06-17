@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebXR Experience</title>
+  <!-- Import the main application's theme -->
+  <link rel="stylesheet" href="/public/css/theme.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-primary);
+    }
+    
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--background-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: opacity 0.5s ease;
+    }
+    
+    #loading-progress {
+      width: 300px;
+      height: 20px;
+      background-color: var(--surface-variant);
+      border-radius: var(--border-radius-full);
+      margin-top: 20px;
+      overflow: hidden;
+    }
+    
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+    
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    #theme-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 101;
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: var(--border-radius-md);
+      cursor: pointer;
+      font-family: var(--font-family);
+      transition: all var(--transition-normal);
+    }
+    
+    #theme-toggle:hover {
+      background-color: var(--surface-variant);
+    }
+    
+    #info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 100;
+      background-color: var(--card-background);
+      border-radius: var(--border-radius-md);
+      padding: 10px;
+      max-width: 300px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+    
+    #info h1 {
+      margin-top: 0;
+      font-size: var(--font-size-lg);
+      color: var(--primary-color);
+    }
+    
+    #info p {
+      margin-bottom: 0;
+      font-size: var(--font-size-sm);
+    }
+    
+    #navigation {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      z-index: 100;
+    }
+    
+    .nav-button {
+      background-color: var(--primary-color);
+      color: var(--text-on-primary);
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--border-radius-md);
+      cursor: pointer;
+      font-family: var(--font-family);
+      transition: all var(--transition-normal);
+    }
+    
+    .nav-button:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    .nav-button.active {
+      background-color: var(--accent-color);
+    }
+  </style>
+</head>
+<body>
+  <div id="loading-overlay">
+    <h2>Loading WebXR Experience</h2>
+    <div id="loading-progress">
+      <div id="progress-bar"></div>
+    </div>
+  </div>
+  
+  <button id="theme-toggle">Toggle Dark Mode</button>
+  
+  <div id="info">
+    <h1>WebXR Experience</h1>
+    <p>Click the 'Enter VR' button to start the experience.</p>
+  </div>
+  
+  <div id="navigation">
+    <button class="nav-button active" data-route="/">Home</button>
+    <button class="nav-button" data-route="/gallery">Gallery</button>
+    <button class="nav-button" data-route="/settings">Settings</button>
+  </div>
+  
+  <!-- VR Router Component -->
+  <vr-router id="vr-router" initial-route="/">
+    <vr-route path="/" component="vr-scene-home" title="Home"></vr-route>
+    <vr-route path="/gallery" component="vr-scene-gallery" title="Gallery"></vr-route>
+    <vr-route path="/settings" component="vr-scene-settings" title="Settings"></vr-route>
+  </vr-router>
+  
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+        "three/examples/jsm/webxr/VRButton.js": "https://unpkg.com/three@0.150.1/examples/jsm/webxr/VRButton.js",
+        "three/examples/jsm/webxr/XRControllerModelFactory.js": "https://unpkg.com/three@0.150.1/examples/jsm/webxr/XRControllerModelFactory.js",
+        "@profullstack/spa-router": "/webxr/js/deps.js"
+      }
+    }
+  </script>
+  
+  <script type="module">
+    // Import components and modules
+    import { VRRouter, VRRoute } from './src/ui/vr-router.js';
+    import { VRSceneHome } from './src/scenes/home-scene.js';
+    import { VRSceneGallery } from './src/scenes/gallery-scene.js';
+    import { VRSceneSettings } from './src/scenes/settings-scene.js';
+    
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    // Check for saved theme preference or use device preference
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Set initial theme
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = 'Toggle Light Mode';
+    }
+    
+    // Toggle theme when button is clicked
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? '' : 'dark';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      themeToggle.textContent = newTheme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+    });
+    
+    // Simulate loading progress
+    const progressBar = document.getElementById('progress-bar');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 10;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        
+        // Hide loading overlay after a short delay
+        setTimeout(() => {
+          loadingOverlay.classList.add('hidden');
+        }, 500);
+      }
+      progressBar.style.width = `${progress}%`;
+    }, 200);
+    
+    // Navigation buttons
+    const navButtons = document.querySelectorAll('.nav-button');
+    const vrRouter = document.getElementById('vr-router');
+    
+    navButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const route = button.getAttribute('data-route');
+        vrRouter.navigate(route);
+      });
+    });
+    
+    // Register the VR Scene Components
+    customElements.define('vr-scene-home', VRSceneHome);
+    customElements.define('vr-scene-gallery', VRSceneGallery);
+    customElements.define('vr-scene-settings', VRSceneSettings);
+    
+    // Listen for route changes
+    vrRouter.addEventListener('vr-route-changed', (event) => {
+      console.log('Route changed:', event.detail.route);
+      
+      // Update active button
+      navButtons.forEach(button => {
+        const route = button.getAttribute('data-route');
+        if (route === event.detail.route.path) {
+          button.classList.add('active');
+        } else {
+          button.classList.remove('active');
+        }
+      });
+      
+      // Update info text
+      const info = document.getElementById('info');
+      const title = event.detail.route.title || 'WebXR Experience';
+      info.querySelector('h1').textContent = title;
+    });
+  </script>
+</body>
+</html>

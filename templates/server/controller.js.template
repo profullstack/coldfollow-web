@@ -1,0 +1,85 @@
+/**
+ * {{controllerName}}
+ *
+ * Controller for handling {{entityName}} related operations
+ */
+
+/**
+ * Get all items
+ * @param {Object} c - Hono context
+ * @returns {Response} - JSON response
+ */
+export async function getAll(c) {
+  try {
+    // Implementation goes here
+    return c.json({ message: 'Get all items' });
+  } catch (error) {
+    console.error('Error in getAll:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+}
+
+/**
+ * Get item by ID
+ * @param {Object} c - Hono context
+ * @returns {Response} - JSON response
+ */
+export async function getById(c) {
+  try {
+    const { id } = c.req.param();
+    // Implementation goes here
+    return c.json({ message: `Get item ${id}` });
+  } catch (error) {
+    console.error('Error in getById:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+}
+
+/**
+ * Create a new item
+ * @param {Object} c - Hono context
+ * @returns {Response} - JSON response
+ */
+export async function create(c) {
+  try {
+    const data = await c.req.json();
+    // Implementation goes here
+    return c.json({ message: 'Item created', data }, 201);
+  } catch (error) {
+    console.error('Error in create:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+}
+
+/**
+ * Update an existing item
+ * @param {Object} c - Hono context
+ * @returns {Response} - JSON response
+ */
+export async function update(c) {
+  try {
+    const { id } = c.req.param();
+    const data = await c.req.json();
+    // Implementation goes here
+    return c.json({ message: `Item ${id} updated`, data });
+  } catch (error) {
+    console.error('Error in update:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+}
+
+/**
+ * Delete an item
+ * @param {Object} c - Hono context
+ * @returns {Response} - JSON response
+ */
+export async function remove(c) {
+  try {
+    const { id } = c.req.param();
+    // Implementation goes here
+    return c.json({ message: `Item ${id} deleted` });
+  } catch (error) {
+    console.error('Error in remove:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+}

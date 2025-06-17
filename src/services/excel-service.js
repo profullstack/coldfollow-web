@@ -9,10 +9,10 @@ export const excelService = {
    * Generate an Excel spreadsheet from HTML content containing tables
    * @param {string} html - The HTML content containing tables
    * @param {string} sheetName - The name for the worksheet (default: 'Sheet1')
-   * @returns {Buffer} - A buffer containing the Excel file data
+   * @returns {Promise<Buffer>} - A buffer containing the Excel file data
    * @throws {Error} - If no tables are found in the HTML content
    */
-  generateExcel(html, sheetName = 'Sheet1') {
+  async generateExcel(html, sheetName = 'Sheet1') {
     // Create a DOM from the HTML
     const dom = new JSDOM(html);
     const document = dom.window.document;

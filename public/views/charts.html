@@ -1,0 +1,241 @@
+<style>
+  @import url('/css/charts.css');
+</style>
+<div class="charts-container container">
+  <h1 data-i18n="charts.title">Charts.css Demo</h1>
+  <p data-i18n="charts.description">Explore various chart types using Charts.css - a modern CSS framework for data visualization.</p>
+  
+  <div class="charts-content">
+    <!-- Column Chart Section -->
+    <section class="chart-section">
+      <h2>Column Chart</h2>
+      <p>A basic column chart showing developer salary progression over time.</p>
+      
+      <table class="charts-css column show-labels show-primary-axis show-4-secondary-axes data-spacing-4">
+        <caption>Front End Developer Salary</caption>
+        <thead>
+          <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Income</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">2016</th>
+            <td style="--size: calc(40 / 100);">$40K</td>
+          </tr>
+          <tr>
+            <th scope="row">2017</th>
+            <td style="--size: calc(60 / 100);">$60K</td>
+          </tr>
+          <tr>
+            <th scope="row">2018</th>
+            <td style="--size: calc(75 / 100);">$75K</td>
+          </tr>
+          <tr>
+            <th scope="row">2019</th>
+            <td style="--size: calc(90 / 100);">$90K</td>
+          </tr>
+          <tr>
+            <th scope="row">2020</th>
+            <td style="--size: calc(100 / 100);">$100K 👑</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Bar Chart Section -->
+    <section class="chart-section">
+      <h2>Bar Chart</h2>
+      <p>Multi-series bar chart comparing different metrics across years.</p>
+      
+      <table class="charts-css bar show-labels data-spacing-5" id="multi-bar-chart">
+        <caption>Years Compared</caption>
+        <thead>
+          <tr>
+            <th scope="col">Year</th>
+            <th scope="col">Progress 1</th>
+            <th scope="col">Progress 2</th>
+            <th scope="col">Progress 3</th>
+            <th scope="col">Progress 4</th>
+            <th scope="col">Progress 5</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">2000</th>
+            <td style="--size: 0.2;">20</td>
+            <td style="--size: 0.5;">50</td>
+            <td style="--size: 1;">100</td>
+            <td style="--size: 0.7;">70</td>
+            <td style="--size: 0.4;">40</td>
+          </tr>
+          <tr>
+            <th scope="row">2020</th>
+            <td style="--size: 0.2;">20</td>
+            <td style="--size: 0.4;">40</td>
+            <td style="--size: 0.6;">60</td>
+            <td style="--size: 0.8;">80</td>
+            <td style="--size: 1;">100</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Area Chart Section -->
+    <section class="chart-section">
+      <h2>Area Chart</h2>
+      <p>Area chart showing data trends over time.</p>
+      
+      <table class="charts-css area show-labels show-primary-axis">
+        <caption>Website Traffic</caption>
+        <thead>
+          <tr>
+            <th scope="col">Month</th>
+            <th scope="col">Visitors</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Jan</th>
+            <td style="--size: 0.3;">30K</td>
+          </tr>
+          <tr>
+            <th scope="row">Feb</th>
+            <td style="--size: 0.5;">50K</td>
+          </tr>
+          <tr>
+            <th scope="row">Mar</th>
+            <td style="--size: 0.8;">80K</td>
+          </tr>
+          <tr>
+            <th scope="row">Apr</th>
+            <td style="--size: 1.0;">100K</td>
+          </tr>
+          <tr>
+            <th scope="row">May</th>
+            <td style="--size: 0.9;">90K</td>
+          </tr>
+          <tr>
+            <th scope="row">Jun</th>
+            <td style="--size: 0.7;">70K</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Line Chart Section -->
+    <section class="chart-section">
+      <h2>Line Chart</h2>
+      <p>Line chart displaying performance metrics.</p>
+      
+      <table class="charts-css line show-labels show-primary-axis">
+        <caption>Performance Metrics</caption>
+        <thead>
+          <tr>
+            <th scope="col">Quarter</th>
+            <th scope="col">Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Q1</th>
+            <td style="--size: 0.4;">40</td>
+          </tr>
+          <tr>
+            <th scope="row">Q2</th>
+            <td style="--size: 0.6;">60</td>
+          </tr>
+          <tr>
+            <th scope="row">Q3</th>
+            <td style="--size: 0.8;">80</td>
+          </tr>
+          <tr>
+            <th scope="row">Q4</th>
+            <td style="--size: 1.0;">100</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Interactive Controls Section -->
+    <section class="chart-section">
+      <h2>Interactive Chart Controls</h2>
+      <p>Click the buttons below to modify chart appearance:</p>
+      
+      <div class="chart-controls">
+        <button class="show-heading">Show Heading</button>
+        <button class="hide-data">Hide Data</button>
+        <button class="reverse-data">Reverse Data</button>
+        <button class="data-spacing-10">Data Spacing</button>
+        <button class="datasets-spacing-5">Dataset Spacing</button>
+        <button class="show-primary-axis">Primary Axis</button>
+        <button class="show-4-secondary-axes">Secondary Axes</button>
+      </div>
+
+      <table class="charts-css column show-labels interactive-chart" id="interactive-chart">
+        <caption>Interactive Chart Example</caption>
+        <thead>
+          <tr>
+            <th scope="col">Item</th>
+            <th scope="col">Value 1</th>
+            <th scope="col">Value 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">A</th>
+            <td style="--size: 0.5;">50</td>
+            <td style="--size: 0.8;">80</td>
+          </tr>
+          <tr>
+            <th scope="row">B</th>
+            <td style="--size: 0.7;">70</td>
+            <td style="--size: 0.6;">60</td>
+          </tr>
+          <tr>
+            <th scope="row">C</th>
+            <td style="--size: 1.0;">100</td>
+            <td style="--size: 0.4;">40</td>
+          </tr>
+          <tr>
+            <th scope="row">D</th>
+            <td style="--size: 0.3;">30</td>
+            <td style="--size: 0.9;">90</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Legend Examples -->
+    <section class="chart-section">
+      <h2>Chart Legends</h2>
+      <p>Different legend styles for chart data:</p>
+      
+      <div class="legend-examples">
+        <div class="legend legend-circle">
+          <div>Circle Legend</div>
+          <div>Red</div>
+          <div>Blue</div>
+          <div>Green</div>
+        </div>
+        
+        <div class="legend legend-square">
+          <div>Square Legend</div>
+          <div>Orange</div>
+          <div>Violet</div>
+          <div>Yellow</div>
+        </div>
+        
+        <div class="legend legend-line">
+          <div>Line Legend</div>
+          <div>Series 1</div>
+          <div>Series 2</div>
+          <div>Series 3</div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script type="module" src="/js/views/charts.js"></script>

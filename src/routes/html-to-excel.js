@@ -13,7 +13,7 @@ export async function htmlToExcelHandler(c) {
     const { html, filename = 'document.xlsx', sheetName = 'Sheet1', store = false } = c.get('body');
     
     // Generate Excel spreadsheet from HTML tables
-    const excelBuffer = excelService.generateExcel(html, sheetName);
+    const excelBuffer = await excelService.generateExcel(html, sheetName);
     
     // Store the Excel file in Supabase if requested
     if (store) {

@@ -34,4 +34,4 @@ test-output.pdf
 # OS specific
 .DS_Store
 Thumbs.db
-
+supabase/.temp

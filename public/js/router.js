@@ -3,13 +3,18 @@
  */
 import { Router, transitions, renderer, componentLoader } from './deps.js';
 import { localizer } from './i18n-setup.js';
+import { createRoutes } from './route-helpers.js';
 import {
-  initLoginPage, 
-  initRegisterPage, 
-  initApiKeysPage, 
-  initSettingsPage, 
-  initSubscriptionPage, 
-  initResetPasswordPage 
+  initLoginPage,
+  initRegisterPage,
+  initApiKeysPage,
+  initSettingsPage,
+  initSubscriptionPage,
+  initResetPasswordPage,
+  initManageSubscriptionPage,
+  initTestFeaturePage,
+  initFaqsPage,
+  initChartsPage
 } from './page-initializers.js';
 
 // Create a DOM fragment with the default layout
@@ -52,7 +57,12 @@ function createLayoutFragment(content) {
  * @param {string} url - Page URL
  * @returns {Promise<string>} - Page HTML
  */
-async function loadPage(url) {
+/**
+ * Load a page from the server
+ * @param {string} url - Page URL
+ * @returns {Promise<string>} - Page HTML
+ */
+export async function loadPage(url) {
   try {
     // Add cache-busting parameter
     const fullUrl = `${url}?_=${Date.now()}`;
@@ -214,7 +224,8 @@ export function createRouter(options = {}) {
     }
   });
   
-  // Create the router
+  // Create a basic router
+  console.log('Creating basic router');
   const router = new Router({
     rootElement: options.rootElement || '#app',
     transition: customFade,
@@ -222,62 +233,64 @@ export function createRouter(options = {}) {
       translateContainer: localizer.translateContainer.bind(localizer),
       applyRTLToDocument: localizer.applyRTLToDocument.bind(localizer),
       keepScripts: true // Keep script tags in views
-    }),
-    errorHandler: (path) => {
-      console.log('Custom error handler called for path:', path);
-      
-      // Clean up any overlays immediately
-      cleanupOverlays();
-      
-      // Set up a safety interval to periodically check for and remove any overlays
-      const safetyInterval = setInterval(cleanupOverlays, 500);
-      
-      // Clear the safety interval after 3 seconds
-      setTimeout(() => {
-        clearInterval(safetyInterval);
-        console.log('Safety interval cleared');
-      }, 3000);
-      
-      // Create error content fragment
-      const contentFragment = document.createDocumentFragment();
-      
-      // Create content container
-      const contentContainer = document.createElement('div');
-      contentContainer.className = 'content-container';
-      contentContainer.style.display = 'flex';
-      contentContainer.style.justifyContent = 'center';
-      contentContainer.style.alignItems = 'center';
-      contentContainer.style.minHeight = '60vh';
-      
-      // Create error page div
-      const errorPage = document.createElement('div');
-      errorPage.className = 'error-page';
-      
-      // Create heading
-      const heading = document.createElement('h1');
-      heading.textContent = '404 - Page Not Found';
-      errorPage.appendChild(heading);
-      
-      // Create message
-      const message = document.createElement('p');
-      message.textContent = `The page "${path}" could not be found.`;
-      errorPage.appendChild(message);
-      
-      // Create back link
-      const backLink = document.createElement('a');
-      backLink.href = '/';
-      backLink.className = 'back-link';
-      backLink.textContent = 'Go back to home';
-      errorPage.appendChild(backLink);
-      
-      // Assemble the fragment
-      contentContainer.appendChild(errorPage);
-      contentFragment.appendChild(contentContainer);
-      
-      // Return the error wrapped in the default layout
-      return createLayoutFragment(contentFragment);
-    }
+    })
   });
+  
+  // Add custom error handling
+  router.errorHandler = (path) => {
+    console.log('Custom error handler called for path:', path);
+    
+    // Clean up any overlays immediately
+    cleanupOverlays();
+    
+    // Set up a safety interval to periodically check for and remove any overlays
+    const safetyInterval = setInterval(cleanupOverlays, 500);
+    
+    // Clear the safety interval after 3 seconds
+    setTimeout(() => {
+      clearInterval(safetyInterval);
+      console.log('Safety interval cleared');
+    }, 3000);
+    
+    // Create error content fragment
+    const contentFragment = document.createDocumentFragment();
+    
+    // Create content container
+    const contentContainer = document.createElement('div');
+    contentContainer.className = 'content-container';
+    contentContainer.style.display = 'flex';
+    contentContainer.style.justifyContent = 'center';
+    contentContainer.style.alignItems = 'center';
+    contentContainer.style.minHeight = '60vh';
+    
+    // Create error page div
+    const errorPage = document.createElement('div');
+    errorPage.className = 'error-page';
+    
+    // Create heading
+    const heading = document.createElement('h1');
+    heading.textContent = '404 - Page Not Found';
+    errorPage.appendChild(heading);
+    
+    // Create message
+    const message = document.createElement('p');
+    message.textContent = `The page "${path}" could not be found.`;
+    errorPage.appendChild(message);
+    
+    // Create back link
+    const backLink = document.createElement('a');
+    backLink.href = '/';
+    backLink.className = 'back-link';
+    backLink.textContent = 'Go back to home';
+    errorPage.appendChild(backLink);
+    
+    // Assemble the fragment
+    contentContainer.appendChild(errorPage);
+    contentFragment.appendChild(contentContainer);
+    
+    // Return the error wrapped in the default layout
+    return createLayoutFragment(contentFragment);
+  };
   
   // Store the original init method
   const originalInit = router.init;
@@ -342,42 +355,63 @@ export function createRouter(options = {}) {
     };
   }
   
-  // Add middleware for translations
-  router.use(async (to, from, next) => {
-    console.log(`Router middleware: from ${from || 'initial'} to ${to.path}`);
-    
-    // Dispatch pre-navigation event
-    document.dispatchEvent(new CustomEvent('pre-navigation', {
-      detail: { fromPath: from || '', toPath: to.path }
-    }));
-    
-    // Continue with navigation
-    next();
-    
-    // Apply translations after transition
-    document.addEventListener('spa-transition-end', () => {
-      localizer.translateDOM();
-      localizer.applyRTLToDocument();
-    }, { once: true });
-  });
+  // Add middleware for translations if the router supports it
+  if (typeof router.use === 'function') {
+    try {
+      router.use(async (to, from, next) => {
+        console.log(`Router middleware: from ${from || 'initial'} to ${to.path}`);
+        
+        // Dispatch pre-navigation event
+        document.dispatchEvent(new CustomEvent('pre-navigation', {
+          detail: { fromPath: from || '', toPath: to.path }
+        }));
+        
+        // Continue with navigation
+        next();
+        
+        // Apply translations after transition
+        document.addEventListener('spa-transition-end', () => {
+          localizer.translateDOM();
+          localizer.applyRTLToDocument();
+        }, { once: true });
+      });
+    } catch (error) {
+      console.error('Error adding middleware to router:', error);
+    }
+  } else {
+    console.warn('Router does not support middleware (use method not available)');
+  }
   
   // Override navigate method to dispatch events and handle loading state
-  const originalNavigate = router.navigate.bind(router);
-  router.navigate = async function(path, params = {}) {
-    console.log(`Custom navigate method called for path: ${path}`);
-    
-    // Reset loading state if needed
-    if (this.loading) {
-      console.log('Resetting loading state before navigation');
-      this.loading = false;
+  if (typeof router.navigate === 'function') {
+    try {
+      const originalNavigate = router.navigate.bind(router);
+      router.navigate = async function(path, params = {}) {
+        console.log(`Custom navigate method called for path: ${path}`);
+        
+        // Reset loading state if needed
+        if (this.loading) {
+          console.log('Resetting loading state before navigation');
+          this.loading = false;
+        }
+        
+        document.dispatchEvent(new CustomEvent('pre-navigation', {
+          detail: { fromPath: window.location.pathname, toPath: path }
+        }));
+        
+        try {
+          return await originalNavigate(path, params);
+        } catch (error) {
+          console.error('Error during navigation:', error);
+          return Promise.resolve();
+        }
+      };
+    } catch (error) {
+      console.error('Error overriding navigate method:', error);
     }
-    
-    document.dispatchEvent(new CustomEvent('pre-navigation', {
-      detail: { fromPath: window.location.pathname, toPath: path }
-    }));
-    
-    return originalNavigate(path, params);
-  };
+  } else {
+    console.warn('Router does not have a navigate method to override');
+  }
   
   return router;
 }
@@ -389,117 +423,123 @@ export function createRouter(options = {}) {
 export function defineRoutes(router) {
   console.log('Defining routes...');
   
-  // Define routes
-  const routes = {
-    '/': {
-      view: () => loadPage('/views/home.html')
-    },
+  // Define routes using the createRoutes helper
+  const routes = createRoutes({
+    // Public routes
+    '/': '/views/home.html',
+    
+    // Authentication routes
     '/login': {
-      view: () => loadPage('/views/login.html'),
-      afterRender: () => initLoginPage()
+      viewPath: '/views/login.html',
+      afterRender: initLoginPage
     },
     '/register': {
-      view: () => loadPage('/views/register.html'),
-      afterRender: () => initRegisterPage()
+      viewPath: '/views/register.html',
+      afterRender: initRegisterPage
     },
     '/reset-password': {
-      view: () => loadPage('/views/reset-password.html'),
-      afterRender: () => initResetPasswordPage()
+      viewPath: '/views/reset-password.html',
+      afterRender: initResetPasswordPage
     },
-    '/reset-password-confirm': {
-      view: () => loadPage('/views/reset-password-confirm.html')
-    },
-    '/state-demo': {
-      view: () => loadPage('/views/state-demo.html')
+    '/reset-password-confirm': '/views/reset-password-confirm.html',
+    
+    // Demo routes
+    '/state-demo': '/views/state-demo.html',
+    '/charts': {
+      viewPath: '/views/charts.html',
+      afterRender: initChartsPage
     },
     '/simple-state-demo': {
-      view: () => loadPage('/views/simple-state-demo.html'),
+      viewPath: '/views/simple-state-demo.html',
       afterRender: () => {
         import('./components/simple-counter.js').catch(error => {
           console.error('Error loading simple-counter component:', error);
         });
       }
     },
+    '/faqs': {
+      viewPath: '/views/faqs.html',
+      afterRender: initFaqsPage
+    },
+    '/test-feature': {
+      viewPath: '/views/test-feature.html',
+      afterRender: initTestFeaturePage
+    },
+    '/i18n-demo': '/views/i18n-demo.html',
+    
+    // Protected routes
     '/dashboard': {
-      view: () => loadPage('/views/dashboard.html'),
-      beforeEnter: async (to, from, next) => {
-        try {
-          const { checkAuthStatus } = await import('./utils/auth-status.js');
-          const status = await checkAuthStatus();
-          
-          if (!status.authenticated) {
-            return next('/login');
-          }
-          
-          // Check subscription status
-          const userJson = localStorage.getItem('user');
-          if (userJson) {
-            const user = JSON.parse(userJson);
-            const hasActiveSubscription = user?.subscription?.status === 'active';
-            
-            if (!hasActiveSubscription) {
-              alert('You need an active subscription to access the dashboard.');
-              return next('/subscription');
-            }
-          }
-          
-          next();
-        } catch (error) {
-          console.error('Error checking authentication status:', error);
-          return next('/login');
-        }
-      }
+      viewPath: '/views/dashboard.html',
+      requireAuth: true,
+      requireSubscription: true
     },
-    '/api-docs': {
-      view: () => loadPage('/views/api-docs.html')
-    },
+    '/api-docs': '/views/api-docs.html',
     '/api-keys': {
-      view: () => loadPage('/views/api-keys.html'),
-      afterRender: () => initApiKeysPage()
+      viewPath: '/views/api-keys.html',
+      afterRender: initApiKeysPage,
+      requireAuth: true
     },
     '/settings': {
-      view: () => loadPage('/views/settings.html'),
-      afterRender: () => initSettingsPage()
+      viewPath: '/views/settings.html',
+      afterRender: initSettingsPage,
+      requireAuth: true
     },
     '/subscription': {
-      view: () => loadPage('/views/subscription.html'),
-      afterRender: () => initSubscriptionPage()
+      viewPath: '/views/subscription.html',
+      afterRender: initSubscriptionPage
     },
-    '/stripe-payment': {
-      view: () => loadPage('/views/stripe-payment-new.html')
-    },
-    '/terms': {
-      view: () => loadPage('/views/terms.html')
-    },
-    '/privacy': {
-      view: () => loadPage('/views/privacy.html')
-    },
-    '/refund': {
-      view: () => loadPage('/views/refund.html')
-    },
-    '/i18n-demo': {
-      view: () => loadPage('/views/i18n-demo.html')
-    }
-  };
-  
-  // Add aliases for routes with .html extension
-  Object.keys(routes).forEach(path => {
-    if (path !== '/') {
-      routes[`${path}.html`] = routes[path];
+    '/stripe-payment': '/views/stripe-payment-new.html',
+    
+    // Legal routes
+    '/terms': '/views/terms.html',
+    '/privacy': '/views/privacy.html',
+    '/refund': '/views/refund.html',
+    
+    // Subscription management
+    '/manage-subscription': {
+      viewPath: '/views/manage-subscription.html',
+      afterRender: initManageSubscriptionPage,
+      requireAuth: true
     }
   });
   
   console.log('Routes defined:', Object.keys(routes));
   
-  // Register routes
-  router.registerRoutes(routes);
+  // Register routes if the method exists
+  if (typeof router.registerRoutes === 'function') {
+    try {
+      router.registerRoutes(routes);
+      
+      // Debug: Log registered routes
+      if (router.routes) {
+        console.log('Routes registered:', Object.keys(router.routes));
+      } else {
+        console.warn('Router has no routes property after registration');
+      }
+    } catch (error) {
+      console.error('Error registering routes:', error);
+    }
+  } else {
+    console.warn('Router does not have a registerRoutes method');
+    
+    // Fallback: Set routes directly if possible
+    if (router) {
+      router.routes = routes;
+      console.log('Routes set directly on router object');
+    }
+  }
   
-  // Debug: Log registered routes
-  console.log('Routes registered:', Object.keys(router.routes));
-  
-  // Initialize the router
+  // Initialize the router if the method exists
   console.log('Router initializing...');
-  router.init();
+  if (typeof router.init === 'function') {
+    try {
+      router.init();
+    } catch (error) {
+      console.error('Error initializing router:', error);
+    }
+  } else {
+    console.warn('Router does not have an init method');
+  }
   
   return router;
 }

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebXR UI Components Example</title>
+  <!-- Import the main application's theme -->
+  <link rel="stylesheet" href="/public/css/theme.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: var(--font-family);
+    }
+    
+    #info {
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      text-align: center;
+      color: var(--text-primary);
+      background-color: var(--card-background);
+      padding: 10px;
+      z-index: 100;
+      border-bottom: 2px solid var(--primary-color);
+    }
+    
+    #info a {
+      color: var(--primary-color);
+    }
+    
+    #loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--background-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      color: var(--text-primary);
+      transition: opacity 0.5s ease;
+    }
+    
+    #loading-progress {
+      width: 300px;
+      height: 20px;
+      background-color: var(--surface-variant);
+      border-radius: var(--border-radius-full);
+      margin-top: 20px;
+      overflow: hidden;
+    }
+    
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+    
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    #theme-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 101;
+      background-color: var(--surface-color);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: var(--border-radius-md);
+      cursor: pointer;
+      font-family: var(--font-family);
+      transition: all var(--transition-normal);
+    }
+    
+    #theme-toggle:hover {
+      background-color: var(--surface-variant);
+    }
+  </style>
+</head>
+<body>
+  <div id="loading-overlay">
+    <h2>Loading WebXR Experience</h2>
+    <div id="loading-progress">
+      <div id="progress-bar"></div>
+    </div>
+  </div>
+  
+  <button id="theme-toggle">Toggle Dark Mode</button>
+  
+  <div id="info">
+    <h1>WebXR UI Components Example</h1>
+    <p>This example demonstrates how to use Web Components in a WebXR application.</p>
+    <p>Click the 'Enter VR' button to experience in VR.</p>
+  </div>
+  
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+        "three/examples/jsm/webxr/VRButton.js": "https://unpkg.com/three@0.150.1/examples/jsm/webxr/VRButton.js",
+        "three/examples/jsm/webxr/XRControllerModelFactory.js": "https://unpkg.com/three@0.150.1/examples/jsm/webxr/XRControllerModelFactory.js"
+      }
+    }
+  </script>
+  
+  <script type="module">
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    // Check for saved theme preference or use device preference
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Set initial theme
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = 'Toggle Light Mode';
+    }
+    
+    // Toggle theme when button is clicked
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? '' : 'dark';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      themeToggle.textContent = newTheme === 'dark' ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+    });
+    
+    // Simulate loading progress
+    const progressBar = document.getElementById('progress-bar');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 10;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        
+        // Hide loading overlay after a short delay
+        setTimeout(() => {
+          loadingOverlay.classList.add('hidden');
+        }, 500);
+      }
+      progressBar.style.width = `${progress}%`;
+    }, 200);
+    
+    // Import the UI components example
+    import './ui-components-example.js';
+  </script>
+</body>
+</html>

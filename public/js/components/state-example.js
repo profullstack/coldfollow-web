@@ -1,28 +1,93 @@
 /**
- * Example component demonstrating state manager integration
+ * Example component demonstrating state management
  */
 console.log('Loading state-example.js');
-import { StateMixin, defaultStateManager } from '../state-manager.js';
-console.log('Imported StateMixin and defaultStateManager');
 
-// Define a base component class
-class StateExampleBase extends HTMLElement {
+// Create a simple state object with a Proxy for reactivity
+const createSimpleState = (initialState = {}) => {
+  const listeners = new Set();
+  
+  const state = new Proxy(initialState, {
+    set(target, property, value) {
+      const oldValue = target[property];
+      target[property] = value;
+      
+      if (oldValue !== value) {
+        listeners.forEach(listener => listener(value, property, target));
+      }
+      
+      return true;
+    }
+  });
+  
+  return {
+    state,
+    subscribe(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    }
+  };
+};
+
+// Create a state store with initial state
+const stateStore = createSimpleState({
+  counter: 0,
+  theme: document.documentElement.getAttribute('data-theme') || 'light',
+  user: { loggedIn: false }
+});
+
+// Define the component class
+class StateExampleElement extends HTMLElement {
   constructor() {
     super();
+    console.log('StateExampleElement constructor called');
     this.attachShadow({ mode: 'open' });
+    this._unsubscribe = null;
   }
 
   connectedCallback() {
-    // Connect to state keys
-    this.connectToState(['counter', 'theme', 'user']);
-    console.log('Connected to state keys: counter, theme, user');
+    console.log('StateExampleElement connected to DOM');
+    
+    // Subscribe to state changes
+    this._unsubscribe = stateStore.subscribe((value, property, fullState) => {
+      console.log('State changed in component:', property);
+      console.log('New state:', fullState);
+      console.log('State value:', value);
+      
+      // Re-render the component
+      this.render();
+      
+      // If the theme changed, update the document theme
+      if (property === 'theme') {
+        document.documentElement.setAttribute('data-theme', value);
+      }
+    });
     
     this.render();
-    this.addEventListeners();
+  }
+  
+  disconnectedCallback() {
+    // Clean up subscription when element is removed
+    if (this._unsubscribe) {
+      this._unsubscribe();
+      this._unsubscribe = null;
+    }
+  }
+
+  // Helper method to get state
+  getState(property) {
+    return stateStore.state[property];
+  }
+  
+  // Helper method to set state
+  setState(updates) {
+    Object.entries(updates).forEach(([key, value]) => {
+      stateStore.state[key] = value;
+    });
   }
 
   render() {
-    // Get current counter value from state
+    // Get current values from state
     const counter = this.getState('counter') || 0;
     const theme = this.getState('theme') || 'light';
     const user = this.getState('user') || { loggedIn: false };
@@ -121,6 +186,9 @@ class StateExampleBase extends HTMLElement {
         </div>
       </div>
     `;
+
+    // Add event listeners after rendering
+    this.addEventListeners();
   }
 
   addEventListeners() {
@@ -132,11 +200,14 @@ class StateExampleBase extends HTMLElement {
         console.log('Increment button clicked');
         const currentCounter = this.getState('counter') || 0;
         console.log('Current counter value:', currentCounter);
-        this.setState({ counter: currentCounter + 1 });
-        console.log('Counter incremented to:', currentCounter + 1);
+        
+        try {
+          this.setState({ counter: currentCounter + 1 });
+          console.log('Counter incremented to:', currentCounter + 1);
+        } catch (error) {
+          console.error('Error setting state:', error);
+        }
       });
-    } else {
-      console.warn('Increment button not found in the shadow DOM');
     }
 
     this.shadowRoot.getElementById('decrement')?.addEventListener('click', () => {
@@ -154,15 +225,6 @@ class StateExampleBase extends HTMLElement {
       const newTheme = currentTheme === 'light' ? 'dark' : 'light';
       
       this.setState({ theme: newTheme });
-      
-      // Also update document theme for the whole application
-      document.documentElement.setAttribute('data-theme', newTheme);
-      
-      // Dispatch theme change event for other components
-      const event = new CustomEvent('themechange', { 
-        detail: { theme: newTheme } 
-      });
-      document.dispatchEvent(event);
     });
 
     // User login/logout
@@ -171,92 +233,23 @@ class StateExampleBase extends HTMLElement {
       
       if (user.loggedIn) {
         // Logout
-        this.setState({ 
-          user: { loggedIn: false } 
-        });
+        this.setState({ user: { loggedIn: false } });
       } else {
         // Login (simulate)
-        this.setState({ 
-          user: { 
-            loggedIn: true, 
-            username: 'DemoUser', 
+        this.setState({
+          user: {
+            loggedIn: true,
+            username: 'DemoUser',
             email: 'demo@example.com',
             lastLogin: new Date().toISOString()
-          } 
+          }
         });
       }
     });
   }
-
-  // This method will be called when state changes
-  stateChanged(state, changedKeys) {
-    console.log('State changed in component:', changedKeys);
-    console.log('New state:', state);
-    
-    // Check if the counter key changed
-    if (changedKeys.includes('counter')) {
-      console.log('Counter changed, updating display directly');
-      
-      // Get the counter display element
-      const counterDisplay = this.shadowRoot.querySelector('.counter-display');
-      if (counterDisplay) {
-        // Update the counter display directly
-        // Handle both cases: when state is the full state object or just the counter value
-        let counterValue;
-        if (typeof state === 'object' && state !== null) {
-          // If state is an object, it's the full state object
-          counterValue = state.counter;
-          console.log('State is an object, counter value:', counterValue);
-        } else {
-          // If state is not an object, it's the counter value itself
-          counterValue = state;
-          console.log('State is the counter value itself:', counterValue);
-        }
-        
-        counterDisplay.textContent = `Counter: ${counterValue}`;
-        console.log('Counter display updated directly to:', counterValue);
-        console.log('Counter display element text after update:', counterDisplay.textContent);
-      } else {
-        console.error('Counter display element not found');
-        // If the element doesn't exist, do a full render
-        this.render();
-      }
-      
-      // Also update the state display
-      const stateDisplayPre = this.shadowRoot.querySelector('.state-display pre');
-      if (stateDisplayPre) {
-        // Get the full state from the state manager
-        const fullState = this.getState();
-        stateDisplayPre.textContent = JSON.stringify(fullState, null, 2);
-      }
-    } else {
-      // For other state changes, do a full render
-      console.log('Other state changed, doing full render');
-      this.render();
-      
-      // Re-attach event listeners after render
-      console.log('Re-attaching event listeners after render');
-      this.addEventListeners();
-    }
-  }
 }
 
-// Create the connected component using the StateMixin
-const StateExample = StateMixin()(StateExampleBase);
-
 // Register the custom element
-customElements.define('state-example', StateExample);
+customElements.define('state-example', StateExampleElement);
 
-// Initialize default state if not already set
-document.addEventListener('DOMContentLoaded', () => {
-  // Only set initial values if they don't exist
-  if (defaultStateManager.getState('counter') === undefined) {
-    defaultStateManager.setState({
-      counter: 0,
-      theme: document.documentElement.getAttribute('data-theme') || 'light',
-      user: { loggedIn: false }
-    }, true); // Silent update to avoid unnecessary renders
-  }
-});
-
-export default StateExample;
+export default StateExampleElement;

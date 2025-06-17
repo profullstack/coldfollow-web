@@ -1,0 +1,157 @@
+{
+  "app": {
+    "name": "Example App",
+    "description": "An example application using @profullstack/localizer"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "home": {
+    "welcome": "Welcome to Example App",
+    "tagline": "A simple example of internationalization",
+    "get_started": "Get Started",
+    "learn_more": "Learn More"
+  },
+  "about": {
+    "title": "About Us",
+    "description": "We are a team of developers passionate about creating great software.",
+    "mission": "Our mission is to make the web more accessible to everyone.",
+    "team": {
+      "title": "Our Team",
+      "description": "Meet the people behind Example App"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "description": "We'd love to hear from you!",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "submit": "Send Message"
+    },
+    "success": "Your message has been sent successfully!",
+    "error": "There was an error sending your message. Please try again."
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login",
+      "forgot_password": "Forgot Password?",
+      "no_account": "Don't have an account?",
+      "register": "Register"
+    },
+    "register": {
+      "title": "Register",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "submit": "Register",
+      "has_account": "Already have an account?",
+      "login": "Login"
+    },
+    "forgot_password": {
+      "title": "Forgot Password",
+      "email": "Email",
+      "submit": "Reset Password",
+      "back_to_login": "Back to Login"
+    },
+    "reset_password": {
+      "title": "Reset Password",
+      "password": "New Password",
+      "confirm_password": "Confirm New Password",
+      "submit": "Reset Password"
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome, ${name}!",
+    "stats": {
+      "title": "Your Stats",
+      "visits": "Visits",
+      "orders": "Orders",
+      "revenue": "Revenue"
+    },
+    "recent_activity": {
+      "title": "Recent Activity",
+      "no_activity": "No recent activity"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": {
+      "title": "Profile",
+      "name": "Name",
+      "email": "Email",
+      "bio": "Bio",
+      "save": "Save Changes"
+    },
+    "account": {
+      "title": "Account",
+      "change_password": "Change Password",
+      "delete_account": "Delete Account",
+      "delete_confirm": "Are you sure you want to delete your account? This action cannot be undone."
+    },
+    "preferences": {
+      "title": "Preferences",
+      "language": "Language",
+      "theme": "Theme",
+      "notifications": "Notifications"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success!",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "page": "Page ${page} of ${total}",
+    "items_per_page": "Items per page",
+    "next": "Next",
+    "previous": "Previous",
+    "first": "First",
+    "last": "Last"
+  },
+  "errors": {
+    "not_found": "404 - Page Not Found",
+    "not_found_message": "The page you are looking for does not exist.",
+    "server_error": "500 - Server Error",
+    "server_error_message": "Something went wrong on our end. Please try again later.",
+    "unauthorized": "401 - Unauthorized",
+    "unauthorized_message": "You are not authorized to access this page.",
+    "forbidden": "403 - Forbidden",
+    "forbidden_message": "You do not have permission to access this resource."
+  },
+  "validation": {
+    "required": "${field} is required",
+    "email": "Please enter a valid email address",
+    "min_length": "${field} must be at least ${length} characters",
+    "max_length": "${field} must be at most ${length} characters",
+    "password_match": "Passwords do not match",
+    "invalid_format": "Invalid format"
+  },
+  "dates": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow",
+    "days_ago": "${count} day ago",
+    "days_ago_plural": "${count} days ago",
+    "days_from_now": "${count} day from now",
+    "days_from_now_plural": "${count} days from now"
+  }
+}

@@ -800,6 +800,319 @@ export function initSubscriptionPage() {
 }
 
 /**
+ * Initialize the test-feature page
+ */
+export function initTestFeaturePage() {
+  console.log('Initializing test-feature page');
+  
+  // Get the form element
+  const form = document.getElementById('test-feature-form');
+  if (!form) {
+    console.error('test-feature form not found');
+    return;
+  }
+  
+  // Get the result container
+  const resultContainer = document.getElementById('form-result');
+  if (!resultContainer) {
+    console.error('Form result container not found');
+    return;
+  }
+  
+  // Add submit event listener to the form
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Show loading state
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Processing...';
+    submitButton.disabled = true;
+    
+    try {
+      // Get form data
+      const formData = new FormData(form);
+      const formDataObj = Object.fromEntries(formData.entries());
+      
+      // Process the form data
+      console.log('Form data:', formDataObj);
+      
+      // In a real application, you would send this data to a server
+      // For this example, we'll just simulate a server response
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Show success message
+      resultContainer.style.display = 'block';
+      resultContainer.style.backgroundColor = '#d1fae5'; // Light green
+      resultContainer.innerHTML = `
+        <h3>Form Submitted Successfully</h3>
+        <p>Thank you, ${formDataObj.name}! Your message has been received.</p>
+        <p>We'll respond to ${formDataObj.email} as soon as possible.</p>
+      `;
+      
+      // Reset the form
+      form.reset();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      
+      // Show error message
+      resultContainer.style.display = 'block';
+      resultContainer.style.backgroundColor = '#fee2e2'; // Light red
+      resultContainer.innerHTML = `
+        <h3>Error Submitting Form</h3>
+        <p>Sorry, there was an error processing your submission.</p>
+        <p>Error: ${error.message || 'Unknown error'}</p>
+      `;
+    } finally {
+      // Reset button state
+      submitButton.textContent = originalButtonText;
+      submitButton.disabled = false;
+    }
+  });
+}
+
+/**
+ * Initialize the faqs page
+ */
+export function initFaqsPage() {
+  console.log('Initializing faqs page');
+  
+  // Get the form element
+  const form = document.getElementById('faqs-form');
+  if (!form) {
+    console.error('faqs form not found');
+    return;
+  }
+  
+  // Get the result container
+  const resultContainer = document.getElementById('form-result');
+  if (!resultContainer) {
+    console.error('Form result container not found');
+    return;
+  }
+  
+  // Add submit event listener to the form
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Show loading state
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Processing...';
+    submitButton.disabled = true;
+    
+    try {
+      // Get form data
+      const formData = new FormData(form);
+      const formDataObj = Object.fromEntries(formData.entries());
+      
+      // Process the form data
+      console.log('Form data:', formDataObj);
+      
+      // In a real application, you would send this data to a server
+      // For this example, we'll just simulate a server response
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Show success message
+      resultContainer.style.display = 'block';
+      resultContainer.style.backgroundColor = '#d1fae5'; // Light green
+      resultContainer.innerHTML = `
+        <h3>Form Submitted Successfully</h3>
+        <p>Thank you, ${formDataObj.name}! Your message has been received.</p>
+        <p>We'll respond to ${formDataObj.email} as soon as possible.</p>
+      `;
+      
+      // Reset the form
+      form.reset();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      
+      // Show error message
+      resultContainer.style.display = 'block';
+      resultContainer.style.backgroundColor = '#fee2e2'; // Light red
+      resultContainer.innerHTML = `
+        <h3>Error Submitting Form</h3>
+        <p>Sorry, there was an error processing your submission.</p>
+        <p>Error: ${error.message || 'Unknown error'}</p>
+      `;
+    } finally {
+      // Reset button state
+      submitButton.textContent = originalButtonText;
+      submitButton.disabled = false;
+    }
+  });
+}
+
+/**
+ * Initialize the test-fix page
+ */
+export function initTestFixPage() {
+  console.log('Initializing test-fix page');
+  
+  // Get the form element
+  const form = document.getElementById('test-fix-form');
+  if (!form) {
+    console.error('test-fix form not found');
+    return;
+  }
+  
+  // Get the result container
+  const resultContainer = document.getElementById('form-result');
+  if (!resultContainer) {
+    console.error('Form result container not found');
+    return;
+  }
+  
+  // Add submit event listener to the form
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Show loading state
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Processing...';
+    submitButton.disabled = true;
+    
+    try {
+      // Get form data
+      const formData = new FormData(form);
+      const formDataObj = Object.fromEntries(formData.entries());
+      
+      // Process the form data
+      console.log('Form data:', formDataObj);
+      
+      // In a real application, you would send this data to a server
+      // For this example, we'll just simulate a server response
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Show success message
+      resultContainer.style.display = 'block';
+      resultContainer.style.backgroundColor = '#d1fae5'; // Light green
+      resultContainer.innerHTML = `
+        <h3>Form Submitted Successfully</h3>
+        <p>Thank you, ${formDataObj.name}! Your message has been received.</p>
+        <p>We'll respond to ${formDataObj.email} as soon as possible.</p>
+      `;
+      
+      // Reset the form
+      form.reset();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      
+      // Show error message
+      resultContainer.style.display = 'block';
+      resultContainer.style.backgroundColor = '#fee2e2'; // Light red
+      resultContainer.innerHTML = `
+        <h3>Error Submitting Form</h3>
+        <p>Sorry, there was an error processing your submission.</p>
+        <p>Error: ${error.message || 'Unknown error'}</p>
+      `;
+    } finally {
+      // Reset button state
+      submitButton.textContent = originalButtonText;
+      submitButton.disabled = false;
+    }
+  });
+}
+
+/**
+ * Initialize manage subscription page
+ */
+export async function initManageSubscriptionPage() {
+  // Import and initialize the subscription management page
+  const { initSubscriptionManagement } = await import('./views/manage-subscription.js');
+  return initSubscriptionManagement();
+}
+
+/**
+ * Initialize the test-fix-2 page
+ */
+export function initTestFix2Page() {
+  console.log('Initializing test-fix-2 page');
+  
+  // Get the form element
+  const form = document.getElementById('test-fix-2-form');
+  if (!form) {
+    console.error('test-fix-2 form not found');
+    return;
+  }
+  
+  // Get the result container
+  const resultContainer = document.getElementById('form-result');
+  if (!resultContainer) {
+    console.error('Form result container not found');
+    return;
+  }
+  
+  // Add submit event listener to the form
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Show loading state
+    const submitButton = form.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Processing...';
+    submitButton.disabled = true;
+    
+    try {
+      // Get form data
+      const formData = new FormData(form);
+      const formDataObj = Object.fromEntries(formData.entries());
+      
+      // Process the form data
+      console.log('Form data:', formDataObj);
+      
+      // In a real application, you would send this data to a server
+      // For this example, we'll just simulate a server response
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Show success message
+      resultContainer.style.display = 'block';
+      resultContainer.style.backgroundColor = '#d1fae5'; // Light green
+      resultContainer.innerHTML = `
+        <h3>Form Submitted Successfully</h3>
+        <p>Thank you, ${formDataObj.name}! Your message has been received.</p>
+        <p>We'll respond to ${formDataObj.email} as soon as possible.</p>
+      `;
+      
+      // Reset the form
+      form.reset();
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      
+      // Show error message
+      resultContainer.style.display = 'block';
+      resultContainer.style.backgroundColor = '#fee2e2'; // Light red
+      resultContainer.innerHTML = `
+        <h3>Error Submitting Form</h3>
+        <p>Sorry, there was an error processing your submission.</p>
+        <p>Error: ${error.message || 'Unknown error'}</p>
+      `;
+    } finally {
+      // Reset button state
+      submitButton.textContent = originalButtonText;
+      submitButton.disabled = false;
+    }
+  });
+}
+
+/**
+ * Initialize the charts page
+ */
+export async function initChartsPage() {
+  console.log('Initializing charts page');
+  
+  try {
+    // Import and initialize the charts page functionality
+    const { initChartsInteractivity } = await import('./views/charts.js');
+    initChartsInteractivity();
+    console.log('Charts page initialized successfully');
+  } catch (error) {
+    console.error('Error initializing charts page:', error);
+  }
+}
+
+/**
  * Initialize reset password page
  */
 export async function initResetPasswordPage() {

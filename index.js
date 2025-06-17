@@ -12,19 +12,25 @@ import { JSDOM } from 'jsdom';
 import PptxGenJS from 'pptxgenjs';
 import TurndownService from 'turndown';
 
+// Import the WebXR integration
+import { integrateWebXR } from './webxr/hono-integration.js';
+
 // Load environment variables
 dotenvFlow.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = new Hono();
 
+// Integrate WebXR experience at /webxr path
+integrateWebXR(app);
+
 // SPA routing middleware - all routes without extensions go to index.html
 app.use('*', async (c, next) => {
   const url = new URL(c.req.url);
   const pathname = url.pathname;
   
-  // Skip API routes
-  if (pathname.startsWith('/api/')) {
+  // Skip API routes and WebXR routes
+  if (pathname.startsWith('/api/') || pathname.startsWith('/webxr/')) {
     return next();
   }
   
@@ -55,8 +61,8 @@ app.get('*', async (c) => {
   
   console.log(`Fallback handler for: ${pathname}`);
   
-  // If we got here and it's not an API route or a file with extension, serve index.html
-  if (!pathname.startsWith('/api/') && !pathname.includes('.')) {
+  // If we got here and it's not an API route, WebXR route, or a file with extension, serve index.html
+  if (!pathname.startsWith('/api/') && !pathname.startsWith('/webxr/') && !pathname.includes('.')) {
     const indexPath = path.join(__dirname, 'public', 'index.html');
     try {
       const indexContent = await fs.readFile(indexPath, 'utf-8');
@@ -403,5 +409,6 @@ serve({
   console.log(`- HTML to PowerPoint endpoint: http://localhost:${info.port}/api/1/html-to-ppt`);
   console.log(`- HTML to Markdown endpoint: http://localhost:${info.port}/api/1/html-to-markdown`);
   console.log(`- Markdown to HTML endpoint: http://localhost:${info.port}/api/1/markdown-to-html`);
+  console.log(`- WebXR Experience: http://localhost:${info.port}/webxr`);
   console.log(`- Web interface: http://localhost:${info.port}`);
 });

@@ -5,12 +5,24 @@ import { htmlToPptRoute } from './html-to-ppt.js';
 import { htmlToMarkdownRoute } from './html-to-markdown.js';
 import { markdownToHtmlRoute } from './markdown-to-html.js';
 import { htmlToEpubRoute } from './html-to-epub.js';
+import { pdfToMarkdownRoute } from './pdf-to-markdown.js';
+import { docxToMarkdownRoute } from './docx-to-markdown.js';
+import { docToMarkdownRoute } from './doc-to-markdown.js';
+import { epubToMarkdownRoute } from './epub-to-markdown.js';
+import { textToMarkdownRoute } from './text-to-markdown.js';
+import { pptxToMarkdownRoute } from './pptx-to-markdown.js';
+import { xlsxToMarkdownRoute } from './xlsx-to-markdown.js';
 import { documentHistoryRoute } from './document-history.js';
 import { downloadDocumentRoute } from './download-document.js';
 import {
   subscriptionRoute,
   subscriptionStatusRoute
 } from './subscription.js';
+import {
+  getSubscriptionDetails,
+  createStripePortalSession,
+  cancelSubscription
+} from './subscription-management.js';
 import { stripePaymentRoutes } from './stripe-payments.js';
 import stripeDirectRouter from './stripe-direct.js';
 import { apiKeyRoutes } from './api-keys.js';
@@ -35,6 +47,13 @@ const protectedRoutes = [
   htmlToMarkdownRoute,
   markdownToHtmlRoute,
   htmlToEpubRoute,
+  pdfToMarkdownRoute,
+  docxToMarkdownRoute,
+  docToMarkdownRoute,
+  epubToMarkdownRoute,
+  textToMarkdownRoute,
+  pptxToMarkdownRoute,
+  xlsxToMarkdownRoute,
   documentHistoryRoute,
   downloadDocumentRoute
 ];
@@ -59,7 +78,26 @@ const publicRoutes = [
   resetPasswordConfirmRoute,
   authStatusRoute,
   supabaseConfigRoute,
-  websocketRoute
+  websocketRoute,
+  // Subscription management routes
+  {
+    method: 'GET',
+    path: '/api/subscription/details',
+    handler: getSubscriptionDetails,
+    middleware: [authMiddleware] // This one needs auth
+  },
+  {
+    method: 'POST',
+    path: '/api/stripe/create-portal-session',
+    handler: createStripePortalSession,
+    middleware: [authMiddleware] // This one needs auth
+  },
+  {
+    method: 'POST',
+    path: '/api/subscription/cancel',
+    handler: cancelSubscription,
+    middleware: [authMiddleware] // This one needs auth
+  }
 ];
 
 /**

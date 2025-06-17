@@ -1,0 +1,49 @@
+{
+  "name": "@profullstack/state-manager",
+  "version": "0.8.0",
+  "description": "Enhanced state manager with web component integration, persistence, and subscription management",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "browser": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./persistence": "./dist/persistence.js",
+    "./web-components": "./dist/web-components.js",
+    "./middleware": "./dist/middleware.js"
+  },
+  "scripts": {
+    "build": "node browser-build.js",
+    "test": "pnpm install && vitest run --bail 1",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run build",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.3.1",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "vitest": "^1.3.1"
+  },
+  "keywords": [
+    "state",
+    "state-management",
+    "web-components",
+    "persistence",
+    "subscription",
+    "reactive",
+    "store"
+  ],
+  "author": "ProFullStack",
+  "license": "MIT",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/profullstack/state-manager"
+  },
+  "bugs": {
+    "url": "https://github.com/profullstack/state-manager/issues"
+  },
+  "homepage": "https://github.com/profullstack/state-manager#readme"
+}

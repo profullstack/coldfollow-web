@@ -33,16 +33,27 @@ function initDashboard() {
     }
   }
   
-  // Verify subscription status
-  const hasActiveSubscription = user &&
-                               user.subscription &&
-                               user.subscription.status === 'active';
+  /**
+   * Check if user has access (admin or active subscription)
+   * @param {Object} user - User object
+   * @returns {boolean} - Whether the user has access
+   */
+  function hasAccess(user) {
+    if (!user) return false;
+    if (user.is_admin === true) return true;
+    return user.subscription?.status === 'active';
+  }
   
-  if (!hasActiveSubscription) {
+  // Check if user has access
+  if(user.is_admin === true) {
+    
+  } else {
+    if (!hasAccess(user)) {
     // Redirect to subscription page
     alert('You need an active subscription to access the dashboard.');
     window.router.navigate('/subscription');
     return;
+    }
   }
   
   // Set up tab switching
@@ -126,7 +137,7 @@ function updateFilenameExtension(documentType) {
   // Add new extension based on document type
   const extensions = {
     pdf: '.pdf',
-    doc: '.doc',
+    doc: '.docx',  // Updated from .doc to .docx
     excel: '.xlsx',
     ppt: '.pptx',
     epub: '.epub',
@@ -182,7 +193,9 @@ async function convertDocument() {
         break;
         
       case 'doc':
+        console.log('Converting to DOCX');
         result = await ApiClient.htmlToDoc(html, filename, storeDocument);
+        console.log('DOCX conversion successful');
         break;
         
       case 'excel':

@@ -31,7 +31,9 @@ if (document.readyState === 'complete' || document.readyState === 'interactive')
  */
 function initApp() {
   // Set API base URL for client-side requests (domain only, without /api/1)
-  window.API_BASE_URL = 'https://convert2doc.com';
+  // Use localhost for local development, production URL otherwise
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  window.API_BASE_URL = isLocalhost ? 'http://localhost:8099' : 'https://convert2doc.com';
   console.log('API base URL set to:', window.API_BASE_URL);
   
   // Initialize i18n first
@@ -65,9 +67,24 @@ function initRouter() {
   
   // Debug: Try to access the router's internal state
   console.log('Router internal state:', router);
-  console.log('Router routes property:', router.routes);
-  console.log('Router routes keys after registration:', Object.keys(router.routes));
-  console.log('Router route for / exists after registration:', router.routes['/'] !== undefined);
+  
+  // Safely check router properties
+  try {
+    if (router) {
+      console.log('Router routes property:', router.routes || 'undefined');
+      
+      if (router.routes && typeof router.routes === 'object') {
+        console.log('Router routes keys after registration:', Object.keys(router.routes));
+        console.log('Router route for / exists after registration:', router.routes['/'] !== undefined);
+      } else {
+        console.log('Router routes is not an object or is undefined');
+      }
+    } else {
+      console.log('Router is undefined or null');
+    }
+  } catch (error) {
+    console.error('Error accessing router properties:', error);
+  }
   
   // Expose router globally
   window.router = router;

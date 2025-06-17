@@ -111,6 +111,11 @@ export async function authMiddleware(c, next) {
       }, 401);
     }
     
+    // Ensure is_admin is always present in user object
+    if (typeof user.is_admin === 'undefined') {
+      user.is_admin = false;
+    }
+
     // Set user in context for later use
     c.set('user', user);
     

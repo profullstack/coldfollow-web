@@ -1,0 +1,51 @@
+{
+  "name": "@profullstack/api-key-manager",
+  "version": "0.3.0",
+  "description": "Simple API key management system with generation, validation, and rate limiting",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./memory": "./dist/adapters/memory.js",
+    "./redis": "./dist/adapters/redis.js",
+    "./database": "./dist/adapters/database.js"
+  },
+  "scripts": {
+    "build": "mkdir -p dist && cp -r src/* dist/",
+    "test": "vitest run --bail 1",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "husky": "^9.0.11",
+    "vitest": "^1.3.0"
+  },
+  "keywords": [
+    "api",
+    "key",
+    "management",
+    "authentication",
+    "rate-limiting",
+    "security"
+  ],
+  "author": "ProFullStack",
+  "license": "MIT",
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "uuid": "^11.1.0"
+  },
+  "optionalDependencies": {
+    "redis": "^4.6.13"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/profullstack/api-key-manager"
+  },
+  "bugs": {
+    "url": "https://github.com/profullstack/api-key-manager/issues"
+  },
+  "homepage": "https://github.com/profullstack/api-key-manager#readme"
+}

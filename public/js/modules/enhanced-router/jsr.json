@@ -1,0 +1,36 @@
+{
+  "name": "@profullstack/enhanced-router",
+  "version": "0.4.0",
+  "description": "Enhanced SPA router with transition management, i18n integration, and layout management",
+  "exports": {
+    ".": "./dist/index.js",
+    "./transitions": "./dist/transitions.js",
+    "./layouts": "./dist/layouts.js",
+    "./i18n": "./dist/i18n.js"
+  },
+  "dependencies": {
+    "@profullstack/spa-router": "^1.11.8"
+  },
+  "peerDependencies": {
+    "@profullstack/localizer": "^0.5.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "jsdom": "^22.1.0",
+    "mocha": "^10.2.0",
+    "sinon": "^17.0.1"
+  },
+  "keywords": [
+    "router",
+    "spa",
+    "single-page-application",
+    "transitions",
+    "layouts",
+    "i18n"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/profullstack/enhanced-router"
+  }
+}

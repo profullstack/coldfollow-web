@@ -40,11 +40,11 @@ export const apiKeyService = {
   /**
    * Create user if not exists
    * @param {string} email - User email
-   * @param {boolean} isAdmin - Whether the user is an admin
+   * @param {boolean} is_admin - Whether the user is an admin
    * @returns {Promise<Object|null>} - User object or null if couldn't be created
    * @private
    */
-  async _createUserIfNotExists(email, isAdmin = false) {
+  async _createUserIfNotExists(email, is_admin = false) {
     try {
       // Check if user exists
       const user = await this._getUserByEmail(email);
@@ -62,7 +62,7 @@ export const apiKeyService = {
           .from('users')
           .insert([{
             email,
-            is_admin: isAdmin
+            is_admin: is_admin
           }])
           .select()
           .single();
@@ -72,7 +72,7 @@ export const apiKeyService = {
             console.warn(`API Key Service: Permission denied to create user ${email}, proceeding anyway`);
             // Return a temporary user object with just the email
             // This allows operations to proceed without failing entirely
-            return { email, id: null, is_admin: isAdmin, temp_user: true };
+            return { email, id: null, is_admin: is_admin, temp_user: true };
           } else {
             throw error;
           }
@@ -86,7 +86,7 @@ export const apiKeyService = {
         if (insertError.code === '42501') { // Permission denied error
           console.warn(`API Key Service: Permission denied to create user ${email}, proceeding anyway`);
           // Return a temporary user object with just the email
-          return { email, id: null, is_admin: isAdmin, temp_user: true };
+          return { email, id: null, is_admin: is_admin, temp_user: true };
         } else {
           throw insertError;
         }
@@ -94,7 +94,7 @@ export const apiKeyService = {
     } catch (error) {
       console.error(`API Key Service: Error in _createUserIfNotExists for ${email}:`, error);
       // Return a temporary user object to allow operations to continue
-      return { email, id: null, is_admin: isAdmin, temp_user: true };
+      return { email, id: null, is_admin: is_admin, temp_user: true };
     }
   },
 

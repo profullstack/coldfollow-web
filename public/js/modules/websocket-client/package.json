@@ -1,0 +1,49 @@
+{
+  "name": "@profullstack/websocket-client",
+  "version": "0.3.0",
+  "description": "Robust WebSocket client with connection management, reconnection logic, and message handling",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./browser": "./dist/browser.js",
+    "./node": "./dist/node.js"
+  },
+  "scripts": {
+    "build": "mkdir -p dist && cp -r src/* dist/",
+    "test": "pnpm install && mocha --bail test/index.js",
+    "prepublishOnly": "npm run build",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0"
+  },
+  "keywords": [
+    "websocket",
+    "ws",
+    "client",
+    "reconnect",
+    "realtime",
+    "connection",
+    "messaging"
+  ],
+  "author": "ProFullStack",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.1",
+    "eventemitter3": "^5.0.1"
+  },
+  "browser": {
+    "./dist/node.js": "./dist/browser.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/profullstack/websocket-client"
+  },
+  "bugs": {
+    "url": "https://github.com/profullstack/websocket-client/issues"
+  },
+  "homepage": "https://github.com/profullstack/websocket-client#readme"
+}

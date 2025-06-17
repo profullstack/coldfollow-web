@@ -1,4 +1,5 @@
 import { paymentService } from '../services/payment-service.js';
+import { apiKeyService } from '../services/api-key-service.js';
 import { errorUtils } from '../utils/error-utils.js';
 
 /**
@@ -18,7 +19,13 @@ export async function subscriptionCheck(c, next) {
     if (freeEndpoints.includes(c.req.path)) {
       return next();
     }
-    
+
+    // Bypass subscription check for admin users
+    const user = c.get('user');
+    if (user && user.is_admin) {
+      return next();
+    }
+
     // Get API key from header
     const apiKey = c.req.header('X-API-Key');
     
@@ -33,10 +40,10 @@ export async function subscriptionCheck(c, next) {
     // For simplicity, we're using the API key as the email address
     const email = apiKey;
     
-    // Check if user has an active subscription
-    const hasActiveSubscription = await paymentService.hasActiveSubscription(email);
+    // Check if user has an active subscription or is an admin
+    const hasAccess = await apiKeyService.hasAccess(email);
     
-    if (!hasActiveSubscription) {
+    if (!hasAccess) {
       return c.json({ 
         error: 'Active subscription required', 
         subscription_required: true,

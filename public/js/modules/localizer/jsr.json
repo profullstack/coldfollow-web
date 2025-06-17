@@ -1,0 +1,26 @@
+{
+  "name": "@profullstack/localizer",
+  "version": "0.8.0",
+  "description": "Simple localization and internationalization library with RTL support",
+  "exports": {
+    ".": "./dist/index.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "eslint": "^8.56.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.3"
+  },
+  "keywords": [
+    "i18n",
+    "l10n",
+    "localization",
+    "internationalization",
+    "translation",
+    "rtl",
+    "right-to-left",
+    "arabic"
+  ],
+  "license": "MIT"
+}

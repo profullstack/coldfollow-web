@@ -1,0 +1,196 @@
+/**
+ * WebXR UI Theme
+ * 
+ * This file imports the theme variables from the main application's theme.css file
+ * and applies them to the WebXR UI components.
+ */
+
+/* Import the theme variables from the main application */
+@import url('/public/css/theme.css');
+
+/* VR UI Panel styles */
+.vr-panel {
+  background-color: var(--card-background);
+  border-radius: var(--border-radius-lg);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  padding: 15px;
+  min-width: 200px;
+  min-height: 100px;
+  box-shadow: var(--shadow-md);
+  border: 2px solid var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+  transition: all var(--transition-normal);
+  user-select: none;
+}
+
+.vr-panel-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 10px;
+  text-align: center;
+  width: 100%;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 5px;
+  color: var(--primary-color);
+}
+
+.vr-panel-content {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* VR Button styles */
+.vr-button {
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: var(--border-radius-md);
+  color: var(--text-on-primary);
+  cursor: pointer;
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  margin: 5px 0;
+  padding: 8px 15px;
+  transition: background-color var(--transition-fast);
+  width: 90%;
+  text-align: center;
+}
+
+.vr-button:hover {
+  background-color: var(--primary-dark);
+}
+
+.vr-button:active {
+  background-color: var(--primary-light);
+  transform: scale(0.98);
+}
+
+/* VR Slider styles */
+.vr-slider {
+  width: 90%;
+  margin: 10px 0;
+  -webkit-appearance: none;
+  height: 10px;
+  border-radius: var(--border-radius-full);
+  background: var(--surface-variant);
+  outline: none;
+}
+
+.vr-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+}
+
+.vr-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+}
+
+/* VR Toggle styles */
+.vr-toggle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  margin: 10px 0;
+}
+
+.vr-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.vr-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--surface-variant);
+  transition: var(--transition-normal);
+  border-radius: 30px;
+}
+
+.vr-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--text-on-primary);
+  transition: var(--transition-normal);
+  border-radius: 50%;
+}
+
+.vr-toggle input:checked + .vr-toggle-slider {
+  background-color: var(--primary-color);
+}
+
+.vr-toggle input:checked + .vr-toggle-slider:before {
+  transform: translateX(30px);
+}
+
+/* VR Label styles */
+.vr-label {
+  margin: 5px 0;
+  text-align: center;
+  width: 90%;
+  color: var(--text-secondary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+}
+
+/* Dark theme support */
+[data-theme="dark"] .vr-panel {
+  background-color: var(--card-background);
+  color: var(--text-primary);
+  border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .vr-button {
+  background-color: var(--primary-color);
+  color: var(--text-on-primary);
+}
+
+[data-theme="dark"] .vr-button:hover {
+  background-color: var(--primary-dark);
+}
+
+[data-theme="dark"] .vr-button:active {
+  background-color: var(--primary-light);
+}
+
+/* Controller ray styles */
+.controller-ray {
+  background: linear-gradient(90deg, var(--primary-color), transparent);
+}
+
+/* Teleportation marker styles */
+.teleport-marker {
+  border: 2px solid var(--primary-color);
+  background-color: rgba(224, 35, 55, 0.3);
+}
+
+/* Interactive object highlight */
+.interactive-highlight {
+  outline: 2px solid var(--secondary-color);
+}

@@ -1,10 +1,9 @@
 /**
  * Simple Counter Component
- * 
- * This demonstrates the simplified state management approach using the simple-state.js library.
- * It provides a much cleaner API compared to the current implementation.
+ *
+ * This demonstrates a simplified state management approach without using the StoreConnector.
  */
-import { createStore, StoreConnector } from '../../js/deps.js';
+import { createStore } from '../../js/deps.js';
 
 // Create a store for our counter component
 const counterStore = createStore('counter', {
@@ -12,35 +11,36 @@ const counterStore = createStore('counter', {
   theme: 'light'
 });
 
-// Define the base component class
-class SimpleCounterBase extends HTMLElement {
+// Define the component class
+class SimpleCounter extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
+    this._storeUnsubscribe = null;
   }
 
   connectedCallback() {
+    // Subscribe to store changes
+    this._storeUnsubscribe = counterStore.subscribe((state, property) => {
+      this.render();
+      
+      // Update document theme if theme property changed
+      if (property === 'theme') {
+        document.documentElement.setAttribute('data-theme', state.theme);
+      }
+    });
+    
+    // Initial render
     this.render();
     this.setupEventListeners();
-    
-    // Connect specific elements to state properties
-    this.bindElement(
-      this.shadowRoot.querySelector('.counter-value'),
-      'count',
-      (value) => `Counter: ${value}`
-    );
-    
-    // Connect the theme toggle button text
-    this.bindElement(
-      this.shadowRoot.querySelector('#theme-toggle'),
-      'theme',
-      (theme) => `Toggle Theme (Current: ${theme})`
-    );
-    
-    // Update the component's theme when the theme changes
-    this.connect('theme', (state) => {
-      this.shadowRoot.host.setAttribute('data-theme', state.theme);
-    });
+  }
+  
+  disconnectedCallback() {
+    // Unsubscribe from store changes
+    if (this._storeUnsubscribe) {
+      this._storeUnsubscribe();
+      this._storeUnsubscribe = null;
+    }
   }
   
   render() {
@@ -118,12 +118,15 @@ class SimpleCounterBase extends HTMLElement {
         </div>
       </div>
     `;
+    
+    // Update host attribute for theme
+    this.setAttribute('data-theme', theme);
   }
   
   setupEventListeners() {
     // Increment button
     this.shadowRoot.getElementById('increment').addEventListener('click', () => {
-      // Direct state manipulation - much cleaner!
+      // Direct state manipulation
       counterStore.state.count++;
     });
     
@@ -143,15 +146,9 @@ class SimpleCounterBase extends HTMLElement {
     this.shadowRoot.getElementById('theme-toggle').addEventListener('click', () => {
       // Toggle theme with a simple assignment
       counterStore.state.theme = counterStore.state.theme === 'light' ? 'dark' : 'light';
-      
-      // Update document theme
-      document.documentElement.setAttribute('data-theme', counterStore.state.theme);
     });
   }
 }
-
-// Create the connected component using the StoreConnector mixin
-const SimpleCounter = StoreConnector(counterStore)(SimpleCounterBase);
 
 // Register the custom element
 customElements.define('simple-counter', SimpleCounter);

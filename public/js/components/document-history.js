@@ -39,26 +39,54 @@ export class DocumentHistory extends BaseComponent {
         margin-bottom: 20px;
       }
       
-      .history-table {
+      .history-list {
         width: 100%;
-        border-collapse: collapse;
+        list-style-position: inside;
+        padding: 0;
         margin-bottom: 20px;
       }
       
-      .history-table th,
-      .history-table td {
-        padding: 10px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
+      .history-item {
+        padding: 15px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: var(--background-color);
       }
       
-      .history-table th {
-        background-color: var(--background-color-alt);
-        font-weight: bold;
-      }
-      
-      .history-table tr:hover {
+      .history-item:hover {
         background-color: var(--hover-color, rgba(0, 0, 0, 0.05));
+      }
+      
+      .history-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      
+      .history-item-type {
+        font-weight: bold;
+        font-size: 16px;
+      }
+      
+      .history-item-date {
+        color: #666;
+        font-size: 14px;
+      }
+      
+      .history-item-details {
+        margin-bottom: 10px;
+      }
+      
+      .history-item-detail {
+        margin-bottom: 5px;
+      }
+      
+      .history-item-label {
+        font-weight: bold;
+        display: inline-block;
+        margin-right: 5px;
       }
       
       .download-link {
@@ -222,31 +250,33 @@ export class DocumentHistory extends BaseComponent {
     }
     
     return `
-      <table class="history-table">
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Generated At</th>
-            <th>Storage Path</th>
-            <th>Metadata</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${this._history.map(item => `
-            <tr>
-              <td>${this._formatDocumentType(item.document_type)}</td>
-              <td>${this._formatDate(item.generated_at)}</td>
-              <td>${item.storage_path}</td>
-              <td>${this._formatMetadata(item.metadata)}</td>
-              <td class="action-buttons">
-                <button class="download-link" data-path="${item.storage_path}">Download</button>
-                ${item.source_doc ? `<button class="edit-link" data-source="${encodeURIComponent(item.source_doc)}" data-type="${item.document_type}">Edit</button>` : ''}
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
+      <ol class="history-list">
+        ${this._history.map(item => `
+          <li class="history-item">
+            <div class="history-item-header">
+              <div class="history-item-type">${this._formatDocumentType(item.document_type)}</div>
+              <div class="history-item-date">${this._formatDate(item.generated_at)}</div>
+            </div>
+            
+            <div class="history-item-details">
+              <div class="history-item-detail">
+                <span class="history-item-label">Storage Path:</span>
+                <span>${item.storage_path}</span>
+              </div>
+              
+              <div class="history-item-detail">
+                <span class="history-item-label">Metadata:</span>
+                <div>${this._formatMetadata(item.metadata)}</div>
+              </div>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="download-link" data-path="${item.storage_path}">Download</button>
+              ${item.source_doc ? `<button class="edit-link" data-source="${encodeURIComponent(item.source_doc)}" data-type="${item.document_type}">Edit</button>` : ''}
+            </div>
+          </li>
+        `).join('')}
+      </ol>
     `;
   }
 

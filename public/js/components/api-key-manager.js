@@ -135,37 +135,62 @@ export class ApiKeyManager extends BaseComponent {
         background-color: var(--secondary-dark);
       }
       
-      .table-responsive {
-        overflow-x: auto;
-        margin-bottom: 20px;
-      }
-      
-      .api-keys-table {
+      .api-keys-list {
         width: 100%;
-        border-collapse: collapse;
+        list-style-position: inside;
+        padding: 0;
         margin-bottom: 20px;
       }
       
-      .api-keys-table th,
-      .api-keys-table td {
-        padding: 12px 15px;
-        text-align: left;
-        border-bottom: 1px solid var(--border-color);
+      .api-key-item {
+        padding: 15px;
+        margin-bottom: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        background-color: var(--background-color);
       }
       
-      .api-keys-table th {
+      .api-key-item:hover {
+        background-color: var(--surface-variant);
+      }
+      
+      .api-key-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      
+      .api-key-name {
         font-weight: var(--font-weight-semibold);
+        font-size: var(--font-size-lg);
+      }
+      
+      .api-key-details {
+        margin-bottom: 15px;
+      }
+      
+      .api-key-detail {
+        margin-bottom: 5px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      
+      .api-key-label {
+        font-weight: var(--font-weight-medium);
         color: var(--text-secondary);
-        background-color: var(--surface-variant);
+        margin-right: 10px;
+        min-width: 100px;
       }
       
-      .api-keys-table tr:hover {
-        background-color: var(--surface-variant);
+      .api-key-value {
+        color: var(--text-primary);
       }
       
-      .api-keys-table .actions {
+      .api-key-actions {
         display: flex;
         gap: 10px;
+        flex-wrap: wrap;
       }
       
       .empty-state {
@@ -321,39 +346,37 @@ export class ApiKeyManager extends BaseComponent {
     }
     
     return `
-      <div class="table-responsive">
-        <table class="api-keys-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Created</th>
-              <th>Last Used</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${this._apiKeys.map(key => `
-              <tr data-key-id="${key.id}">
-                <td>${key.name}</td>
-                <td>
-                  <span class="status-badge ${key.is_active ? 'active' : 'inactive'}">
-                    ${key.is_active ? 'Active' : 'Inactive'}
-                  </span>
-                </td>
-                <td>${this._formatDate(key.created_at)}</td>
-                <td>${key.last_used_at ? this._formatDate(key.last_used_at) : 'Never'}</td>
-                <td class="actions">
-                  <button class="toggle-button ${key.is_active ? 'active' : ''}" data-action="toggle" data-key-id="${key.id}" title="${key.is_active ? 'Deactivate this API key' : 'Activate this API key'}">
-                    ${key.is_active ? 'Deactivate' : 'Activate'}
-                  </button>
-                  <button class="delete-button" data-action="delete" data-key-id="${key.id}" title="Delete this API key permanently">Delete</button>
-                </td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
+      <ol class="api-keys-list">
+        ${this._apiKeys.map(key => `
+          <li class="api-key-item" data-key-id="${key.id}">
+            <div class="api-key-header">
+              <div class="api-key-name">${key.name}</div>
+              <span class="status-badge ${key.is_active ? 'active' : 'inactive'}">
+                ${key.is_active ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+            
+            <div class="api-key-details">
+              <div class="api-key-detail">
+                <span class="api-key-label">Created:</span>
+                <span class="api-key-value">${this._formatDate(key.created_at)}</span>
+              </div>
+              
+              <div class="api-key-detail">
+                <span class="api-key-label">Last Used:</span>
+                <span class="api-key-value">${key.last_used_at ? this._formatDate(key.last_used_at) : 'Never'}</span>
+              </div>
+            </div>
+            
+            <div class="api-key-actions">
+              <button class="toggle-button ${key.is_active ? 'active' : ''}" data-action="toggle" data-key-id="${key.id}" title="${key.is_active ? 'Deactivate this API key' : 'Activate this API key'}">
+                ${key.is_active ? 'Deactivate' : 'Activate'}
+              </button>
+              <button class="delete-button" data-action="delete" data-key-id="${key.id}" title="Delete this API key permanently">Delete</button>
+            </div>
+          </li>
+        `).join('')}
+      </ol>
     `;
   }
 
@@ -443,9 +466,9 @@ export class ApiKeyManager extends BaseComponent {
     }
     
     // Toggle and delete buttons
-    const apiKeysTable = this.$('.api-keys-table');
-    if (apiKeysTable) {
-      apiKeysTable.addEventListener('click', (e) => {
+    const apiKeysList = this.$('.api-keys-list');
+    if (apiKeysList) {
+      apiKeysList.addEventListener('click', (e) => {
         const button = e.target.closest('button');
         if (!button) return;
         
