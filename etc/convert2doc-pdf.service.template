@@ -6,14 +6,14 @@ After=network.target
 Type=simple
 User=${SERVICE_USER:-ubuntu}
 Group=${SERVICE_GROUP:-ubuntu}
-WorkingDirectory=${SERVICE_WORKING_DIR:-/home/ubuntu/www/convert2doc.com/pdf}
-ExecStart=/bin/zsh ${START_SCRIPT:-/home/ubuntu/www/convert2doc.com/pdf/bin/start.sh}
+WorkingDirectory=${SERVICE_WORKING_DIR:-/home/ubuntu/www/coldfollow.com/coldfollow-web}
+ExecStart=/bin/zsh ${START_SCRIPT:-/home/ubuntu/www/coldfollow.com/coldfollow-web/bin/start.sh}
 Restart=on-failure
 RestartSec=10
 
 # Log to files instead of journal
-StandardOutput=append:/var/log/${SERVICE_NAME:-convert2doc-pdf}.log
-StandardError=append:/var/log/${SERVICE_NAME:-convert2doc-pdf}.error.log
+StandardOutput=append:/var/log/${SERVICE_NAME:-coldfollow-web}.log
+StandardError=append:/var/log/${SERVICE_NAME:-coldfollow-web}.error.log
 
 # Environment
 Environment=NODE_ENV=${NODE_ENV:-production}

@@ -51,7 +51,7 @@ The app will connect to the Convert2Doc web application. The URL is determined i
 
 1. From the `API_BASE_URL` environment variable
 2. From the `API_BASE_URL` in the `.env` file in the project root
-3. Fallback to the hardcoded URL: `https://convert2doc.com`
+3. Fallback to the hardcoded URL: `https://coldfollow.com`
 
 ## Features
 

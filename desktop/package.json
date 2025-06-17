@@ -1,5 +1,5 @@
 {
-  "name": "convert2doc-desktop",
+  "name": "coldfollow-desktop",
   "version": "1.0.0",
   "description": "Convert2Doc Desktop App",
   "main": "src/main.js",
@@ -10,9 +10,9 @@
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux"
   },
-  "author": "ProFullStack <info@convert2doc.com>",
+  "author": "ProFullStack <info@coldfollow.com>",
   "license": "MIT",
-  "homepage": "https://convert2doc.com",
+  "homepage": "https://coldfollow.com",
   "devDependencies": {
     "electron": "^25.0.0",
     "electron-builder": "^24.0.0"
@@ -21,7 +21,7 @@
     "dotenv": "^16.0.3"
   },
   "build": {
-    "appId": "com.convert2doc.app",
+    "appId": "com.coldfollow.app",
     "productName": "Convert2Doc",
     "directories": {
       "output": "dist"
@@ -34,7 +34,7 @@
     "linux": {
       "target": ["AppImage"],
       "category": "Office",
-      "maintainer": "ProFullStack <info@convert2doc.com>"
+      "maintainer": "ProFullStack <info@coldfollow.com>"
     }
   }
 }

@@ -22,8 +22,8 @@ This repository is configured to automatically deploy to the production server w
    cat ~/.ssh/id_ed25519.pub
    
    # Then on your server, add it to authorized_keys
-   ssh ubuntu@convert2doc.com "mkdir -p ~/.ssh && chmod 700 ~/.ssh"
-   ssh ubuntu@convert2doc.com "echo 'your-public-key-here' >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
+   ssh ubuntu@coldfollow.com "mkdir -p ~/.ssh && chmod 700 ~/.ssh"
+   ssh ubuntu@coldfollow.com "echo 'your-public-key-here' >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
    ```
 
 3. **Add the required secrets to GitHub**:

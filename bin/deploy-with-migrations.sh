@@ -21,8 +21,8 @@ fi
 REMOTE_HOST="${DEPLOY_REMOTE_HOST:-104.36.23.197}"
 REMOTE_PORT="${DEPLOY_REMOTE_PORT:-2048}"
 REMOTE_USER="${DEPLOY_REMOTE_USER:-ubuntu}"
-REMOTE_DIR="${DEPLOY_REMOTE_DIR:-www/convert2doc.com/pdf}"
-SERVICE_NAME="${SERVICE_NAME:-convert2doc-pdf}"
+REMOTE_DIR="${DEPLOY_REMOTE_DIR:-www/coldfollow.com/coldfollow-web}"
+SERVICE_NAME="${SERVICE_NAME:-coldfollow-web}"
 
 # Create SSH options
 SSH_OPTS="-p $REMOTE_PORT"

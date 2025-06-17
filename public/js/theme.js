@@ -8,7 +8,7 @@ class ThemeManager {
     this.themeToggleClass = 'theme-toggle';
     this.darkThemeClass = 'dark';
     this.lightThemeClass = 'light';
-    this.storageKey = 'convert2doc-theme';
+    this.storageKey = 'coldfollow-theme';
     this.themeAttribute = 'data-theme';
     
     this.init();

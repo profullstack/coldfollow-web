@@ -130,8 +130,8 @@ app.post('/api/stripe-simple/create-checkout', async (c) => {
       },
       body: new URLSearchParams({
         'mode': 'subscription',
-        'success_url': 'https://convert2doc.com/dashboard?success=true',
-        'cancel_url': 'https://convert2doc.com/register?canceled=true',
+        'success_url': 'https://coldfollow.com/dashboard?success=true',
+        'cancel_url': 'https://coldfollow.com/register?canceled=true',
         'customer_email': email, // Pre-fill customer email in checkout
         'line_items[0][price]': priceId,
         'line_items[0][quantity]': '1'
@@ -178,8 +178,8 @@ app.post('/api/stripe-direct/create-checkout', async (c) => {
     // Directly create session with minimal params
     const session = await stripeDirectClient.checkout.sessions.create({
       mode: 'subscription',
-      success_url: 'https://convert2doc.com/dashboard?success=true',
-      cancel_url: 'https://convert2doc.com/register?canceled=true',
+      success_url: 'https://coldfollow.com/dashboard?success=true',
+      cancel_url: 'https://coldfollow.com/register?canceled=true',
       customer_email: email, // Pre-fill customer email in checkout
       line_items: [{ price: priceId, quantity: 1 }]
     });

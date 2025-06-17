@@ -23,7 +23,7 @@ if [ -f "$PROJECT_DIR/.env" ]; then
 fi
 
 # Set default values if not in environment
-SERVICE_NAME=${SERVICE_NAME:-"convert2doc-pdf"}
+SERVICE_NAME=${SERVICE_NAME:-"coldfollow-web"}
 SERVICE_USER=${SERVICE_USER:-"ubuntu"}
 SERVICE_GROUP=${SERVICE_GROUP:-"ubuntu"}
 SERVICE_WORKING_DIR=${SERVICE_WORKING_DIR:-"$PROJECT_DIR"}

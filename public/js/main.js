@@ -33,7 +33,7 @@ function initApp() {
   // Set API base URL for client-side requests (domain only, without /api/1)
   // Use localhost for local development, production URL otherwise
   const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  window.API_BASE_URL = isLocalhost ? 'http://localhost:8099' : 'https://convert2doc.com';
+  window.API_BASE_URL = isLocalhost ? 'http://localhost:8099' : 'https://coldfollow.com';
   console.log('API base URL set to:', window.API_BASE_URL);
   
   // Initialize i18n first

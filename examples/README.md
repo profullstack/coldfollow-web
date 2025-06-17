@@ -23,7 +23,7 @@ This directory contains example scripts demonstrating how to use each of the doc
 ### Prerequisites
 
 1. **Authentication Token**: Replace `YOUR_AUTH_TOKEN` in any example with a valid bearer token
-2. **Server Running**: Ensure the convert2doc server is running (usually on port 3000)
+2. **Server Running**: Ensure the coldfollow server is running (usually on port 3000)
 3. **Sample Files**: Place sample files in the examples directory or update the file paths in the scripts
 
 ### Running an Example

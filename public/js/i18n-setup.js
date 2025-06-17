@@ -27,7 +27,7 @@ export async function initI18n() {
     }
     
     // Set initial language based on localStorage or browser preference
-    const storedLang = localStorage.getItem('convert2doc-language');
+    const storedLang = localStorage.getItem('coldfollow-language');
     const availableLanguages = localizer.getAvailableLanguages();
     
     if (storedLang && availableLanguages.includes(storedLang)) {
@@ -59,7 +59,7 @@ export async function initI18n() {
     window.addEventListener('language-changed', (event) => {
       const { language } = event.detail;
       console.log(`Language changed to: ${language}`);
-      localStorage.setItem('convert2doc-language', language);
+      localStorage.setItem('coldfollow-language', language);
       
       // Apply RTL direction if needed
       localizer.applyRTLToDocument();
