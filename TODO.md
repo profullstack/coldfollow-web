@@ -5,11 +5,20 @@ Transform the platform into a comprehensive social media marketing and cold outr
 
 ## Phase 1: Database Schema & Migrations
 
-### 1.1 Core Campaign Management Tables
-- [ ] **Create campaigns table migration**
+### 1.1 Core Campaign Management Tables ✅ COMPLETED
+- [x] **Create campaigns table migration** ✅ COMPLETED
   ```bash
+  # Migration created using existing generator system
   node bin/generator.js server migration --name="create_campaigns_table"
   ```
+  **✅ Migration System Fixed and Working:**
+  - Enhanced existing `bin/apply-migration.js` to be a full-featured migration runner
+  - Uses existing `bin/generator.js` for creating new migrations
+  - Migration tracking with `_migrations` table and checksums
+  - Supports UP migration sections from template files
+  - Colored output and proper error handling
+  - Integration with Supabase client using service role key
+  - Package.json scripts updated for easy usage
   - `id` (UUID, primary key)
   - `user_id` (UUID, foreign key to auth.users)
   - `name` (VARCHAR, campaign name)
@@ -27,7 +36,7 @@ Transform the platform into a comprehensive social media marketing and cold outr
 ### 1.2 Contact Management Tables
 - [ ] **Create contacts table migration**
   ```bash
-  node bin/generator.js server migration --name="create_contacts_table"
+  pnpm migrate:create create_contacts_table
   ```
   - `id` (UUID, primary key)
   - `user_id` (UUID, foreign key to auth.users)
@@ -47,7 +56,7 @@ Transform the platform into a comprehensive social media marketing and cold outr
 
 - [ ] **Create contact_lists table migration**
   ```bash
-  node bin/generator.js server migration --name="create_contact_lists_table"
+  pnpm migrate:create create_contact_lists_table
   ```
   - `id` (UUID, primary key)
   - `user_id` (UUID, foreign key to auth.users)
@@ -58,7 +67,7 @@ Transform the platform into a comprehensive social media marketing and cold outr
 
 - [ ] **Create contact_list_members table migration**
   ```bash
-  node bin/generator.js server migration --name="create_contact_list_members_table"
+  pnpm migrate:create create_contact_list_members_table
   ```
   - `id` (UUID, primary key)
   - `contact_list_id` (UUID, foreign key)
@@ -68,7 +77,7 @@ Transform the platform into a comprehensive social media marketing and cold outr
 ### 1.3 Campaign Tasks & Execution Tables
 - [ ] **Create campaign_tasks table migration**
   ```bash
-  node bin/generator.js server migration --name="create_campaign_tasks_table"
+  pnpm migrate:create create_campaign_tasks_table
   ```
   - `id` (UUID, primary key)
   - `campaign_id` (UUID, foreign key to campaigns)
@@ -85,7 +94,7 @@ Transform the platform into a comprehensive social media marketing and cold outr
 
 - [ ] **Create campaign_executions table migration**
   ```bash
-  node bin/generator.js server migration --name="create_campaign_executions_table"
+  pnpm migrate:create create_campaign_executions_table
   ```
   - `id` (UUID, primary key)
   - `campaign_task_id` (UUID, foreign key)
@@ -102,7 +111,7 @@ Transform the platform into a comprehensive social media marketing and cold outr
 ### 1.4 Template Management Tables
 - [ ] **Create templates table migration**
   ```bash
-  node bin/generator.js server migration --name="create_templates_table"
+  pnpm migrate:create create_templates_table
   ```
   - `id` (UUID, primary key)
   - `user_id` (UUID, foreign key to auth.users)
@@ -118,7 +127,7 @@ Transform the platform into a comprehensive social media marketing and cold outr
 ### 1.5 Social Media Integration Tables
 - [ ] **Create social_accounts table migration**
   ```bash
-  node bin/generator.js server migration --name="create_social_accounts_table"
+  pnpm migrate:create create_social_accounts_table
   ```
   - `id` (UUID, primary key)
   - `user_id` (UUID, foreign key to auth.users)
@@ -134,7 +143,7 @@ Transform the platform into a comprehensive social media marketing and cold outr
 
 - [ ] **Create social_posts table migration**
   ```bash
-  node bin/generator.js server migration --name="create_social_posts_table"
+  pnpm migrate:create create_social_posts_table
   ```
   - `id` (UUID, primary key)
   - `campaign_task_id` (UUID, foreign key, nullable)
@@ -151,7 +160,7 @@ Transform the platform into a comprehensive social media marketing and cold outr
 ### 1.6 Analytics & Reporting Tables
 - [ ] **Create campaign_analytics table migration**
   ```bash
-  node bin/generator.js server migration --name="create_campaign_analytics_table"
+  pnpm migrate:create create_campaign_analytics_table
   ```
   - `id` (UUID, primary key)
   - `campaign_id` (UUID, foreign key)

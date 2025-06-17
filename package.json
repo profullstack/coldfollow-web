@@ -11,7 +11,9 @@
     "test:integration": "node test.js",
     "deploy": "pnpm build && ./bin/deploy.sh",
     "build": "./bin/build.sh",
-    "stripe:products": "node bin/create-stripe-products.js"
+    "stripe:products": "node bin/create-stripe-products.js",
+    "migrate:status": "node bin/migration-status.js",
+    "migrate:create": "node bin/generator.js server migration --name"
   },
   "keywords": [
     "social media",
