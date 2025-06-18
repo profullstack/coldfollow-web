@@ -122,7 +122,7 @@ class PfFooter extends HTMLElement {
             <h3 data-i18n="footer.resources">Resources</h3>
             <ul class="footer-links">
               <li><a href="/api-keys" data-i18n="footer.api_keys">API Keys</a></li>
-              <li><a href="https://github.com/convert2doc/pdf" target="_blank" data-i18n="footer.github">GitHub</a></li>
+              <li><a href="https://github.com/profullstack/coldfollow-web" target="_blank" data-i18n="footer.github">GitHub</a></li>
               <li><a href="mailto:support@convert2doc.com" data-i18n="footer.support">Support</a></li>
             </ul>
           </div>
