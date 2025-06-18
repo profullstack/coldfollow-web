@@ -105,6 +105,82 @@
     "back": "Zurück",
     "next": "Weiter",
     "continue": "Fortfahren",
-    "check_status": "Zahlungsstatus prüfen"
+    "check_status": "Zahlungsstatus prüfen",
+    "note": "Hinweis"
+  },
+  "pricing": {
+    "title": "Wählen Sie Ihren Cold Outreach & Marketing Plan",
+    "subtitle": "Verstärken Sie Ihre Kundenakquise mit unserer umfassenden Plattform für E-Mail, SMS, KI-gestützte Anrufe und Social Media Automatisierung.",
+    "monthly_plan": "Monatlich",
+    "yearly_plan": "Jährlich",
+    "most_popular": "Am beliebtesten",
+    "best_value": "Bester Wert",
+    "get_started": "Loslegen",
+    "save_over_50": "Sparen Sie über 50%!",
+    "features": {
+      "unlimited_email": "Unbegrenzte E-Mail-Akquise",
+      "sms_campaigns": "SMS-Marketing-Kampagnen",
+      "ai_phone_calls": "KI-gestützte Anrufe",
+      "social_automation": "Social Media Automatisierung",
+      "basic_analytics": "Basis-Analytics-Dashboard",
+      "advanced_analytics": "Erweiterte Analysen & Berichte",
+      "email_support": "E-Mail-Support",
+      "priority_support": "Prioritäts-E-Mail-Support",
+      "contacts_1000": "Bis zu 1.000 Kontakte",
+      "unlimited_contacts": "Unbegrenzte Kontakte",
+      "ab_testing": "A/B-Testing-Tools",
+      "custom_integrations": "Benutzerdefinierte Integrationen"
+    },
+    "features_overview": {
+      "title": "Was ist enthalten",
+      "email_outreach": {
+        "title": "E-Mail-Akquise",
+        "description": "Personalisierte E-Mail-Kampagnen mit fortschrittlicher Automatisierung und Tracking"
+      },
+      "sms_marketing": {
+        "title": "SMS-Marketing",
+        "description": "Direkte SMS-Kampagnen, um Ihre Zielgruppe sofort zu erreichen"
+      },
+      "ai_phone_calls": {
+        "title": "KI-Anrufe",
+        "description": "Automatisierte Telefonakquise mit fortschrittlicher KI-Technologie"
+      },
+      "social_automation": {
+        "title": "Social Media Automatisierung",
+        "description": "Planen und automatisieren Sie Beiträge auf mehreren sozialen Plattformen"
+      },
+      "analytics": {
+        "title": "Analysen & Berichte",
+        "description": "Detaillierte Einblicke und Leistungsmetriken für alle Kampagnen"
+      },
+      "intelligent_automation": {
+        "title": "Intelligente Automatisierung",
+        "description": "Intelligente Workflows und Verhaltensauslöser für maximale Effizienz"
+      }
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "cancel_anytime": {
+        "question": "Kann ich jederzeit kündigen?",
+        "answer": "Ja, Sie können Ihr Abonnement jederzeit kündigen. Keine langfristigen Verträge oder Kündigungsgebühren."
+      },
+      "payment_methods": {
+        "question": "Welche Zahlungsmethoden akzeptieren Sie?",
+        "answer": "Wir akzeptieren Kreditkarten über Stripe und verschiedene Kryptowährungen einschließlich Bitcoin, Ethereum, Solana und USDC."
+      },
+      "free_trial": {
+        "question": "Gibt es eine kostenlose Testversion?",
+        "answer": "Wir bieten vom ersten Tag an eine vollwertige Erfahrung. Beginnen Sie mit unserem monatlichen Plan und upgraden oder kündigen Sie nach Bedarf."
+      },
+      "refunds": {
+        "question": "Bieten Sie Rückerstattungen an?",
+        "answer": "Ja, wir bieten eine 30-tägige Geld-zurück-Garantie. Weitere Details finden Sie in unserer Rückerstattungsrichtlinie."
+      }
+    },
+    "cta": {
+      "title": "Bereit, Ihre Kundenakquise zu verstärken?",
+      "subtitle": "Schließen Sie sich Tausenden von Unternehmen an, die ColdFollow nutzen, um ihre Marketing-Bemühungen zu skalieren.",
+      "button": "Starten Sie heute Ihre Reise"
+    }
   }
 }

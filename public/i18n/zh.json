@@ -91,6 +91,88 @@
     "usdc": "USDC",
     "credit_card": "信用卡"
   },
+  "pricing": {
+    "title": "价格方案",
+    "subtitle": "选择适合您业务的完美方案",
+    "monthly": "月付",
+    "yearly": "年付",
+    "save_percent": "节省 ${percent}%",
+    "per_month": "/月",
+    "per_year": "/年",
+    "billed_monthly": "按月计费",
+    "billed_yearly": "按年计费",
+    "most_popular": "最受欢迎",
+    "get_started": "开始使用",
+    "choose_plan": "选择方案",
+    "starter": {
+      "name": "入门版",
+      "price_monthly": "$29",
+      "price_yearly": "$290",
+      "description": "适合小团队和个人使用",
+      "features": [
+        "每月500次冷外联",
+        "基础社交媒体管理",
+        "邮件支持",
+        "基础分析和报告",
+        "5个活动模板"
+      ]
+    },
+    "professional": {
+      "name": "专业版",
+      "price_monthly": "$79",
+      "price_yearly": "$790",
+      "description": "适合成长中的企业",
+      "features": [
+        "每月2,000次冷外联",
+        "高级社交媒体管理",
+        "优先邮件支持",
+        "详细分析和报告",
+        "无限活动模板",
+        "A/B测试功能",
+        "CRM集成"
+      ]
+    },
+    "enterprise": {
+      "name": "企业版",
+      "price_monthly": "$199",
+      "price_yearly": "$1990",
+      "description": "大型组织的综合解决方案",
+      "features": [
+        "无限冷外联",
+        "企业级社交媒体管理",
+        "专属客户经理",
+        "定制分析和报告",
+        "无限活动模板",
+        "高级A/B测试",
+        "所有CRM集成",
+        "定制集成",
+        "优先支持"
+      ]
+    },
+    "features_comparison": "功能对比",
+    "all_plans_include": "所有方案包含：",
+    "common_features": [
+      "24/7客户支持",
+      "SSL加密",
+      "数据备份",
+      "移动应用访问"
+    ],
+    "faq_title": "常见问题",
+    "faq": [
+      {
+        "question": "我可以随时更改方案吗？",
+        "answer": "是的，您可以随时升级或降级您的方案。更改将在下一个计费周期生效。"
+      },
+      {
+        "question": "您提供免费试用吗？",
+        "answer": "是的，我们为所有方案提供14天免费试用。无需信用卡。"
+      },
+      {
+        "question": "我可以随时取消吗？",
+        "answer": "是的，您可以随时取消订阅。没有取消费用。"
+      }
+    ]
+  },
   "common": {
     "save": "保存",
     "cancel": "取消",

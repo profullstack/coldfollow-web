@@ -107,5 +107,80 @@
     "continue": "Continuer",
     "check_status": "Vérifier l'état du paiement",
     "note": "Remarque"
+  },
+  "pricing": {
+    "title": "Choisissez votre plan de prospection et marketing",
+    "subtitle": "Boostez votre prospection avec notre plateforme complète pour l'email, SMS, appels téléphoniques IA et automatisation des réseaux sociaux.",
+    "monthly_plan": "Mensuel",
+    "yearly_plan": "Annuel",
+    "most_popular": "Le plus populaire",
+    "best_value": "Meilleure valeur",
+    "get_started": "Commencer",
+    "save_over_50": "Économisez plus de 50% !",
+    "features": {
+      "unlimited_email": "Prospection email illimitée",
+      "sms_campaigns": "Campagnes SMS marketing",
+      "ai_phone_calls": "Appels téléphoniques IA",
+      "social_automation": "Automatisation des réseaux sociaux",
+      "basic_analytics": "Tableau de bord analytique de base",
+      "advanced_analytics": "Analyses et rapports avancés",
+      "email_support": "Support par email",
+      "priority_support": "Support email prioritaire",
+      "contacts_1000": "Jusqu'à 1 000 contacts",
+      "unlimited_contacts": "Contacts illimités",
+      "ab_testing": "Outils de test A/B",
+      "custom_integrations": "Intégrations personnalisées"
+    },
+    "features_overview": {
+      "title": "Ce qui est inclus",
+      "email_outreach": {
+        "title": "Prospection email",
+        "description": "Campagnes email personnalisées avec automatisation et suivi avancés"
+      },
+      "sms_marketing": {
+        "title": "Marketing SMS",
+        "description": "Campagnes SMS directes pour atteindre votre audience instantanément"
+      },
+      "ai_phone_calls": {
+        "title": "Appels téléphoniques IA",
+        "description": "Prospection téléphonique automatisée alimentée par une technologie IA avancée"
+      },
+      "social_automation": {
+        "title": "Automatisation des réseaux sociaux",
+        "description": "Planifiez et automatisez les publications sur plusieurs plateformes sociales"
+      },
+      "analytics": {
+        "title": "Analyses et rapports",
+        "description": "Insights détaillés et métriques de performance pour toutes les campagnes"
+      },
+      "intelligent_automation": {
+        "title": "Automatisation intelligente",
+        "description": "Workflows intelligents et déclencheurs comportementaux pour une efficacité maximale"
+      }
+    },
+    "faq": {
+      "title": "Questions fréquemment posées",
+      "cancel_anytime": {
+        "question": "Puis-je annuler à tout moment ?",
+        "answer": "Oui, vous pouvez annuler votre abonnement à tout moment. Aucun contrat à long terme ni frais d'annulation."
+      },
+      "payment_methods": {
+        "question": "Quels modes de paiement acceptez-vous ?",
+        "answer": "Nous acceptons les cartes de crédit via Stripe et diverses cryptomonnaies incluant Bitcoin, Ethereum, Solana et USDC."
+      },
+      "free_trial": {
+        "question": "Y a-t-il un essai gratuit ?",
+        "answer": "Nous offrons une expérience complète dès le premier jour. Commencez avec notre plan mensuel et mettez à niveau ou annulez selon vos besoins."
+      },
+      "refunds": {
+        "question": "Offrez-vous des remboursements ?",
+        "answer": "Oui, nous offrons une garantie de remboursement de 30 jours. Consultez notre politique de remboursement pour plus de détails."
+      }
+    },
+    "cta": {
+      "title": "Prêt à booster votre prospection ?",
+      "subtitle": "Rejoignez des milliers d'entreprises utilisant ColdFollow pour développer leurs efforts marketing.",
+      "button": "Commencez votre parcours aujourd'hui"
+    }
   }
 }

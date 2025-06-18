@@ -288,5 +288,80 @@
     "time_based_triggers": "Time-based Triggers",
     "workflow_status": "Workflow Status",
     "workflow_stats": "Workflow Statistics"
+  },
+  "pricing": {
+    "title": "Choose Your Cold Outreach & Marketing Plan",
+    "subtitle": "Supercharge your outreach with our comprehensive platform for email, SMS, AI-powered phone calls, and social media automation.",
+    "monthly_plan": "Monthly",
+    "yearly_plan": "Yearly",
+    "most_popular": "Most Popular",
+    "best_value": "Best Value",
+    "get_started": "Get Started",
+    "save_over_50": "Save over 50%!",
+    "features": {
+      "unlimited_email": "Unlimited Email Outreach",
+      "sms_campaigns": "SMS Marketing Campaigns",
+      "ai_phone_calls": "AI-Powered Phone Calls",
+      "social_automation": "Social Media Automation",
+      "basic_analytics": "Basic Analytics Dashboard",
+      "advanced_analytics": "Advanced Analytics & Reporting",
+      "email_support": "Email Support",
+      "priority_support": "Priority Email Support",
+      "contacts_1000": "Up to 1,000 contacts",
+      "unlimited_contacts": "Unlimited contacts",
+      "ab_testing": "A/B Testing Tools",
+      "custom_integrations": "Custom Integrations"
+    },
+    "features_overview": {
+      "title": "What's Included",
+      "email_outreach": {
+        "title": "Email Outreach",
+        "description": "Personalized email campaigns with advanced automation and tracking"
+      },
+      "sms_marketing": {
+        "title": "SMS Marketing",
+        "description": "Direct SMS campaigns to reach your audience instantly"
+      },
+      "ai_phone_calls": {
+        "title": "AI Phone Calls",
+        "description": "Automated phone outreach powered by advanced AI technology"
+      },
+      "social_automation": {
+        "title": "Social Media Automation",
+        "description": "Schedule and automate posts across multiple social platforms"
+      },
+      "analytics": {
+        "title": "Analytics & Reporting",
+        "description": "Detailed insights and performance metrics for all campaigns"
+      },
+      "intelligent_automation": {
+        "title": "Intelligent Automation",
+        "description": "Smart workflows and behavioral triggers for maximum efficiency"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "cancel_anytime": {
+        "question": "Can I cancel anytime?",
+        "answer": "Yes, you can cancel your subscription at any time. No long-term contracts or cancellation fees."
+      },
+      "payment_methods": {
+        "question": "What payment methods do you accept?",
+        "answer": "We accept credit cards via Stripe and various cryptocurrencies including Bitcoin, Ethereum, Solana, and USDC."
+      },
+      "free_trial": {
+        "question": "Is there a free trial?",
+        "answer": "We offer a full-featured experience from day one. Start with our monthly plan and upgrade or cancel as needed."
+      },
+      "refunds": {
+        "question": "Do you offer refunds?",
+        "answer": "Yes, we offer a 30-day money-back guarantee. Check our refund policy for details."
+      }
+    },
+    "cta": {
+      "title": "Ready to Supercharge Your Outreach?",
+      "subtitle": "Join thousands of businesses using ColdFollow to scale their marketing efforts.",
+      "button": "Start Your Journey Today"
+    }
   }
 }

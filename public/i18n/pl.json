@@ -91,6 +91,88 @@
     "usdc": "USDC",
     "credit_card": "Karta kredytowa"
   },
+  "pricing": {
+    "title": "Cennik",
+    "subtitle": "Wybierz plan idealny dla Twojego biznesu",
+    "monthly": "Miesięczny",
+    "yearly": "Roczny",
+    "save_percent": "Oszczędź ${percent}%",
+    "per_month": "/miesiąc",
+    "per_year": "/rok",
+    "billed_monthly": "Rozliczane miesięcznie",
+    "billed_yearly": "Rozliczane rocznie",
+    "most_popular": "Najpopularniejszy",
+    "get_started": "Rozpocznij",
+    "choose_plan": "Wybierz plan",
+    "starter": {
+      "name": "Starter",
+      "price_monthly": "$29",
+      "price_yearly": "$290",
+      "description": "Idealny dla małych zespołów i osób indywidualnych",
+      "features": [
+        "500 cold outreach miesięcznie",
+        "Podstawowe zarządzanie mediami społecznościowymi",
+        "Wsparcie e-mail",
+        "Podstawowe analizy i raporty",
+        "5 szablonów kampanii"
+      ]
+    },
+    "professional": {
+      "name": "Profesjonalny",
+      "price_monthly": "$79",
+      "price_yearly": "$790",
+      "description": "Idealny dla rozwijających się firm",
+      "features": [
+        "2,000 cold outreach miesięcznie",
+        "Zaawansowane zarządzanie mediami społecznościowymi",
+        "Priorytetowe wsparcie e-mail",
+        "Szczegółowe analizy i raporty",
+        "Nieograniczone szablony kampanii",
+        "Funkcje testów A/B",
+        "Integracje CRM"
+      ]
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price_monthly": "$199",
+      "price_yearly": "$1990",
+      "description": "Kompleksowe rozwiązanie dla dużych organizacji",
+      "features": [
+        "Nieograniczony cold outreach",
+        "Enterprise zarządzanie mediami społecznościowymi",
+        "Dedykowany menedżer konta",
+        "Niestandardowe analizy i raporty",
+        "Nieograniczone szablony kampanii",
+        "Zaawansowane testy A/B",
+        "Wszystkie integracje CRM",
+        "Niestandardowe integracje",
+        "Wsparcie priorytetowe"
+      ]
+    },
+    "features_comparison": "Porównanie funkcji",
+    "all_plans_include": "Wszystkie plany obejmują:",
+    "common_features": [
+      "Wsparcie klienta 24/7",
+      "Szyfrowanie SSL",
+      "Kopie zapasowe danych",
+      "Dostęp do aplikacji mobilnej"
+    ],
+    "faq_title": "Często zadawane pytania",
+    "faq": [
+      {
+        "question": "Czy mogę zmienić plan w dowolnym momencie?",
+        "answer": "Tak, możesz w każdej chwili podwyższyć lub obniżyć swój plan. Zmiany wejdą w życie w następnym cyklu rozliczeniowym."
+      },
+      {
+        "question": "Czy oferujecie bezpłatny okres próbny?",
+        "answer": "Tak, oferujemy 14-dniowy bezpłatny okres próbny dla wszystkich planów. Nie jest wymagana karta kredytowa."
+      },
+      {
+        "question": "Czy mogę anulować w dowolnym momencie?",
+        "answer": "Tak, możesz anulować subskrypcję w dowolnym momencie. Nie ma opłat za anulowanie."
+      }
+    ]
+  },
   "common": {
     "save": "Zapisz",
     "cancel": "Anuluj",
