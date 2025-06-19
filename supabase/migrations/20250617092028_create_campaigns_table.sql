@@ -55,3 +55,30 @@ CREATE TRIGGER update_campaigns_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
+-- Down migration: Drop everything in reverse order
+-- This section will be executed when rolling back the migration
+
+/*
+-- Drop trigger
+DROP TRIGGER IF EXISTS update_campaigns_updated_at ON campaigns;
+
+-- Drop function (only if not used by other tables)
+-- Note: Be careful with this - only drop if no other tables use this function
+-- DROP FUNCTION IF EXISTS update_updated_at_column();
+
+-- Drop RLS policies
+DROP POLICY IF EXISTS "Users can delete their own campaigns" ON campaigns;
+DROP POLICY IF EXISTS "Users can update their own campaigns" ON campaigns;
+DROP POLICY IF EXISTS "Users can insert their own campaigns" ON campaigns;
+DROP POLICY IF EXISTS "Users can view their own campaigns" ON campaigns;
+
+-- Drop indexes (they will be dropped automatically with the table, but explicit is better)
+DROP INDEX IF EXISTS idx_campaigns_created_at;
+DROP INDEX IF EXISTS idx_campaigns_type;
+DROP INDEX IF EXISTS idx_campaigns_status;
+DROP INDEX IF EXISTS idx_campaigns_user_id;
+
+-- Drop table (this will also drop all indexes and triggers associated with it)
+DROP TABLE IF EXISTS campaigns;
+*/
+
