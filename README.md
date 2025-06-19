@@ -1,6 +1,6 @@
 # ColdFollow - Social Media Marketing Platform
 
-[![Crypto Payment](https://paybadge.profullstack.com/badge.svg)](https://paybadge.profullstack.com/?tickers=btc%2Ceth%2Csol%2Cusdc)
+[![Crypto Payment](https://paybadge.profullstack.com/badge-large.svg)](https://paybadge.profullstack.com/?tickers=btc%2Ceth%2Csol%2Cusdc)
 
 ColdFollow is a comprehensive social media marketing platform designed for cold outreach and automated engagement. Built with modern web technologies, it provides powerful tools for email marketing, SMS campaigns, AI-powered phone calls, and social media management across multiple platforms.
 
