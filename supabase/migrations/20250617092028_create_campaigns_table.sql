@@ -58,7 +58,7 @@ CREATE TRIGGER update_campaigns_updated_at
 -- Down migration: Drop everything in reverse order
 -- This section will be executed when rolling back the migration
 
-/*
+
 -- Drop trigger
 DROP TRIGGER IF EXISTS update_campaigns_updated_at ON campaigns;
 
@@ -80,5 +80,5 @@ DROP INDEX IF EXISTS idx_campaigns_user_id;
 
 -- Drop table (this will also drop all indexes and triggers associated with it)
 DROP TABLE IF EXISTS campaigns;
-*/
+
 
