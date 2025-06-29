@@ -1,27 +1,12 @@
 -- Migration: {{migrationName}}
 -- Created at: {{timestamp}}
 
----------------------------------------------------------------------------
--- UP MIGRATION - Changes to apply
----------------------------------------------------------------------------
-
--- Example up migration:
+-- Example migration:
 -- CREATE TABLE new_table (
 --   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 --   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 --   name TEXT NOT NULL
 -- );
 
--- Write your up migration SQL here:
-
-
-
----------------------------------------------------------------------------
--- DOWN MIGRATION - How to revert the changes (for rollbacks)
----------------------------------------------------------------------------
-
--- Example down migration:
--- DROP TABLE IF EXISTS new_table;
-
--- Write your down migration SQL here:
+-- Write your migration SQL here:
 

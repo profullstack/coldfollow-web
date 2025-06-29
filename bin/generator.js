@@ -11,7 +11,7 @@
  *
  * Server-side commands:
  * - server route: Generates a new server-side route handler
- * - server migration: Generates a new database migration file
+ * - server migration: Generates a new Supabase database migration file (forward-only)
  * - server controller: Generates a new server-side controller file
  *
  * Usage:
@@ -127,7 +127,7 @@ Client Commands:
 
 Server Commands:
   route        Generate a new server-side route handler
-  migration    Generate a new database migration file
+  migration    Generate a new Supabase database migration file (forward-only)
   controller   Generate a new server-side controller file
 
 Examples:
@@ -568,8 +568,13 @@ function generateServerMigration(args) {
     // Suggest next steps
     console.log('\nNext steps:');
     console.log('1. Edit the migration file to add your SQL commands');
-    console.log('2. Apply the migration using the appropriate command');
-    console.log('   Example: node bin/apply-migration.js');
+    console.log('2. For local development:');
+    console.log('   - Link project: supabase link --project-ref <your-project-ref>');
+    console.log('   - Apply migration: supabase db push');
+    console.log('3. For CI/CD deployment:');
+    console.log('   - Ensure SUPABASE_ACCESS_TOKEN and SUPABASE_DB_PASSWORD are set');
+    console.log('   - Use: supabase db push --linked in GitHub Actions');
+    console.log('   Note: Supabase only supports forward migrations (no DOWN methods)');
   } catch (error) {
     throw error;
   }
@@ -582,7 +587,8 @@ function showServerMigrationHelp() {
   console.log(`
 Server Migration Generator
 
-Generates a new SQL migration file with a timestamp prefix.
+Generates a new SQL migration file with a timestamp prefix for Supabase.
+Note: Supabase does not support DOWN methods, so only forward migrations are generated.
 
 Usage:
   node bin/generator.js server migration --name="add_user_fields"
@@ -590,6 +596,11 @@ Usage:
 Options:
   --name           Migration name (required, e.g., "add_user_fields" or "AddUserFields")
   --help           Show this help information
+
+Important Setup Notes:
+  - For local development: Ensure project is linked with 'supabase link --project-ref <ref>'
+  - For CI/CD deployments: Set SUPABASE_ACCESS_TOKEN and SUPABASE_DB_PASSWORD in secrets
+  - If you see "Local config differs from linked project", update supabase/config.toml
   `);
 }
 

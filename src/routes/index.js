@@ -36,6 +36,7 @@ import {
 import { authStatusRoute } from './auth-status.js';
 import { supabaseConfigRoute } from './config.js';
 import { websocketRoute } from './websocket.js';
+import { exchangeRateRoutes } from './exchange-rates.js';
 import { authMiddleware } from '../middleware/auth-middleware.js';
 
 // Routes that require authentication
@@ -106,7 +107,8 @@ const publicRoutes = [
 export const routes = [
   ...protectedRoutes,
   ...publicRoutes,
-  ...apiKeyRoutes
+  ...apiKeyRoutes,
+  ...exchangeRateRoutes
 ];
 
 /**
