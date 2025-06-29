@@ -68,6 +68,10 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+# Check migration status before applying
+echo -e "${YELLOW}Checking migration status on remote server...${NC}"
+ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "cd $REMOTE_DIR && ./bin/supabase-db.sh status"
+
 # Run the Supabase migrations
 echo -e "${YELLOW}Running Supabase migrations on remote server...${NC}"
 ssh $SSH_OPTS $REMOTE_USER@$REMOTE_HOST "cd $REMOTE_DIR && ./bin/supabase-db.sh migrate"

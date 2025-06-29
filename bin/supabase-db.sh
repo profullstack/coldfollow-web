@@ -21,6 +21,7 @@ usage() {
   echo "  setup    - Install Supabase CLI and link to your cloud project"
   echo "  migrate  - Sync with remote DB and run migrations"
   echo "  sync     - Sync local migration history with remote database"
+  echo "  status   - Check migration status and show which migrations are applied"
   echo "  new NAME - Create a new migration file"
   echo "  update   - Check for Supabase CLI updates and upgrade if available"
   echo ""
@@ -28,6 +29,7 @@ usage() {
   echo "  $0 setup"
   echo "  $0 migrate"
   echo "  $0 sync"
+  echo "  $0 status"
   echo "  $0 new add_user_preferences"
   echo "  $0 update"
   exit 1
@@ -283,6 +285,11 @@ run_migrations() {
     echo -e "${YELLOW}Supabase project not initialized. Setting up...${NC}"
     setup_project
   fi
+  
+  # Show migration status before running migrations
+  echo -e "${YELLOW}Checking current migration status before applying changes...${NC}"
+  check_migration_status
+  echo ""
   
   # Make sure we have all environment variables
   if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ] || [ -z "$SUPABASE_DB_PASSWORD" ] || [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
@@ -579,6 +586,118 @@ sync_with_remote() {
   fi
 }
 
+# Function to check migration status
+check_migration_status() {
+  echo -e "${YELLOW}Checking migration status...${NC}"
+  
+  # Check if Supabase CLI is installed
+  if ! command -v supabase &> /dev/null; then
+    install_cli
+    export PATH="$HOME/.local/bin:$PATH"
+  fi
+  
+  # Check if Supabase project is initialized
+  if [ ! -d "supabase" ]; then
+    echo -e "${YELLOW}Supabase project not initialized. Setting up...${NC}"
+    setup_project
+  fi
+  
+  # Make sure we have all environment variables
+  if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ] || [ -z "$SUPABASE_DB_PASSWORD" ] || [ -z "$SUPABASE_ACCESS_TOKEN" ]; then
+    if [ -f .env ]; then
+      echo -e "${YELLOW}Reloading environment variables from .env file...${NC}"
+      source .env
+    fi
+  fi
+  
+  # Set environment variables for Supabase CLI
+  export SUPABASE_DB_PASSWORD="$SUPABASE_DB_PASSWORD"
+  export SUPABASE_ACCESS_TOKEN="$SUPABASE_ACCESS_TOKEN"
+  
+  echo -e "${YELLOW}=== Migration Status Report ===${NC}"
+  echo ""
+  
+  # List all local migration files
+  if [ -d "supabase/migrations" ]; then
+    echo -e "${YELLOW}Local migration files:${NC}"
+    for migration_file in supabase/migrations/*.sql; do
+      if [ -f "$migration_file" ]; then
+        filename=$(basename "$migration_file")
+        echo -e "${GREEN}📄 $filename${NC}"
+        
+        # Extract the first few lines to show what the migration does
+        echo -e "${YELLOW}   Content preview:${NC}"
+        head -10 "$migration_file" | grep -E "^--" | head -3 | sed 's/^/   /'
+        echo ""
+      fi
+    done
+  else
+    echo -e "${RED}No migrations directory found.${NC}"
+    return 1
+  fi
+  
+  echo -e "${YELLOW}=== Checking Applied Migrations ===${NC}"
+  
+  # Get migration history from remote database
+  echo -e "${YELLOW}Fetching migration history from remote database...${NC}"
+  
+  # Create a temporary file to capture the migration list output
+  MIGRATION_LIST_OUTPUT=$(mktemp)
+  
+  # Try to get the migration list using supabase migration list
+  supabase migration list 2>&1 | tee "$MIGRATION_LIST_OUTPUT"
+  LIST_EXIT_CODE=$?
+  
+  if [ $LIST_EXIT_CODE -eq 0 ]; then
+    echo -e "${GREEN}Migration list retrieved successfully!${NC}"
+    echo ""
+    echo -e "${YELLOW}=== Migration Status Summary ===${NC}"
+    
+    # Parse the output and show status for each local migration
+    for migration_file in supabase/migrations/*.sql; do
+      if [ -f "$migration_file" ]; then
+        filename=$(basename "$migration_file" .sql)
+        
+        # Check if this migration appears in the applied list
+        if grep -q "$filename" "$MIGRATION_LIST_OUTPUT"; then
+          echo -e "${GREEN}✅ $filename - APPLIED${NC}"
+        else
+          echo -e "${RED}❌ $filename - NOT APPLIED${NC}"
+        fi
+      fi
+    done
+  else
+    echo -e "${YELLOW}Could not retrieve migration list. Trying alternative method...${NC}"
+    
+    # Alternative: Check each migration individually
+    echo -e "${YELLOW}Checking migrations individually...${NC}"
+    for migration_file in supabase/migrations/*.sql; do
+      if [ -f "$migration_file" ]; then
+        filename=$(basename "$migration_file" .sql)
+        echo -e "${YELLOW}🔍 Checking $filename...${NC}"
+        
+        # For now, just mark as unknown since we can't check individual status easily
+        echo -e "${YELLOW}❓ $filename - STATUS UNKNOWN${NC}"
+      fi
+    done
+  fi
+  
+  # Clean up temporary file
+  rm -f "$MIGRATION_LIST_OUTPUT"
+  
+  echo ""
+  echo -e "${YELLOW}=== Troubleshooting Tips ===${NC}"
+  echo -e "${YELLOW}If migrations show as NOT APPLIED:${NC}"
+  echo -e "${YELLOW}1. Run: ./bin/supabase-db.sh migrate${NC}"
+  echo -e "${YELLOW}2. Check your database connection and permissions${NC}"
+  echo -e "${YELLOW}3. Verify SUPABASE_DB_PASSWORD and SUPABASE_ACCESS_TOKEN${NC}"
+  echo ""
+  echo -e "${YELLOW}If you're missing the campaigns table specifically:${NC}"
+  echo -e "${YELLOW}1. Check if there's a migration that creates the campaigns table${NC}"
+  echo -e "${YELLOW}2. Look for any migration that might have failed to apply${NC}"
+  echo -e "${YELLOW}3. Consider creating a new migration for the campaigns table if missing${NC}"
+}
+
 # Function to check for updates and upgrade if needed
 check_for_updates() {
   echo -e "${YELLOW}Checking for Supabase CLI updates...${NC}"
@@ -621,6 +740,9 @@ case "$1" in
     ;;
   sync)
     sync_with_remote
+    ;;
+  status)
+    check_migration_status
     ;;
   new)
     if [ $# -lt 2 ]; then
