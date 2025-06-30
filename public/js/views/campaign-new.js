@@ -97,9 +97,13 @@ class CampaignNewManager {
       // Show success message
       this.showSuccessMessage('Campaign created successfully!');
 
-      // Redirect to dashboard after a short delay
+      // Navigate to dashboard after a short delay using SPA router
       setTimeout(() => {
-        window.location.href = '/dashboard';
+        if (window.router && window.router.navigate) {
+          window.router.navigate('/dashboard');
+        } else {
+          window.location.href = '/dashboard';
+        }
       }, 1500);
 
     } catch (error) {
@@ -120,8 +124,12 @@ class CampaignNewManager {
   cancelForm() {
     console.log('Campaign creation cancelled');
     
-    // Redirect back to dashboard
-    window.location.href = '/dashboard';
+    // Navigate back to dashboard using SPA router
+    if (window.router && window.router.navigate) {
+      window.router.navigate('/dashboard');
+    } else {
+      window.location.href = '/dashboard';
+    }
   }
 
   showSuccessMessage(message) {
