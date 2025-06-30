@@ -477,6 +477,14 @@ export function defineRoutes(router) {
         console.log('Dashboard route loaded with web components');
       }
     },
+    '/campaigns/new': {
+      viewPath: '/views/campaign-new.html',
+      requireAuth: true,
+      requireSubscription: true,
+      afterRender: () => {
+        console.log('Campaign creation page loaded');
+      }
+    },
     '/api-docs': '/views/api-docs.html',
     '/api-keys': {
       viewPath: '/views/api-keys.html',

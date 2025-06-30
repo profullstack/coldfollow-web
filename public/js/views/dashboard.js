@@ -17,8 +17,40 @@ class DashboardManager {
 
   async init() {
     this.setupTabNavigation();
+    await this.waitForComponents();
     this.setupComponents();
     await this.loadCampaigns();
+  }
+
+  async waitForComponents() {
+    // Wait for web components to be defined
+    await Promise.all([
+      customElements.whenDefined('campaign-list'),
+      customElements.whenDefined('campaign-form')
+    ]);
+    
+    // Wait a bit more for components to be fully rendered
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Additional wait for Shadow DOM to be fully rendered
+    let retries = 0;
+    const maxRetries = 10;
+    
+    while (retries < maxRetries) {
+      const campaignList = document.getElementById('campaign-list');
+      const campaignForm = document.getElementById('campaign-form');
+      
+      if (campaignList && campaignForm) {
+        // Wait a bit more for Shadow DOM to be ready
+        await new Promise(resolve => setTimeout(resolve, 50));
+        break;
+      }
+      
+      retries++;
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+    
+    console.log('Components ready after', retries, 'retries');
   }
 
   setupTabNavigation() {
@@ -56,21 +88,32 @@ class DashboardManager {
     this.campaignList = document.getElementById('campaign-list');
     this.campaignForm = document.getElementById('campaign-form');
 
+    console.log('Setting up components:', {
+      campaignList: this.campaignList,
+      campaignForm: this.campaignForm
+    });
+
     // Set up campaign list callbacks
     if (this.campaignList) {
+      console.log('Setting up campaign list callbacks');
       this.campaignList.setCallbacks({
         onEdit: (campaignId) => this.editCampaign(campaignId),
         onDelete: (campaignId) => this.deleteCampaign(campaignId),
         onCreate: () => this.showCreateForm()
       });
+    } else {
+      console.error('Campaign list component not found');
     }
 
     // Set up campaign form callbacks
     if (this.campaignForm) {
+      console.log('Setting up campaign form callbacks');
       this.campaignForm.setCallbacks({
         onSave: (campaignData, campaignId) => this.saveCampaign(campaignData, campaignId),
         onCancel: () => this.cancelForm()
       });
+    } else {
+      console.error('Campaign form component not found');
     }
   }
 

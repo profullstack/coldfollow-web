@@ -50,8 +50,12 @@ export class CampaignList extends BaseComponent {
           this.onDelete(campaignId);
         }
       } else if (event.target.matches('#new-campaign-btn')) {
-        if (this.onCreate) {
-          this.onCreate();
+        // Navigate to campaign creation page using SPA router
+        if (window.router && window.router.navigate) {
+          window.router.navigate('/campaigns/new');
+        } else {
+          // Fallback to window.location if router is not available
+          window.location.href = '/campaigns/new';
         }
       }
     });
