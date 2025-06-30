@@ -37,6 +37,7 @@ import { authStatusRoute } from './auth-status.js';
 import { supabaseConfigRoute } from './config.js';
 import { websocketRoute } from './websocket.js';
 import { exchangeRateRoutes } from './exchange-rates.js';
+import { campaignRoutes } from './campaigns.js';
 import { authMiddleware } from '../middleware/auth-middleware.js';
 
 // Routes that require authentication
@@ -56,7 +57,8 @@ const protectedRoutes = [
   pptxToMarkdownRoute,
   xlsxToMarkdownRoute,
   documentHistoryRoute,
-  downloadDocumentRoute
+  downloadDocumentRoute,
+  ...campaignRoutes
 ];
 
 // Apply auth middleware to protected routes

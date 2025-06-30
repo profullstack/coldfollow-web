@@ -471,7 +471,11 @@ export function defineRoutes(router) {
     '/dashboard': {
       viewPath: '/views/dashboard.html',
       requireAuth: true,
-      requireSubscription: true
+      requireSubscription: true,
+      afterRender: () => {
+        // Dashboard components are initialized via their own script
+        console.log('Dashboard route loaded with web components');
+      }
     },
     '/api-docs': '/views/api-docs.html',
     '/api-keys': {
