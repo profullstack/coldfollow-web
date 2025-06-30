@@ -25,10 +25,15 @@ export class CampaignForm extends BaseComponent {
   }
 
   initEventListeners() {
-    // Form submission
+    console.log('CampaignForm: Setting up event listeners');
+    
+    // Form submission - use event delegation from the shadow root
     this.addEventListener('submit', (event) => {
+      console.log('CampaignForm: Submit event captured', event.target);
       if (event.target.matches('#campaign-form')) {
+        console.log('CampaignForm: Preventing default form submission');
         event.preventDefault();
+        event.stopPropagation();
         this.handleSubmit();
       }
     });
@@ -36,6 +41,7 @@ export class CampaignForm extends BaseComponent {
     // Cancel button
     this.addEventListener('click', (event) => {
       if (event.target.matches('#cancel-btn')) {
+        event.preventDefault();
         if (this.onCancel) {
           this.onCancel();
         }
@@ -170,16 +176,33 @@ export class CampaignForm extends BaseComponent {
   }
 
   async handleSubmit() {
+    console.log('CampaignForm: handleSubmit called');
+    
     const form = this.$('#campaign-form');
+    if (!form) {
+      console.error('CampaignForm: Form element not found');
+      return;
+    }
+    
+    console.log('CampaignForm: Form found, creating FormData');
     const formData = new FormData(form);
+    
+    // Log form data for debugging
+    console.log('CampaignForm: Form data entries:');
+    for (let [key, value] of formData.entries()) {
+      console.log(`  ${key}: ${value}`);
+    }
     
     // Validate required fields
     const name = formData.get('name')?.trim();
     if (!name) {
+      console.log('CampaignForm: Validation failed - name is required');
       this.showError('Campaign name is required');
       return;
     }
 
+    console.log('CampaignForm: Building campaign data');
+    
     // Build campaign data
     const campaignData = {
       name,
@@ -197,8 +220,14 @@ export class CampaignForm extends BaseComponent {
       campaignData.settings = { ...campaignData.settings, ...typeSpecificData };
     }
 
+    console.log('CampaignForm: Campaign data built:', campaignData);
+    console.log('CampaignForm: onSave callback available:', !!this.onSave);
+
     if (this.onSave) {
+      console.log('CampaignForm: Calling onSave callback');
       this.onSave(campaignData, this.isEditing ? this.campaign.id : null);
+    } else {
+      console.error('CampaignForm: No onSave callback available');
     }
   }
 
@@ -462,7 +491,7 @@ export class CampaignForm extends BaseComponent {
 
         <div id="form-error" class="error-message"></div>
 
-        <form id="campaign-form">
+        <form id="campaign-form" action="javascript:void(0);" method="post">
           <div class="form-section">
             <h3 class="section-title">Basic Information</h3>
             
@@ -569,8 +598,38 @@ export class CampaignForm extends BaseComponent {
 
   render() {
     super.render();
-    // Update form fields after render
-    setTimeout(() => this.updateFormFields(), 0);
+    // Update form fields after render and set up form-specific event listeners
+    setTimeout(() => {
+      this.updateFormFields();
+      this.setupFormEventListeners();
+    }, 0);
+  }
+
+  setupFormEventListeners() {
+    const form = this.$('#campaign-form');
+    if (form) {
+      console.log('CampaignForm: Setting up direct form event listener');
+      
+      // Remove any existing event listeners to avoid duplicates
+      form.removeEventListener('submit', this.handleFormSubmit);
+      
+      // Bind the handler to maintain 'this' context
+      this.handleFormSubmit = this.handleFormSubmit.bind(this);
+      
+      // Add the event listener directly to the form
+      form.addEventListener('submit', this.handleFormSubmit);
+      
+      console.log('CampaignForm: Form event listener attached successfully');
+    } else {
+      console.error('CampaignForm: Could not find form element to attach listener');
+    }
+  }
+
+  handleFormSubmit(event) {
+    console.log('CampaignForm: Form submit handler called');
+    event.preventDefault();
+    event.stopPropagation();
+    this.handleSubmit();
   }
 }
 
