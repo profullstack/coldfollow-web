@@ -17,7 +17,7 @@ if [ -d "../modules" ]; then
   echo "Modules copied successfully."
 else
   echo "Warning: ../modules directory not found. No modules were copied."
-  exit 1
+  echo "Continuing without external modules..."
 fi
 
 echo "Build process completed successfully!"
