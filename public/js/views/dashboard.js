@@ -32,17 +32,25 @@ class DashboardManager {
     // Wait a bit more for components to be fully rendered
     await new Promise(resolve => setTimeout(resolve, 100));
     
-    // Additional wait for Shadow DOM to be fully rendered
+    // Get component references
+    const campaignList = document.getElementById('campaign-list');
+    const campaignForm = document.getElementById('campaign-form');
+    
+    if (!campaignList || !campaignForm) {
+      throw new Error('Required components not found in DOM');
+    }
+    
+    // Wait for components to be fully initialized
     let retries = 0;
-    const maxRetries = 10;
+    const maxRetries = 30;
     
     while (retries < maxRetries) {
-      const campaignList = document.getElementById('campaign-list');
-      const campaignForm = document.getElementById('campaign-form');
+      const listReady = typeof campaignList.setCallbacks === 'function';
+      const formReady = typeof campaignForm.setCallbacks === 'function' &&
+                       (campaignForm.isInitialized || campaignForm.pendingCallbacks !== undefined);
       
-      if (campaignList && campaignForm) {
-        // Wait a bit more for Shadow DOM to be ready
-        await new Promise(resolve => setTimeout(resolve, 50));
+      if (listReady && formReady) {
+        console.log('DashboardManager: Components fully ready');
         break;
       }
       
@@ -50,7 +58,11 @@ class DashboardManager {
       await new Promise(resolve => setTimeout(resolve, 50));
     }
     
-    console.log('Components ready after', retries, 'retries');
+    if (retries >= maxRetries) {
+      console.warn('DashboardManager: Component initialization timeout, proceeding anyway');
+    } else {
+      console.log('DashboardManager: Components ready after', retries, 'retries');
+    }
   }
 
   setupTabNavigation() {
@@ -107,13 +119,18 @@ class DashboardManager {
 
     // Set up campaign form callbacks
     if (this.campaignForm) {
-      console.log('Setting up campaign form callbacks');
-      this.campaignForm.setCallbacks({
-        onSave: (campaignData, campaignId) => this.saveCampaign(campaignData, campaignId),
-        onCancel: () => this.cancelForm()
-      });
+      console.log('DashboardManager: Setting up campaign form callbacks');
+      try {
+        this.campaignForm.setCallbacks({
+          onSave: (campaignData, campaignId) => this.saveCampaign(campaignData, campaignId),
+          onCancel: () => this.cancelForm()
+        });
+        console.log('DashboardManager: Campaign form callbacks set successfully');
+      } catch (error) {
+        console.error('DashboardManager: Error setting campaign form callbacks:', error);
+      }
     } else {
-      console.error('Campaign form component not found');
+      console.error('DashboardManager: Campaign form component not found');
     }
   }
 

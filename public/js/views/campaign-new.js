@@ -28,31 +28,34 @@ class CampaignNewManager {
     // Wait for next tick to ensure components are rendered
     await new Promise(resolve => setTimeout(resolve, 100));
     
-    // Additional wait for Shadow DOM to be fully rendered
+    // Get the component reference
+    this.campaignForm = document.getElementById('campaign-form');
+    
+    if (!this.campaignForm) {
+      throw new Error('Campaign form component not found in DOM');
+    }
+    
+    // Wait for the component to be fully initialized
     let retries = 0;
-    const maxRetries = 20;
+    const maxRetries = 30;
     
     while (retries < maxRetries) {
-      this.campaignForm = document.getElementById('campaign-form');
-      
-      if (this.campaignForm) {
-        // Wait for the component to be fully initialized (including render cycle)
-        await new Promise(resolve => setTimeout(resolve, 150));
-        
-        // Check if the component has its methods available
-        if (typeof this.campaignForm.setCallbacks === 'function') {
-          console.log('CampaignNewManager: Component fully ready with setCallbacks method');
-          break;
-        } else {
-          console.log('CampaignNewManager: Component found but setCallbacks not ready, retrying...');
-        }
+      // Check if the component has its methods available and is initialized
+      if (typeof this.campaignForm.setCallbacks === 'function' &&
+          (this.campaignForm.isInitialized || this.campaignForm.pendingCallbacks !== undefined)) {
+        console.log('CampaignNewManager: Component fully ready with setCallbacks method');
+        break;
       }
       
       retries++;
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 50));
     }
     
-    console.log('CampaignNewManager: Campaign form component ready after', retries, 'retries');
+    if (retries >= maxRetries) {
+      console.warn('CampaignNewManager: Component initialization timeout, proceeding anyway');
+    } else {
+      console.log('CampaignNewManager: Campaign form component ready after', retries, 'retries');
+    }
   }
 
   setupComponents() {
@@ -60,16 +63,21 @@ class CampaignNewManager {
     if (this.campaignForm && typeof this.campaignForm.setCallbacks === 'function') {
       console.log('CampaignNewManager: Setting up campaign form callbacks');
       
-      this.campaignForm.setCallbacks({
-        onSave: (campaignData) => this.saveCampaign(campaignData),
-        onCancel: () => this.cancelForm()
-      });
-      
-      console.log('CampaignNewManager: Callbacks set successfully');
+      try {
+        this.campaignForm.setCallbacks({
+          onSave: (campaignData) => this.saveCampaign(campaignData),
+          onCancel: () => this.cancelForm()
+        });
+        
+        console.log('CampaignNewManager: Callbacks set successfully');
+      } catch (error) {
+        console.error('CampaignNewManager: Error setting callbacks:', error);
+      }
     } else {
       console.error('CampaignNewManager: Campaign form component not ready or setCallbacks method not available');
       console.log('CampaignNewManager: Component:', this.campaignForm);
       console.log('CampaignNewManager: setCallbacks type:', typeof this.campaignForm?.setCallbacks);
+      console.log('CampaignNewManager: isInitialized:', this.campaignForm?.isInitialized);
     }
   }
 

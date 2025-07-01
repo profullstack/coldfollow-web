@@ -12,6 +12,8 @@ export class CampaignForm extends BaseComponent {
     this.isEditing = false;
     this.onSave = null;
     this.onCancel = null;
+    this.isInitialized = false;
+    this.pendingCallbacks = null;
   }
 
   static get observedAttributes() {
@@ -64,8 +66,18 @@ export class CampaignForm extends BaseComponent {
   }
 
   setCallbacks({ onSave, onCancel }) {
-    this.onSave = onSave;
-    this.onCancel = onCancel;
+    console.log('CampaignForm: setCallbacks called, isInitialized:', this.isInitialized);
+    
+    if (this.isInitialized) {
+      // Component is ready, set callbacks immediately
+      this.onSave = onSave;
+      this.onCancel = onCancel;
+      console.log('CampaignForm: Callbacks set immediately');
+    } else {
+      // Component not ready yet, store callbacks for later
+      this.pendingCallbacks = { onSave, onCancel };
+      console.log('CampaignForm: Callbacks stored for later initialization');
+    }
   }
 
   populateForm() {
@@ -602,7 +614,22 @@ export class CampaignForm extends BaseComponent {
     setTimeout(() => {
       this.updateFormFields();
       this.setupFormEventListeners();
+      this.markAsInitialized();
     }, 0);
+  }
+
+  markAsInitialized() {
+    this.isInitialized = true;
+    console.log('CampaignForm: Component marked as initialized');
+    
+    // Apply any pending callbacks
+    if (this.pendingCallbacks) {
+      console.log('CampaignForm: Applying pending callbacks');
+      this.onSave = this.pendingCallbacks.onSave;
+      this.onCancel = this.pendingCallbacks.onCancel;
+      this.pendingCallbacks = null;
+      console.log('CampaignForm: Pending callbacks applied successfully');
+    }
   }
 
   setupFormEventListeners() {
