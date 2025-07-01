@@ -27,32 +27,30 @@ export class CampaignForm extends BaseComponent {
   }
 
   initEventListeners() {
-    console.log('CampaignForm: Setting up event listeners');
+    console.log('CampaignForm: initEventListeners called - setting up basic event delegation');
     
-    // Form submission - use event delegation from the shadow root
-    this.addEventListener('submit', (event) => {
-      console.log('CampaignForm: Submit event captured', event.target);
-      if (event.target.matches('#campaign-form')) {
-        console.log('CampaignForm: Preventing default form submission');
-        event.preventDefault();
-        event.stopPropagation();
-        this.handleSubmit();
-      }
-    });
-
-    // Cancel button
+    // Use event delegation from the host element for Shadow DOM events
     this.addEventListener('click', (event) => {
+      console.log('CampaignForm: Click event captured on:', event.target.id || event.target.tagName);
+      
       if (event.target.matches('#cancel-btn')) {
+        console.log('CampaignForm: Cancel button clicked');
         event.preventDefault();
         if (this.onCancel) {
+          console.log('CampaignForm: Calling onCancel callback');
           this.onCancel();
+        } else {
+          console.log('CampaignForm: No onCancel callback available');
         }
       }
     });
 
     // Dynamic target audience fields
     this.addEventListener('change', (event) => {
+      console.log('CampaignForm: Change event captured on:', event.target.id || event.target.tagName);
+      
       if (event.target.matches('#type')) {
+        console.log('CampaignForm: Campaign type changed, updating form fields');
         this.updateFormFields();
       }
     });
@@ -633,30 +631,55 @@ export class CampaignForm extends BaseComponent {
   }
 
   setupFormEventListeners() {
+    console.log('CampaignForm: setupFormEventListeners called');
+    
     const form = this.$('#campaign-form');
     if (form) {
-      console.log('CampaignForm: Setting up direct form event listener');
+      console.log('CampaignForm: Form element found, setting up submit event listener');
       
       // Remove any existing event listeners to avoid duplicates
-      form.removeEventListener('submit', this.handleFormSubmit);
+      if (this.handleFormSubmit) {
+        form.removeEventListener('submit', this.handleFormSubmit);
+        console.log('CampaignForm: Removed existing form submit listener');
+      }
       
       // Bind the handler to maintain 'this' context
-      this.handleFormSubmit = this.handleFormSubmit.bind(this);
+      this.handleFormSubmit = (event) => {
+        console.log('CampaignForm: Form submit event triggered');
+        console.log('CampaignForm: Event target:', event.target);
+        console.log('CampaignForm: Event type:', event.type);
+        event.preventDefault();
+        event.stopPropagation();
+        this.handleSubmit();
+      };
       
       // Add the event listener directly to the form
       form.addEventListener('submit', this.handleFormSubmit);
       
-      console.log('CampaignForm: Form event listener attached successfully');
+      console.log('CampaignForm: Form submit event listener attached successfully');
+      
+      // Also add a click listener to the submit button for debugging
+      const submitButton = this.$('button[type="submit"]');
+      if (submitButton) {
+        submitButton.addEventListener('click', (event) => {
+          console.log('CampaignForm: Submit button clicked');
+          console.log('CampaignForm: Button type:', event.target.type);
+          console.log('CampaignForm: Form will submit...');
+        });
+        console.log('CampaignForm: Submit button click listener attached');
+      } else {
+        console.warn('CampaignForm: Submit button not found');
+      }
     } else {
       console.error('CampaignForm: Could not find form element to attach listener');
+      console.log('CampaignForm: Available elements in shadow root:');
+      const allElements = this.shadowRoot.querySelectorAll('*');
+      allElements.forEach(el => {
+        if (el.id) {
+          console.log(`  - ${el.tagName}#${el.id}`);
+        }
+      });
     }
-  }
-
-  handleFormSubmit(event) {
-    console.log('CampaignForm: Form submit handler called');
-    event.preventDefault();
-    event.stopPropagation();
-    this.handleSubmit();
   }
 }
 
