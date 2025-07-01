@@ -64,17 +64,23 @@ export class CampaignForm extends BaseComponent {
   }
 
   setCallbacks({ onSave, onCancel }) {
-    console.log('CampaignForm: setCallbacks called, isInitialized:', this.isInitialized);
+    console.log('CampaignForm: setCallbacks called');
+    console.log('CampaignForm: isInitialized:', this.isInitialized);
+    console.log('CampaignForm: onSave function provided:', typeof onSave);
+    console.log('CampaignForm: onCancel function provided:', typeof onCancel);
     
     if (this.isInitialized) {
       // Component is ready, set callbacks immediately
       this.onSave = onSave;
       this.onCancel = onCancel;
       console.log('CampaignForm: Callbacks set immediately');
+      console.log('CampaignForm: this.onSave is now:', typeof this.onSave);
+      console.log('CampaignForm: this.onCancel is now:', typeof this.onCancel);
     } else {
       // Component not ready yet, store callbacks for later
       this.pendingCallbacks = { onSave, onCancel };
       console.log('CampaignForm: Callbacks stored for later initialization');
+      console.log('CampaignForm: pendingCallbacks:', this.pendingCallbacks);
     }
   }
 
@@ -232,12 +238,25 @@ export class CampaignForm extends BaseComponent {
 
     console.log('CampaignForm: Campaign data built:', campaignData);
     console.log('CampaignForm: onSave callback available:', !!this.onSave);
+    console.log('CampaignForm: onSave callback type:', typeof this.onSave);
+    console.log('CampaignForm: isInitialized:', this.isInitialized);
+    console.log('CampaignForm: pendingCallbacks:', this.pendingCallbacks);
 
     if (this.onSave) {
       console.log('CampaignForm: Calling onSave callback');
-      this.onSave(campaignData, this.isEditing ? this.campaign.id : null);
+      try {
+        this.onSave(campaignData, this.isEditing ? this.campaign.id : null);
+        console.log('CampaignForm: onSave callback executed successfully');
+      } catch (error) {
+        console.error('CampaignForm: Error calling onSave callback:', error);
+      }
     } else {
       console.error('CampaignForm: No onSave callback available');
+      console.error('CampaignForm: Debug info:');
+      console.error('  - this.onSave:', this.onSave);
+      console.error('  - this.onCancel:', this.onCancel);
+      console.error('  - this.isInitialized:', this.isInitialized);
+      console.error('  - this.pendingCallbacks:', this.pendingCallbacks);
     }
   }
 
@@ -619,14 +638,24 @@ export class CampaignForm extends BaseComponent {
   markAsInitialized() {
     this.isInitialized = true;
     console.log('CampaignForm: Component marked as initialized');
+    console.log('CampaignForm: Current onSave before applying pending:', typeof this.onSave);
+    console.log('CampaignForm: Current onCancel before applying pending:', typeof this.onCancel);
     
     // Apply any pending callbacks
     if (this.pendingCallbacks) {
       console.log('CampaignForm: Applying pending callbacks');
+      console.log('CampaignForm: pendingCallbacks.onSave:', typeof this.pendingCallbacks.onSave);
+      console.log('CampaignForm: pendingCallbacks.onCancel:', typeof this.pendingCallbacks.onCancel);
+      
       this.onSave = this.pendingCallbacks.onSave;
       this.onCancel = this.pendingCallbacks.onCancel;
       this.pendingCallbacks = null;
+      
       console.log('CampaignForm: Pending callbacks applied successfully');
+      console.log('CampaignForm: this.onSave is now:', typeof this.onSave);
+      console.log('CampaignForm: this.onCancel is now:', typeof this.onCancel);
+    } else {
+      console.log('CampaignForm: No pending callbacks to apply');
     }
   }
 

@@ -60,16 +60,34 @@ class CampaignNewManager {
 
   setupComponents() {
     // Set up campaign form callbacks
+    console.log('CampaignNewManager: setupComponents called');
+    console.log('CampaignNewManager: this.campaignForm:', this.campaignForm);
+    console.log('CampaignNewManager: setCallbacks method available:', typeof this.campaignForm?.setCallbacks);
+    
     if (this.campaignForm && typeof this.campaignForm.setCallbacks === 'function') {
       console.log('CampaignNewManager: Setting up campaign form callbacks');
+      console.log('CampaignNewManager: Component isInitialized:', this.campaignForm.isInitialized);
+      console.log('CampaignNewManager: Component pendingCallbacks:', this.campaignForm.pendingCallbacks);
+      
+      const onSaveCallback = (campaignData) => {
+        console.log('CampaignNewManager: onSave callback triggered with data:', campaignData);
+        return this.saveCampaign(campaignData);
+      };
+      
+      const onCancelCallback = () => {
+        console.log('CampaignNewManager: onCancel callback triggered');
+        return this.cancelForm();
+      };
       
       try {
         this.campaignForm.setCallbacks({
-          onSave: (campaignData) => this.saveCampaign(campaignData),
-          onCancel: () => this.cancelForm()
+          onSave: onSaveCallback,
+          onCancel: onCancelCallback
         });
         
         console.log('CampaignNewManager: Callbacks set successfully');
+        console.log('CampaignNewManager: Component onSave after setting:', typeof this.campaignForm.onSave);
+        console.log('CampaignNewManager: Component onCancel after setting:', typeof this.campaignForm.onCancel);
       } catch (error) {
         console.error('CampaignNewManager: Error setting callbacks:', error);
       }
