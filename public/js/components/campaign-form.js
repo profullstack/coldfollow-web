@@ -626,12 +626,43 @@ export class CampaignForm extends BaseComponent {
   }
 
   render() {
+    console.log('CampaignForm: render() called');
+    console.log('CampaignForm: onSave before render:', typeof this.onSave);
+    console.log('CampaignForm: onCancel before render:', typeof this.onCancel);
+    console.log('CampaignForm: isInitialized before render:', this.isInitialized);
+    
+    // Store callbacks before render to prevent loss
+    const savedCallbacks = {
+      onSave: this.onSave,
+      onCancel: this.onCancel
+    };
+    
     super.render();
+    
+    console.log('CampaignForm: onSave after super.render():', typeof this.onSave);
+    console.log('CampaignForm: onCancel after super.render():', typeof this.onCancel);
+    
+    // Restore callbacks if they were lost
+    if (savedCallbacks.onSave && !this.onSave) {
+      console.log('CampaignForm: Restoring lost onSave callback');
+      this.onSave = savedCallbacks.onSave;
+    }
+    if (savedCallbacks.onCancel && !this.onCancel) {
+      console.log('CampaignForm: Restoring lost onCancel callback');
+      this.onCancel = savedCallbacks.onCancel;
+    }
+    
     // Update form fields after render and set up form-specific event listeners
     setTimeout(() => {
       this.updateFormFields();
       this.setupFormEventListeners();
-      this.markAsInitialized();
+      
+      // Only mark as initialized if not already initialized
+      if (!this.isInitialized) {
+        this.markAsInitialized();
+      } else {
+        console.log('CampaignForm: Already initialized, skipping markAsInitialized');
+      }
     }, 0);
   }
 
